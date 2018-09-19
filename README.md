@@ -1,1 +1,3 @@
-# Spectral Graph Model Code Repository
+# Structure-Function Model Code Repository
+
+#### Farras' code
