@@ -1,0 +1,8 @@
+name: spectral
+dependencies:
+    - python
+    - matplotlib
+    - numpy
+    - scipy
+    - mne
+    - nitime
