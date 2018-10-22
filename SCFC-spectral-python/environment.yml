@@ -1,0 +1,7 @@
+name: spectral
+dependencies:
+  - python=3.6.6 #or any python 3 should work
+  - matplotlib
+  - numpy
+  - scipy
+  - nitime
