@@ -121,10 +121,10 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
     Keyword Arguments:
         tau_e {float} -- Excitatory time constant parameter (default: {0.012})
         tau_i {float} -- Inhibitory time cosntant paramter (default: {0.003})
-        alpha {int} -- [description] (default: {1})
-        speed {int} -- Transmission velocity (default: {5})
-        gei {int} -- Gain parameter (default: {4})
-        gii {int} -- Gain parameter (default: {1})
+        alpha {float} -- [description] (default: {1})
+        speed {float} -- Transmission velocity (default: {5})
+        gei {float} -- Gain parameter (default: {4})
+        gii {float} -- Gain parameter (default: {1})
         tauC {float} -- [description] (default: {0.006})
 
         Returns: freqresp, ev, Vv, freqresp_out, FCmodel
