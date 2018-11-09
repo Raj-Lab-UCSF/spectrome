@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as mpl
 import numpy as np
 import nitime.algorithms as tsa
-from scipy.io import loadmat, savemat
+#from scipy.io import loadmat, savemat
 from scipy.signal import lfilter, firls, decimate
 from scipy.stats import pearsonr
 from scipy.optimize import basinhopping
@@ -106,9 +106,9 @@ ax_ev = mpl.gca()
 im1 = mpl.imshow(mag2db(ev_freqresp), extent = [0, 40, 0, 57], aspect='auto')
 fig2.colorbar(im1)
 ax_ev.set_title('Frequency Response of Each Eigen Vector')
-mpl.show()
+#mpl.show()
 
-'''
+
 ############################# OPTIMIZATION TO MEG DATA ################################
 ## define upper and lower bounds for parameters:
 # tau_e; tau_i; alpha; speed; gei; gii; tauC
@@ -117,9 +117,10 @@ VLB = np.array([0.005, 0.005, 0.1, 5.0, 0.5, 0.5,0.005])
 VUB = np.array([0.020, 0.020, 1.0, 20, 5.0, 5.0, 0.020])
 x0 = np.array([0.012, 0.003, 1, 5, 4, 1, 0.006])
 minimizer_kwargs = {"method":"L-BFGS-B","args":(C, Ddk_conn, lpf, FMEGrange, frange)}
+print('Starting basin hopping optimization...')
 
-opt_output = basinhopping(networktransfer_costfun, x0, minimizer_kwargs = minimizer_kwargs)
+opt_output = basinhopping(networktransfer_costfun, x0, niter = 2, minimizer_kwargs = minimizer_kwargs, disp = True)
 #save output from basinhopping
-savemat('optm_params.mat',opt_output)
-'''
+np.save('optm_params.npy',opt_output)
+
 ## Visualize optimized model spectra with MEG source localized spectra

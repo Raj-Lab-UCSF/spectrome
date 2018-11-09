@@ -1,3 +1,6 @@
 #ignore caches
 __pycache__
 .ipynb_checkpoints
+.png
+.jpg
+.svg
