@@ -4,7 +4,7 @@ import os
 from scipy.stats import pearsonr
 
 
-def Julia_order():
+def get_Julia_order():
     """Get Julia Owen's brain region ordering (specific for DK86 atlas).
 
     Args:
@@ -61,7 +61,7 @@ def get_HCP_connectome(hcp_dir,
     return Cdk_conn, Ddk_conn, permHCP
 
 
-def getMEGdata(sub_name, ordering, MEGfolder):
+def get_MEG_data(sub_name, ordering, MEGfolder):
     """Get source localized MEG data and arrange it following ordering method.
 
     Args:
@@ -138,8 +138,8 @@ def reduce_extreme_dir(Cdk_conn, max_dir=0.95, f=7):
     return C
 
 
-def NetworkTransferFunction(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
-                            speed=5.0, gei=4.0, gii=1.0, tauC=0.006):
+def network_transfer_function(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
+                              speed=5.0, gei=4.0, gii=1.0, tauC=0.006):
     """Network Transfer Function for spectral graph model.
 
     Args:
@@ -242,28 +242,33 @@ def NetworkTransferFunction(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
     FCmodel = np.matmul(np.matmul(np.diag(1/den), FCmodel), np.diag(1/den))
     return freqresp, ev, Vv, freqresp_out, FCmodel
 
-def networktransfer_costfun(params, C, D, lpf, FMEGdata, frange, rois_with_MEG = np.arange(0,68)):
-    '''[Costfunction for optimization of the model, currently using pearon's correlation as metric]
 
-    Arguments:
-        params {numpy array} -- Currently using 7 parameters (1x7 array): tau_e, tau_i, alpha, speed, gei, gii, tauC
-        C {numpy array} -- Connectivity matrix
-        D {numpy array} -- Distance matrix to introduce delay
-        lpf {numpy array} -- low pass filter, designed before computing PSD
-        FMEGdata {numpy array} -- Empirical data
-        frange {numpy array} -- Vector of frequency bins for which the model computes a frequency response.
+def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
+                          rois_with_MEG=np.arange(0, 68)):
+    """Cost function for optimization of the model.
 
-    Keyword Arguments:
-        rois_with_MEG {numpy array} -- which regions has MEG, only optimize these regions. Usually exclude
-        subcortical regions (default: {np.arange(0,68)})
+    Currently using negative of Pearson's correlation as cost metric.
+
+    Args:
+        params (numpy arr): 1x7 array of parameters: tau_e, tau_i, alpha,
+        speed, gei, gii, tauC.
+        C (numpy arr): Connectivity matrix.
+        D (numpy arr): Distance matrix (introduce delay).
+        lpf (numpy arr): low pass filter, designed before computing PSD.
+        FMEGdata (numpy arr): Empirical data.
+        frange (numpy arr): Vector of frequency bins for which the model
+        compute a frequency response.
+        rois_with_MEG (numpy arr): Regions with MEG. Usually excludes
+        subcortical regions (default: np.arange(0,68)).
 
     Returns:
-        float -- Should be a float? Objective function evaluation result, negative of Pearson's correlation between empirical
-        MEG and model result because we want to maximize.
-    '''
+        err_out (float): Objective function evaluation result, negative of
+        Pearson's correlation between empirica MEG and model result.
 
-    # NetworkTransferFunction current inputs
-    # (C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, speed = 5, gei = 4, gii = 1, tauC = 0.006)
+    """
+    # network_transfer_function current inputs
+    # (C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, speed = 5, gei = 4,\
+    # gii = 1, tauC = 0.006)
     # defining parameters for the optimizer
     tau_e = params[0]
     tau_i = params[1]
@@ -278,26 +283,35 @@ def networktransfer_costfun(params, C, D, lpf, FMEGdata, frange, rois_with_MEG =
     err_min = np.zeros(rois_with_MEG.shape)
     for i in frange:
         w = 2*np.pi*i
-        _, _, _, freqresp_out, _ = NetworkTransferFunction(C, D, w, tau_e = tau_e, tau_i = tau_i,
-                                                          alpha = alpha, speed = speed, gei = gei,
-                                                          gii = gii, tauC = tauC)
+        _, _, _, freqresp_out, _ = network_transfer_function(
+                                                             C,
+                                                             D,
+                                                             w,
+                                                             tau_e=tau_e,
+                                                             tau_i=tau_i,
+                                                             alpha=alpha,
+                                                             speed=speed,
+                                                             gei=gei,
+                                                             gii=gii,
+                                                             tauC=tauC
+                                                             )
         freq_model.append(freqresp_out)
 
     freq_model = np.asarray(freq_model)
-    freq_model = freq_model[:,rois_with_MEG].transpose()
+    freq_model = freq_model[:, rois_with_MEG].transpose()
     for n in rois_with_MEG:
-        qdata = FMEGdata[n,:]
+        qdata = FMEGdata[n, :]
         if np.sum(qdata[:]) != 0:
             qdata = mag2db(qdata)
             qdata = qdata - np.mean(qdata)
 
-        qmodel = np.abs(np.squeeze(freq_model[n,:]))
-        qmodel = mag2db(np.convolve(qmodel, lpf, mode = 'same'))
+        qmodel = np.abs(np.squeeze(freq_model[n, :]))
+        qmodel = mag2db(np.convolve(qmodel, lpf, mode='same'))
         qmodel = qmodel - np.mean(qmodel)
         if np.sum(qmodel) == 0 or np.sum(qdata) == 0:
             err_min[n] = 0
         else:
-            err_min[n] = pearsonr(qdata,qmodel)[0]
+            err_min[n] = pearsonr(qdata, qmodel)[0]
 
     err_out = -np.mean(err_min)
     return err_out
