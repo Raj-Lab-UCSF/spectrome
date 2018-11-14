@@ -7,6 +7,7 @@ from scipy.io import loadmat
 from scipy.signal import lfilter, firls, decimate
 from scipy.stats import pearsonr
 from scipy.optimize import basinhopping
+from spectral_graph import *
 
 """
 Script for running spectral graph model on MEG data from Ashish's initial code transfer.
