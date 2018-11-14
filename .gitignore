@@ -1,6 +1,10 @@
+.DS_Store
 #ignore caches
 __pycache__
 .ipynb_checkpoints
-.png
-.jpg
-.svg
+*.pyc
+
+#ignore figures
+**/.png
+**/.jpg
+**/.svg

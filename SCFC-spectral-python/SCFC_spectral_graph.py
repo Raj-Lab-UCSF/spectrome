@@ -2,11 +2,13 @@ import os
 import matplotlib.pyplot as mpl
 import numpy as np
 import nitime.algorithms as tsa
-#from scipy.io import loadmat, savemat
+import util
+from scipy.io import loadmat
 from scipy.signal import lfilter, firls, decimate
 from scipy.stats import pearsonr
 from scipy.optimize import basinhopping
-from spectralgraph import *
+from spectral_graph import *
+
 """
 Script for running spectral graph model on MEG data from Ashish's initial code transfer.
 """
