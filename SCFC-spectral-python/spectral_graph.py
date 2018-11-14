@@ -61,54 +61,77 @@ def get_HCP_connectome(hcp_dir,
     return Cdk_conn, Ddk_conn, permHCP
 
 
-def getMEGdata(sub_name, ordering=cortJulia, MEGfolder):
+def getMEGdata(sub_name, ordering, MEGfolder):
     """Get source localized MEG data and arrange it following ordering method.
 
     Args:
-        sub_name (str): Description of parameter `sub_name`.
-        cortJulia (arr): Description of parameter `cortJulia`.
-        MEGfolder (str): Description of parameter `MEGfolder`.
+        sub_name (str): Name of subject.
+        ordering (arr): Cortical region ordering (e.g. `cortJulia`).
+        MEGfolder (str): Directory for MEG data.
 
     Returns:
         MEGdata (arr): MEG data.
         coords (type):
 
     """
-    S = loadmat(os.path.join(MEGfolder,sub_name,'DK_timecourse_20.mat'))
+    S = loadmat(os.path.join(MEGfolder, sub_name, 'DK_timecourse_20.mat'))
     MEGdata = S['DK_timecourse']
-    MEGdata = MEGdata[ordering,]
-    C = loadmat(os.path.join(MEGfolder,sub_name,'DK_coords_meg.mat'))
+    MEGdata = MEGdata[ordering, ]
+    C = loadmat(os.path.join(MEGfolder, sub_name, 'DK_coords_meg.mat'))
     coords = C['DK_coords_meg']
-    coords = coords[ordering,]
+    coords = coords[ordering, ]
     del S, C
+
     return MEGdata, coords
 
 
 def mag2db(y):
-    '''[convert magnitude response to decibels]
+    """Convert magnitude response to decibels.
 
-    Arguments:
-        y {numpy array} -- [Power spectrum, raw magnitude response]
+    Args:
+        y (numpy array): Power spectrum, raw magnitude response.
 
     Returns:
-        [numpy array] -- [Power spectrum in dB]
-    '''
+        dby (numpy array): Power spectrum in dB
 
+    """
     dby = 20*np.log10(y)
     return dby
 
 
 def bi_symmetric_c(Cdk_conn, linds, rinds):
-    q = np.maximum(Cdk_conn[linds,:][:,linds], Cdk_conn[rinds,:][:,rinds])
-    q1 = np.maximum(Cdk_conn[linds,:][:,rinds], Cdk_conn[rinds,:][:,linds])
-    Cdk_conn[np.ix_(linds,linds)] = q
-    Cdk_conn[np.ix_(rinds,rinds)] = q
-    Cdk_conn[np.ix_(linds,rinds)] = q1
-    Cdk_conn[np.ix_(rinds,linds)] = q1
+    """Short summary.
+
+    Args:
+        Cdk_conn (type): Description of parameter `Cdk_conn`.
+        linds (type): Description of parameter `linds`.
+        rinds (type): Description of parameter `rinds`.
+
+    Returns:
+        type: Description of returned object.
+
+    """
+    q = np.maximum(Cdk_conn[linds, :][:, linds], Cdk_conn[rinds, :][:, rinds])
+    q1 = np.maximum(Cdk_conn[linds, :][:, rinds], Cdk_conn[rinds, :][:, linds])
+    Cdk_conn[np.ix_(linds, linds)] = q
+    Cdk_conn[np.ix_(rinds, rinds)] = q
+    Cdk_conn[np.ix_(linds, rinds)] = q1
+    Cdk_conn[np.ix_(rinds, linds)] = q1
     return Cdk_conn
 
 
-def reduce_extreme_dir(Cdk_conn, max_dir = 0.95, f=7):
+def reduce_extreme_dir(Cdk_conn, max_dir=0.95, f=7):
+    """Short summary.
+
+    Args:
+        Cdk_conn (type): Description of parameter `Cdk_conn`.
+        max_dir (type): Description of parameter `max_dir`.
+        f (type): Description of parameter `f`.
+
+    Returns:
+        type: Description of returned object.
+
+    """
     thr = f*np.mean(Cdk_conn[Cdk_conn > 0])
     C = np.minimum(Cdk_conn, thr)
     C = max_dir * C + (1-max_dir) * C
@@ -116,43 +139,41 @@ def reduce_extreme_dir(Cdk_conn, max_dir = 0.95, f=7):
 
 
 def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, speed = 5, gei = 4, gii = 1, tauC = 0.006):
-    '''Network Transfer Function for spectral graph model.
+    """Network Transfer Function for spectral graph model.
 
-    Arguments:
-        C {numpy array} -- Connectivity matrix
-        D {numpy array} -- Distance matrix
-        w {float} -- frequency input.
+    Args:
+        C (numpy array): Connectivity matrix.
+        D (numpy array): Distance matrix.
+        w       (float): Frequency input.
+        tau_e   (float): Excitatory time constant parameter (default: {0.012}).
+        tau_i   (float): Inhibitory time cosntant paramter (default: {0.003}).
+        alpha   (float): Description of parameter `alpha` (default: {1}).
+        speed   (float): Transmission velocity (default: {5}).
+        gei     (float): Gain parameter (default: {4}).
+        gii     (float): Gain parameter (default: {1}).
+        tauC    (float): Description of parameter `tauC` (default: {0.006}).
 
-    Keyword Arguments:
-        tau_e {float} -- Excitatory time constant parameter (default: {0.012})
-        tau_i {float} -- Inhibitory time cosntant paramter (default: {0.003})
-        alpha {float} -- [description] (default: {1})
-        speed {float} -- Transmission velocity (default: {5})
-        gei {float} -- Gain parameter (default: {4})
-        gii {float} -- Gain parameter (default: {1})
-        tauC {float} -- [description] (default: {0.006})
+    Returns:
+        freqresp (numpy asarray):
+        ev (numpy asarray): Eigen values
+        Vv (numpy asarray): Eigen vectors
+        freqresp_out (numpy asarray):  Each region's frequency response for
+        the given frequency (w)
+        FCmodel (numpy asarray): Functional connectivity - still in the works
 
-    Returns: freqresp, ev, Vv, freqresp_out, FCmodel
-        freqresp {numpy array} --
-        ev {numpy array} -- Eigen values
-        Vv {numpy array} -- Eigen vectors
-        freqresp_out {numpy array} -- Each region's frequency response for the given frequency (w)
-        FCmodel {numpy array} -- Functional connectivity - still in the works
-    '''
-
+    """
     # Not being used: Pin = 1 and tau_syn = 0.002
-
     # Defining some other parameters used:
     zero_thr = 0.05
-    use_smalleigs = True #otherwise uses full eig()
-    numsmalleigs = np.round(2/3*C.shape[0]) #2/3
-    a = 0.5 # fraction of signal at a node that is recurrent excitatory
-    #gei = 4 # excitatory-inhibitory synaptic conductance as a ratio of E-E synapse
-    #gii = 1 # inhibitory-inhibitory synaptic conductance as a ratio of E-E synapse
-    #tauC = 0.5*tau_e
+    use_smalleigs = True  # otherwise uses full eig()
+    numsmalleigs = np.round(2/3*C.shape[0])  # 2/3
+    a = 0.5  # fraction of signal at a node that is recurrent excitatory
+    #  gei = 4 # excitatory-inhibitory synaptic conductance as ratio of E-E syn.
+    #  gii = 1 # inhibitory-inhibitory synaptic conductance as ratio of E-E syn.
+    #  tauC = 0.5*tau_e
 
-    rowdegree = np.transpose(np.sum(C,axis=1))
-    coldegree = np.sum(C,axis=0)
+    rowdegree = np.transpose(np.sum(C, axis=1))
+    coldegree = np.sum(C, axis=0)
 
     qind = rowdegree + coldegree < 0.2*np.mean(rowdegree + coldegree)
     rowdegree[qind] = np.inf
@@ -167,32 +188,33 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
 
     Tau = 0.001*D/speed
 
-    #Cc = np.real(C*np.exp(-1j*Tau*w)).astype(float)
+    # Cc = np.real(C*np.exp(-1j*Tau*w)).astype(float)
     Cc = C*np.exp(-1j*Tau*w)
 
     L1 = 0.8*np.identity(nroi)
-    L2 = np.divide(1,np.sqrt(rowdegree*coldegree)+np.spacing(1)) #diag(1./(sqrt(rowdegree.*coldegree)+eps));
+    L2 = np.divide(1,np.sqrt(rowdegree*coldegree)+np.spacing(1))
+    # diag(1./(sqrt(rowdegree.*coldegree)+eps));
     L = L1 - np.matmul(np.diag(L2),Cc)
-    #L = np.array(L,dtype=np.float64)
+    # L = np.array(L,dtype=np.float64)
 
     # try scipy.sparse.linalg.eigs next
     if use_smalleigs is True:
         d, v = np.linalg.eig(L)
         eig_ind = np.argsort(np.real(d))
-        eig_vec = v[:,eig_ind]
+        eig_vec = v[:, eig_ind]
         eig_val = d[eig_ind]
     else:
         d, v = np.linalg.eig(L)
         eig_ind = np.argsort(np.abs(d))
-        eig_vec = v[:,eig_ind]
+        eig_vec = v[:, eig_ind]
         eig_val = d[eig_ind]
 
     ev = np.transpose(eig_val[0:K])
-    Vv = eig_vec[:,0:K] #why is eigv 1 all the same numbers?
+    Vv = eig_vec[:, 0:K] # why is eigv 1 all the same numbers?
 
     # Cortical model
-    He = np.divide(1/tau_e**2,(1j*w+1/tau_e)**2)
-    Hi = np.divide(gii*1/tau_i**2,(1j*w+1/tau_i)**2)
+    He = np.divide(1/tau_e**2, (1j*w+1/tau_e)**2)
+    Hi = np.divide(gii*1/tau_i**2, (1j*w+1/tau_i)**2)
 
     Hed = alpha/tau_e/(1j*w + alpha/tau_e*He)
     Hid = alpha/tau_i/(1j*w + alpha/tau_i*Hi)
@@ -202,16 +224,18 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
 
     q1 = 1/alpha*tauC*(1j*w + alpha/tauC*He*ev)
     qthr = zero_thr*np.abs(q1[:]).max()
-    magq1 = np.maximum(np.abs(q1),qthr)
+    magq1 = np.maximum(np.abs(q1), qthr)
     angq1 = np.angle(q1)
-    q1 = np.multiply(magq1,np.exp(1j*angq1))
-    freqresp = np.divide(Htotal,q1)
+    q1 = np.multiply(magq1, np.exp(1j*angq1))
+    freqresp = np.divide(Htotal, q1)
 
     freqresp_out = 0
-    for k in range(1,K):
-        freqresp_out += freqresp[k] * Vv[:,k]
+    for k in range(1, K):
+        freqresp_out += freqresp[k] * Vv[:, k]
 
-    FCmodel = np.matmul(np.matmul(Vv[:,1:K], np.diag(freqresp[1:K]**2)), np.transpose(Vv[:,1:K]))
+    FCmodel = np.matmul(np.matmul(Vv[:, 1:K],
+                        np.diag(freqresp[1:K]**2)),
+                        np.transpose(Vv[:, 1:K]))
 
     den = np.sqrt(np.abs(freqresp_out))
     FCmodel = np.matmul(np.matmul(np.diag(1/den), FCmodel), np.diag(1/den))
