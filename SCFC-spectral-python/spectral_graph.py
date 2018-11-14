@@ -138,7 +138,8 @@ def reduce_extreme_dir(Cdk_conn, max_dir=0.95, f=7):
     return C
 
 
-def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, speed = 5, gei = 4, gii = 1, tauC = 0.006):
+def NetworkTransferFunction(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
+                            speed=5.0, gei=4.0, gii=1.0, tauC=0.006):
     """Network Transfer Function for spectral graph model.
 
     Args:
