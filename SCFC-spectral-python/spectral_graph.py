@@ -4,6 +4,30 @@ import os
 from scipy.stats import pearsonr
 
 
+def Julia_order():
+    """Get Julia Owen's brain region ordering (specific for DK86 atlas).
+
+    Args:
+
+    Returns:
+        permJulia (type): Brain region orders for all regions
+        emptyJulia (type): Brain regions with no MEG
+        cortJulia (type): Brain cortical regions.
+
+    """
+    cortJulia_lh = np.array([0, 1, 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14,
+                             15, 17, 16, 18, 19, 20, 21, 22, 23, 24, 25,
+                             26, 27, 28, 29, 30, 31, 5, 32, 33, 9])
+    qsubcort_lh = np.array([0, 40, 36, 39, 38, 37, 35, 34, 0])
+    qsubcort_rh = qsubcort_lh + 34 + 1
+    cortJulia = np.concatenate([cortJulia_lh, 34 + cortJulia_lh])
+    cortJulia_rh = cortJulia_lh + 34 + 7
+    permJulia = np.concatenate([cortJulia_lh, cortJulia_rh,
+                                qsubcort_lh, qsubcort_rh])
+    emptyJulia = np.array([68, 77, 76, 85])
+    return permJulia, emptyJulia, cortJulia
+
+
 def get_HCP_connectome(hcp_dir,
                        conmat_in='mean80_fibercount.csv',
                        dmat_in='mean80_fiberlength.csv'):
@@ -15,9 +39,9 @@ def get_HCP_connectome(hcp_dir,
         dmat_in (type): name of fiber distance csv file.
 
     Returns:
-        Cdk_conn -- Connectivity matrix oredered according to permHCP
-        Ddk_conn -- Distance matrix ordered by permHCP
-        permHCP -- ordering of brain regions in DK86 atlas
+        Cdk_conn(arr): Connectivity matrix oredered according to permHCP
+        Ddk_conn(arr): Distance matrix ordered by permHCP
+        permHCP(arr): Ordering of brain regions in DK86 atlas
 
     """
     cdk_hcp = np.genfromtxt(os.path.join(hcp_dir, conmat_in),
@@ -36,48 +60,29 @@ def get_HCP_connectome(hcp_dir,
 
     return Cdk_conn, Ddk_conn, permHCP
 
-def Julia_order():
-    '''[Get brain region order for Julia Owen's data set, specific for DK86 atlas]
+
+def getMEGdata(sub_name, ordering=cortJulia, MEGfolder):
+    """Get source localized MEG data and arrange it following ordering method.
+
+    Args:
+        sub_name (str): Description of parameter `sub_name`.
+        cortJulia (arr): Description of parameter `cortJulia`.
+        MEGfolder (str): Description of parameter `MEGfolder`.
 
     Returns:
-        [permJulia, emptyJulia, cortJulia] -- [Brain region orders for all regions,
-        regions with no MEG, and cortical regions respectively]
-    '''
+        MEGdata (arr): MEG data.
+        coords (type):
 
-    cortJulia_lh = np.array([0, 1, 2, 3, 4,
-                   6, 7, 8,
-                   10, 11, 12, 13, 14, 15,
-                   17, 16,
-                   18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-                   5, 32, 33, 9])
-    qsubcort_lh = np.array([0, 40, 36, 39, 38, 37, 35, 34, 0])
-    qsubcort_rh = qsubcort_lh + 34 + 1
-    cortJulia = np.concatenate([cortJulia_lh, 34 + cortJulia_lh])
-    cortJulia_rh = cortJulia_lh + 34 + 7
-    permJulia = np.concatenate([cortJulia_lh, cortJulia_rh, qsubcort_lh, qsubcort_rh])
-    emptyJulia = np.array([68, 77, 76, 85])
-    return permJulia, emptyJulia, cortJulia
-
-def getMEGdata(sub_name, cortJulia, MEGfolder):
-    '''[Get source localized MEG data and arrange data in correct ordering]
-
-    Arguments:
-        sub_name {str} -- [name of subject]
-        cortJulia {numpy array} -- [Cortical region ordering]
-        MEGfolder {str} -- [directory for MEG data]
-
-    Returns:
-        [MEGdata, coords] -- [MEG data as numpy array, coords = ?]
-    '''
-
+    """
     S = loadmat(os.path.join(MEGfolder,sub_name,'DK_timecourse_20.mat'))
     MEGdata = S['DK_timecourse']
-    MEGdata = MEGdata[cortJulia,]
+    MEGdata = MEGdata[ordering,]
     C = loadmat(os.path.join(MEGfolder,sub_name,'DK_coords_meg.mat'))
     coords = C['DK_coords_meg']
-    coords = coords[cortJulia,]
+    coords = coords[ordering,]
     del S, C
     return MEGdata, coords
+
 
 def mag2db(y):
     '''[convert magnitude response to decibels]
@@ -92,6 +97,7 @@ def mag2db(y):
     dby = 20*np.log10(y)
     return dby
 
+
 def bi_symmetric_c(Cdk_conn, linds, rinds):
     q = np.maximum(Cdk_conn[linds,:][:,linds], Cdk_conn[rinds,:][:,rinds])
     q1 = np.maximum(Cdk_conn[linds,:][:,rinds], Cdk_conn[rinds,:][:,linds])
@@ -101,19 +107,13 @@ def bi_symmetric_c(Cdk_conn, linds, rinds):
     Cdk_conn[np.ix_(rinds,linds)] = q1
     return Cdk_conn
 
+
 def reduce_extreme_dir(Cdk_conn, max_dir = 0.95, f=7):
     thr = f*np.mean(Cdk_conn[Cdk_conn > 0])
     C = np.minimum(Cdk_conn, thr)
     C = max_dir * C + (1-max_dir) * C
     return C
 
-# def getMEGspectra(use_allJuliaMEG = False):
-#    if use_allJuliaMEG:
-#        S = loadmat(os.path.join(MEGfolder,'allFMEGdata.mat'))
-#        FMEGdata = np.mean(S['allFMEGdata'], axis = 2)
-#    else:
-#        # Calculate spectra from source localized MEG
-#        for row in MEGdata:
 
 def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, speed = 5, gei = 4, gii = 1, tauC = 0.006):
     '''Network Transfer Function for spectral graph model.
