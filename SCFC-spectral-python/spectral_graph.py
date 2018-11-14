@@ -169,8 +169,8 @@ def NetworkTransferFunction(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
     use_smalleigs = True  # otherwise uses full eig()
     numsmalleigs = np.round(2/3*C.shape[0])  # 2/3
     a = 0.5  # fraction of signal at a node that is recurrent excitatory
-    #  gei = 4 # excitatory-inhibitory synaptic conductance as ratio of E-E syn.
-    #  gii = 1 # inhibitory-inhibitory synaptic conductance as ratio of E-E syn.
+    #  gei = 4 # excitatory-inhibitory synaptic conductance as ratio of E-E syn
+    #  gii = 1 # inhibitory-inhibitory synaptic conductance as ratio of E-E syn
     #  tauC = 0.5*tau_e
 
     rowdegree = np.transpose(np.sum(C, axis=1))
@@ -193,9 +193,9 @@ def NetworkTransferFunction(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
     Cc = C*np.exp(-1j*Tau*w)
 
     L1 = 0.8*np.identity(nroi)
-    L2 = np.divide(1,np.sqrt(rowdegree*coldegree)+np.spacing(1))
+    L2 = np.divide(1, np.sqrt(rowdegree*coldegree)+np.spacing(1))
     # diag(1./(sqrt(rowdegree.*coldegree)+eps));
-    L = L1 - np.matmul(np.diag(L2),Cc)
+    L = L1 - np.matmul(np.diag(L2), Cc)
     # L = np.array(L,dtype=np.float64)
 
     # try scipy.sparse.linalg.eigs next
@@ -211,7 +211,7 @@ def NetworkTransferFunction(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
         eig_val = d[eig_ind]
 
     ev = np.transpose(eig_val[0:K])
-    Vv = eig_vec[:, 0:K] # why is eigv 1 all the same numbers?
+    Vv = eig_vec[:, 0:K]  # why is eigv 1 all the same numbers?
 
     # Cortical model
     He = np.divide(1/tau_e**2, (1j*w+1/tau_e)**2)
