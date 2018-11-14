@@ -4,38 +4,43 @@ import os
 from scipy.stats import pearsonr
 
 
-"""
-Functions used in the spectral graph model
-"""
+def get_HCP_connectome(hcp_dir,
+                       conmat_in='mean80_fibercount.csv',
+                       dmat_in='mean80_fiberlength.csv'):
+    """Short summary.
 
-def getHCPconn(hcp_dir, conmat_in = 'mean80_fibercount.csv', dmat_in = 'mean80_fiberlength.csv'):
-    '''[summary]
-    
-    Arguments:
-        hcp_dir {str} -- [directory to HCP connectome. Example: '/home/user/data/HCPconnectomefolder']
-    
-    Keyword Arguments:
-        conmat_in {str} -- [name of connectivity csv file] (default: {'mean80_fibercount.csv'})
-        dmat_in {str} -- [name of fiber distance csv file] (default: {'mean80_fiberlength.csv'})
-    
+    Args:
+        hcp_dir (str): directory to HCP connectome.
+        conmat_in (type): name of connectivity csv file.
+        dmat_in (type): name of fiber distance csv file.
+
     Returns:
-        [Cdk_conn] -- [Connectivity matrix arranged in appropriate order according to permHCP]
-        [Ddk_conn] -- [Distance matrix arranged in permHCP order]
-        [permHCP] -- [ordering of brain regions in DK86 atlas]
-    '''
+        Cdk_conn -- Connectivity matrix oredered according to permHCP
+        Ddk_conn -- Distance matrix ordered by permHCP
+        permHCP -- ordering of brain regions in DK86 atlas
 
-    cdk_hcp = np.genfromtxt(os.path.join(hcp_dir, conmat_in), delimiter=',', skip_header = 1)
-    ddk_hcp = np.genfromtxt(os.path.join(hcp_dir, dmat_in), delimiter = ',', skip_header = 0)
-    permHCP = np.concatenate([np.arange(18,52), np.arange(52,86), np.arange(0,9), np.arange(9,18)])
-    Cdk_conn = cdk_hcp[permHCP,][:,permHCP]
-    Ddk_conn = ddk_hcp[permHCP,][:,permHCP]
+    """
+    cdk_hcp = np.genfromtxt(os.path.join(hcp_dir, conmat_in),
+                            delimiter=',', skip_header=1)
+
+    ddk_hcp = np.genfromtxt(os.path.join(hcp_dir, dmat_in),
+                            delimiter=',', skip_header=0)
+
+    permHCP = np.concatenate([np.arange(18, 52),
+                              np.arange(52, 86),
+                              np.arange(0, 9),
+                              np.arange(9, 18)])
+
+    Cdk_conn = cdk_hcp[permHCP, ][:, permHCP]
+    Ddk_conn = ddk_hcp[permHCP, ][:, permHCP]
+
     return Cdk_conn, Ddk_conn, permHCP
 
 def Julia_order():
     '''[Get brain region order for Julia Owen's data set, specific for DK86 atlas]
-    
+
     Returns:
-        [permJulia, emptyJulia, cortJulia] -- [Brain region orders for all regions, 
+        [permJulia, emptyJulia, cortJulia] -- [Brain region orders for all regions,
         regions with no MEG, and cortical regions respectively]
     '''
 
@@ -55,12 +60,12 @@ def Julia_order():
 
 def getMEGdata(sub_name, cortJulia, MEGfolder):
     '''[Get source localized MEG data and arrange data in correct ordering]
-    
+
     Arguments:
         sub_name {str} -- [name of subject]
         cortJulia {numpy array} -- [Cortical region ordering]
         MEGfolder {str} -- [directory for MEG data]
-    
+
     Returns:
         [MEGdata, coords] -- [MEG data as numpy array, coords = ?]
     '''
@@ -76,10 +81,10 @@ def getMEGdata(sub_name, cortJulia, MEGfolder):
 
 def mag2db(y):
     '''[convert magnitude response to decibels]
-    
+
     Arguments:
         y {numpy array} -- [Power spectrum, raw magnitude response]
-    
+
     Returns:
         [numpy array] -- [Power spectrum in dB]
     '''
@@ -116,7 +121,7 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
     Arguments:
         C {numpy array} -- Connectivity matrix
         D {numpy array} -- Distance matrix
-        w {float} -- frequency input. 
+        w {float} -- frequency input.
 
     Keyword Arguments:
         tau_e {float} -- Excitatory time constant parameter (default: {0.012})
@@ -127,8 +132,8 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
         gii {float} -- Gain parameter (default: {1})
         tauC {float} -- [description] (default: {0.006})
 
-        Returns: freqresp, ev, Vv, freqresp_out, FCmodel
-        freqresp {numpy array} -- 
+    Returns: freqresp, ev, Vv, freqresp_out, FCmodel
+        freqresp {numpy array} --
         ev {numpy array} -- Eigen values
         Vv {numpy array} -- Eigen vectors
         freqresp_out {numpy array} -- Each region's frequency response for the given frequency (w)
@@ -136,8 +141,8 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
     '''
 
     # Not being used: Pin = 1 and tau_syn = 0.002
-    
-    # Defining some other parameters used: 
+
+    # Defining some other parameters used:
     zero_thr = 0.05
     use_smalleigs = True #otherwise uses full eig()
     numsmalleigs = np.round(2/3*C.shape[0]) #2/3
@@ -145,14 +150,14 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
     #gei = 4 # excitatory-inhibitory synaptic conductance as a ratio of E-E synapse
     #gii = 1 # inhibitory-inhibitory synaptic conductance as a ratio of E-E synapse
     #tauC = 0.5*tau_e
-            
+
     rowdegree = np.transpose(np.sum(C,axis=1))
     coldegree = np.sum(C,axis=0)
-    
+
     qind = rowdegree + coldegree < 0.2*np.mean(rowdegree + coldegree)
     rowdegree[qind] = np.inf
     coldegree[qind] = np.inf
-    
+
     nroi = C.shape[0]
     if use_smalleigs is True:
         K = numsmalleigs
@@ -161,10 +166,10 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
         K = nroi
 
     Tau = 0.001*D/speed
-    
+
     #Cc = np.real(C*np.exp(-1j*Tau*w)).astype(float)
     Cc = C*np.exp(-1j*Tau*w)
-    
+
     L1 = 0.8*np.identity(nroi)
     L2 = np.divide(1,np.sqrt(rowdegree*coldegree)+np.spacing(1)) #diag(1./(sqrt(rowdegree.*coldegree)+eps));
     L = L1 - np.matmul(np.diag(L2),Cc)
@@ -181,7 +186,7 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
         eig_ind = np.argsort(np.abs(d))
         eig_vec = v[:,eig_ind]
         eig_val = d[eig_ind]
-        
+
     ev = np.transpose(eig_val[0:K])
     Vv = eig_vec[:,0:K] #why is eigv 1 all the same numbers?
 
@@ -205,7 +210,7 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
     freqresp_out = 0
     for k in range(1,K):
         freqresp_out += freqresp[k] * Vv[:,k]
-    
+
     FCmodel = np.matmul(np.matmul(Vv[:,1:K], np.diag(freqresp[1:K]**2)), np.transpose(Vv[:,1:K]))
 
     den = np.sqrt(np.abs(freqresp_out))
@@ -214,22 +219,22 @@ def NetworkTransferFunction(C, D, w, tau_e = 0.012, tau_i = 0.003, alpha = 1, sp
 
 def networktransfer_costfun(params, C, D, lpf, FMEGdata, frange, rois_with_MEG = np.arange(0,68)):
     '''[Costfunction for optimization of the model, currently using pearon's correlation as metric]
-    
+
     Arguments:
         params {numpy array} -- Currently using 7 parameters (1x7 array): tau_e, tau_i, alpha, speed, gei, gii, tauC
         C {numpy array} -- Connectivity matrix
         D {numpy array} -- Distance matrix to introduce delay
         lpf {numpy array} -- low pass filter, designed before computing PSD
-        FMEGdata {numpy array} -- Empirical data 
+        FMEGdata {numpy array} -- Empirical data
         frange {numpy array} -- Vector of frequency bins for which the model computes a frequency response.
-    
+
     Keyword Arguments:
-        rois_with_MEG {numpy array} -- which regions has MEG, only optimize these regions. Usually exclude 
+        rois_with_MEG {numpy array} -- which regions has MEG, only optimize these regions. Usually exclude
         subcortical regions (default: {np.arange(0,68)})
-    
+
     Returns:
         float -- Should be a float? Objective function evaluation result, negative of Pearson's correlation between empirical
-        MEG and model result because we want to maximize. 
+        MEG and model result because we want to maximize.
     '''
 
     # NetworkTransferFunction current inputs
@@ -242,17 +247,17 @@ def networktransfer_costfun(params, C, D, lpf, FMEGdata, frange, rois_with_MEG =
     gei = params[4]
     gii = params[5]
     tauC = params[6]
-    
+
     # Computing model's frequency profiles
     freq_model = []
     err_min = np.zeros(rois_with_MEG.shape)
     for i in frange:
         w = 2*np.pi*i
-        _, _, _, freqresp_out, _ = NetworkTransferFunction(C, D, w, tau_e = tau_e, tau_i = tau_i, 
-                                                          alpha = alpha, speed = speed, gei = gei, 
+        _, _, _, freqresp_out, _ = NetworkTransferFunction(C, D, w, tau_e = tau_e, tau_i = tau_i,
+                                                          alpha = alpha, speed = speed, gei = gei,
                                                           gii = gii, tauC = tauC)
         freq_model.append(freqresp_out)
-        
+
     freq_model = np.asarray(freq_model)
     freq_model = freq_model[:,rois_with_MEG].transpose()
     for n in rois_with_MEG:
@@ -260,7 +265,7 @@ def networktransfer_costfun(params, C, D, lpf, FMEGdata, frange, rois_with_MEG =
         if np.sum(qdata[:]) != 0:
             qdata = mag2db(qdata)
             qdata = qdata - np.mean(qdata)
-            
+
         qmodel = np.abs(np.squeeze(freq_model[n,:]))
         qmodel = mag2db(np.convolve(qmodel, lpf, mode = 'same'))
         qmodel = qmodel - np.mean(qmodel)
@@ -268,6 +273,6 @@ def networktransfer_costfun(params, C, D, lpf, FMEGdata, frange, rois_with_MEG =
             err_min[n] = 0
         else:
             err_min[n] = pearsonr(qdata,qmodel)[0]
-            
+
     err_out = -np.mean(err_min)
     return err_out
