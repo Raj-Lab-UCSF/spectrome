@@ -1,3 +1,5 @@
+"""Module for computing basic quantities from a spectral graph model."""
+
 import numpy as np
 from scipy.io import loadmat
 import os
