@@ -4,19 +4,16 @@ class Brain:
     """Short summary.
 
     Attributes:
-        rigid_bodies (type): Description of parameter `rigid_bodies`.
-        soft_bodies (type): Description of parameter `soft_bodies`.
-        rigid_body_nucleotide_types (type): Description of parameter `rigid_body_nucleotide_types`.
-        rigid_body_nucleotides (type): Description of parameter `rigid_body_nucleotides`.
-        soft_body_nucleotide_types (type): Description of parameter `soft_body_nucleotide_types`.
-        soft_body_nucleotides (type): Description of parameter `soft_body_nucleotides`.
-        num_rigid_bodies (type): Description of parameter `num_rigid_bodies`.
+        atlas (type): Description of parameter `atlas`.
+        connectome (type): Description of parameter `connectome`.
+        ntf_parameters (type): Description of parameter `ntf_parameters`.
 
     """
-
     def __init__(self):
         #Body variables
-        self.atlas = []
+        self.atlas = None
+        self.connectome = None
+        self.ordering = None
         self.ntf_parameters = {'tau_e':0.012,
                                'tau_i':0.003,
                                'alpha':1.0,
@@ -25,15 +22,6 @@ class Brain:
                                'gii':1.0,
                                'tauC':0.006
                                }
-
-
-
-class Connectome:
-    def __init__(self):
-        self.atlas = []
-        self.connections = []
-
-
 
 def get_Julia_order():
     """Get Julia Owen's brain region ordering (specific for DK86 atlas).
