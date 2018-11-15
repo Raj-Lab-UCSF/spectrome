@@ -5,7 +5,7 @@ sys.path.append("..")
 
 import os
 from nose.tools import with_setup
-from utils import util
+from utils import path
 
 
 def f_setup():
@@ -22,18 +22,18 @@ def f_teardown():
 
 @with_setup(setup=f_setup, teardown=f_teardown)
 def test_get_file_path():
-    """Checks if util.get_file_path(file) returns `./data/file`."""
+    """Checks if path.get_file_path(file) returns `./data/file`."""
     f_setup()
-    file_path = util.get_file_path('test.txt')
+    file_path = path.get_file_path('test.txt')
     assert os.path.exists(file_path) is True
     f_teardown()
 
 
 @with_setup(setup=f_setup, teardown=f_teardown)
 def test_get_data_path():
-    """Checks if util.get_data_path(file) returns `./data/`."""
+    """Checks if path.get_data_path(file) returns `./data/`."""
     f_setup()
-    data_path = util.get_data_path()
+    data_path = path.get_data_path()
     file_path = os.path.join(data_path, 'test.txt')
     assert os.path.exists(file_path) is True
     f_teardown()
