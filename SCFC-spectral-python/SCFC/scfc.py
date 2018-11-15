@@ -2,6 +2,7 @@ from brain import Brain
 from utils import util
 from calculation import NetworkTransfer
 
+
 def main():
   return()
 
