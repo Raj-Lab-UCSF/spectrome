@@ -5,7 +5,7 @@ from scipy.io import loadmat
 import os
 from scipy.stats import pearsonr
 
-def network_transfer_function(brain=brain, frequency=w):
+def network_transfer_function(parameters, frequency=w):
     """Network Transfer Function for spectral graph model.
 
     Args:
@@ -21,14 +21,13 @@ def network_transfer_function(brain=brain, frequency=w):
         FCmodel (numpy asarray): Functional connectivity - still in the works
 
     """
-    ntf_params = brain.ntf_parameters()
-    tau_e = ntf_params['tau_e']
-    tau_i = ntf_params['tau_i']
-    alpha = ntf_params['alpha']
-    speed = ntf_params['speed']
-    gei   = ntf_params['gei'  ]
-    gii   = ntf_params['gii'  ]
-    tauC  = ntf_params['tauC' ]
+    tau_e = parameters['tau_e']
+    tau_i = parameters['tau_i']
+    alpha = parameters['alpha']
+    speed = parameters['speed']
+    gei   = parameters['gei'  ]
+    gii   = parameters['gii'  ]
+    tauC  = parameters['tauC' ]
 
     # Not being used: Pin = 1 and tau_syn = 0.002
     # Defining some other parameters used:
