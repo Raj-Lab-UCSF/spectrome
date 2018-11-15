@@ -1,8 +1,10 @@
+"""Module with generic useful functions such as to return main dir path."""
+
 import os
 
 
 def get_file_path(filename):
-    """Find filename in the relative directory `./data/` .
+    """Find filename in the relative directory `../data/` .
 
     Args:
         filename (str): file we're looking for in the ./data/ directory.
@@ -12,9 +14,17 @@ def get_file_path(filename):
 
     """
     here_dir = os.path.dirname(os.path.realpath('__file__'))
-    file_dir = os.path.join(here_dir, 'data', filename)
+    file_dir = os.path.join(here_dir, '../data', filename)
 
-    return(file_dir)
+    return file_dir
+
+
+def get_data_path():
+    """Return absolute path to `/data/`."""
+    here_dir = os.path.dirname(os.path.realpath('__file__'))
+    data_path = os.path.join(here_dir, '../data/')
+
+    return data_path
 
 
 def get_absolute_path(relative_path='.'):
@@ -30,4 +40,4 @@ def get_absolute_path(relative_path='.'):
     here_dir = os.path.dirname(os.path.realpath('__file__'))
     abs_path = os.path.join(here_dir, relative_path)
 
-    return(abs_path)
+    return abs_path

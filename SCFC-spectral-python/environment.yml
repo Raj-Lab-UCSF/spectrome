@@ -6,3 +6,4 @@ dependencies:
   - scipy
   - nitime
   - pandas
+  - nose # for unit testing
