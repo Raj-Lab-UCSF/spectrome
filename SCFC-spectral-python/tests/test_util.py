@@ -13,6 +13,7 @@ def f_teardown():
     if 'test.txt' in files:
         os.remove('./data/test.txt')
 
+@with_setup(setup=f_setup, teardown=f_teardown)
 def test_get_file_path():
     f_setup()
     FILEPATH = util.get_file_path('test.txt')
@@ -27,9 +28,3 @@ def test_get_data_path():
     FILEPATH = os.path.join(DATAPATH, 'test.txt')
 
     assert os.path.exists(FILEPATH) == True
-
-
-
-util.get_data_path()
-
-test_get_file_path()
