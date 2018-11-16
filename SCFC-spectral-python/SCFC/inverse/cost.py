@@ -1,3 +1,5 @@
+
+
 def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
                           rois_with_MEG=np.arange(0, 68)):
     """Cost function for optimization of the model.
