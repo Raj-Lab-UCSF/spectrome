@@ -5,7 +5,7 @@ from scipy.io import loadmat
 import os
 from scipy.stats import pearsonr
 
-def network_transfer_function(parameters, frequency=w):
+def network_transfer_function(C, D, parameters, w):
     """Network Transfer Function for spectral graph model.
 
     Args:
