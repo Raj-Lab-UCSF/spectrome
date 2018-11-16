@@ -1,3 +1,5 @@
+import numpy as np
+
 def mag2db(y):
     """Convert magnitude response to decibels.
 
