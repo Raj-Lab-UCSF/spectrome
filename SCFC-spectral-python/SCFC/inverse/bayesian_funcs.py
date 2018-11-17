@@ -1,6 +1,5 @@
 '''Collection of functions to use MCMC methods on MEG data with forward network model'''
-import emcee #the affine invariant MCMC sampler from Foreman-Mackey, D., Hogg, D. W., Lang, D., Goodman, J., Feb. 2012. emcee: The MCMC Hammer.
-import forward.network_transfer as fwd
+from forward import network_transfer as nt
 import numpy as np
 
 def ln_uniform_prior(param, range):
@@ -14,45 +13,38 @@ def ln_uniform_prior(param, range):
         Should be a 2 element list, tuple, or array.
 
     Returns:
-        type: ln p for the prior probability p of param.
+        type: ln p for the prior probability of the parameter on question.
 
     """
     if len(range)%2 != 0:
         raise TypeError('range given must be of length multiple of two.')
 
     if range[0]<param<range[1]:
-        return 0.0
+        return 0.0 #ln prior up to a constant that doesn't matter
     return -np.inf
 
 def model_error(data, **kwargs):
-    """This calculates the error between the data and the model.
-
-    Args:
-        data (type): Description of parameter `data`.
-        params (type): Description of parameter `params`.
-
-    Returns:
-        type: Description of returned object.
-
-    """
+    #calculate error between model and data
 
 
 def ln_gauss_likelihood():
-    """Returns log of likelihood of all data, where the assumption is made that errors in the
-    data are independently drawn from Gaussian distributions.
-
-    Returns:
-        type: Description of returned object.
-
-    """
+    #assume our errors are drawn independently from Gaussian and calculate likelihood.
     var = []
     return -0.5*np.sum((model_error()**2)*invar - np.log(invar))
 
-def lnprobs():
+def lnprobs(theta, w, y, yerr):
     """Calculate the log of posterior probability (with no marginalization) for a single
-    parameter set.
+    parameter set..
+
+    Args:
+        theta (type): the parameters of the model that will be called.
+        w (type): frequency array associated with data points.
+        y (type): real data points.
+        yerr (type): variance of the distribution from which errors are drawn, as array.
 
     Returns:
-        type: Description of returned object.
+        type: for single theta set, the log(likelihood)xlog(prior).
 
     """
+
+    return
