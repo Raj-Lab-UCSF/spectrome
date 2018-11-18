@@ -1,7 +1,7 @@
 """Module with generic useful functions such as to return main dir path."""
 
 import os
-
+import deepdish as dd
 
 def get_file_path(filename):
     """Find filename in the relative directory `../data/` .
@@ -48,3 +48,46 @@ def get_sibling_path(folder):
     par_dir = os.path.abspath(os.path.join(here_dir, os.pardir))
     sibling_dir = os.path.join(par_dir, folder)
     return sibling_dir
+
+def save_hdf5(path, dict):
+    """Save out a dictionary/numpy array to HDF5 format using deepdish package.
+
+    Args:
+        path (type): full path including filename of intended output.
+        dict (type): dictionary/numpy array to be saved.
+
+    Returns:
+        type: Description of returned object.
+
+    """
+
+    dd.io.save(path, dict)
+
+def read_hdf5(path):
+    """Read in dictionary/numpy array from HDF5 format using deepdish package.
+
+    Args:
+        path (type): full path including filename of input.
+
+    Returns:
+        type: dictionary of data.
+
+    """
+
+    dict = dd.io.load(path)
+    return dict
+
+def walk_tree(datapath):
+    """Return list of directories in the passed folder.
+
+    Args:
+        datapath (type): folder of interest.
+
+    Returns:
+        type: list of directories in the passed folder.
+
+    """
+    directories = []
+    for (path, dirs, files) in os.walk(datapath):
+        directories.append(dirs)
+    return directories[0]
