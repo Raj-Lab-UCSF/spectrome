@@ -104,22 +104,4 @@ if __name__ == "__main__":
 
 
 
-    #
-    # coord_dict = key_coords(label_filename, coord_path)
-    # print(coord_dict['bankssts'])
-
-    # outfile = '8002.101/DK_timecourse_20_test.h5'
-    #
-    # data_path = path.get_sibling_path('data')
-    # data_filename = os.path.join(data_path, datafile)
-    #
-
-    #
-    # outdict = key_data(label_filename, data_filename)
-    #
-    # # print(outdict.keys())
-    #
-    # outpath = os.path.join(data_path, outfile)
-    # # save_dict(outpath, outdict)
-    #
-    # print(read_hdf5(outpath)['bankssts'][0])
+    
