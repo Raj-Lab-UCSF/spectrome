@@ -84,6 +84,7 @@ def add_key_coords(label_filepath, coordfile):
 
 if __name__ == "__main__":
 
+    '''example of the use of this -- preprocessed Chang's data accordingly'''
     datapath = '/Users/Megan/RajLab/MEG-chang'
     directories = pth.walk_tree(datapath)
     coord_filename = 'DK_coords_meg.mat'
