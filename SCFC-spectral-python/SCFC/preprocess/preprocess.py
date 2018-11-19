@@ -36,7 +36,7 @@ def add_key_data(label_filepath, data_filepath):
     for line in lines:
         index_stop = line.find('.')
         ind_newline = line.find('\n')
-        lines[i] = line[index_stop+1:ind_newline].lower()
+        lines[i] = line[0:2].upper()+line[index_stop+1:ind_newline].lower()
         i += 1
 
     #import the data and apply the list members as keys, resave data in better format
@@ -71,7 +71,7 @@ def add_key_coords(label_filepath, coordfile):
     for line in lines:
         index_stop = line.find('.')
         ind_newline = line.find('\n')
-        lines[i] = line[index_stop+1:ind_newline].lower()
+        lines[i] = line[0:2].upper()+line[index_stop+1:ind_newline].lower()
         i += 1
 
     coords = loadmat(coordfile)
@@ -138,8 +138,8 @@ def HCP_get_order(filepath, save=False, fileout = None):
                 for cell in row:
                     index = cell.find('ctx')
                     if index != -1:
-                        cell = cell[index+7:]
-                        region_order.append(cell.lower())
+                        cell = cell[4:6].upper() + cell[index+7:].lower()
+                        region_order.append(cell)
                     else:
                         cell = cell
                         region_order.append(cell)
@@ -156,6 +156,7 @@ def HCP_get_order(filepath, save=False, fileout = None):
 
 
 if __name__ == "__main__":
+    #all the testing functions, excuse me for the mess!
 
     # labelfile = 'desikan_atlas_68.csv'
     # label_path = pth.get_sibling_path('dictionaries')
@@ -164,13 +165,13 @@ if __name__ == "__main__":
     # print(regions)
     # print(coords)
 
-    # labelfile = 'mean80_fibercount.csv'
-    # outlist = 'HCP_list.h5'
-    # label_path = pth.get_sibling_path('data')
-    # label_filename = os.path.join(label_path, labelfile)
-    # out_filename = os.path.join(label_path, outlist)
-    # regions = HCP_get_order(label_filename, save = True, fileout = out_filename)
-    # print(regions)
+    labelfile = 'mean80_fibercount.csv'
+    outlist = 'HCP_list.h5'
+    label_path = pth.get_sibling_path('data')
+    label_filename = os.path.join(label_path, labelfile)
+    out_filename = os.path.join(label_path, outlist)
+    regions = HCP_get_order(label_filename, save = True, fileout = out_filename)
+    print(regions)
 
 
     # '''example of the use of this -- preprocessed Chang's data accordingly'''
