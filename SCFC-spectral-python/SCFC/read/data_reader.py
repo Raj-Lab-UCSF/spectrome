@@ -1,8 +1,5 @@
 '''Functions to read in the data and return required inputs to the other analysis functions'''
 
-def sorting(data, standard):
-    '''If your data is in some stupid order, this should reorder it according to the
-    standard you are using -- assuming you've passed in data as a dicitonary'''
 
 
 def get_MEG_data(sub_name, ordering, MEGfolder):
