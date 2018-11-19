@@ -20,7 +20,7 @@ class EmceeWalkers():
 
     def set_ensemble(self):
         #set up the emcee ensemble sampler by passing the functions, additional stuff
-        sampler = emcee.EnsembleSampler(self.nwalkers, self.ndim, self.lnprobs, args=(x, y, yerr))
+        sampler = emcee.EnsembleSampler(self.nwalkers, self.ndim, bayes.lnprob, args=(x, y, yerr))
 
     def run_ensemble(self):
         pos = self.start_position()
