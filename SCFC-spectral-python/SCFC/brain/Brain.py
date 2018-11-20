@@ -1,6 +1,6 @@
+import os, sys
 sys.path.append("..")
 import numpy as np
-import os
 from utils import path as pth
 import read.data_reader as dr
 import preprocess.permute as perm
@@ -141,5 +141,3 @@ class Brain:
         C = np.minimum(self.connectome, thr)
         C = max_dir * C + (1-max_dir) * C
         self.reducedConnectome = C
-
-if __name__ == "__main__":
