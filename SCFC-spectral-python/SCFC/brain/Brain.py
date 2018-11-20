@@ -6,18 +6,22 @@ import read.data_reader as dr
 import preprocess.permute as perm
 
 class Brain:
-    """Short summary.
+    """A class containing data that represents a single brain.
 
     Attributes:
-        atlas (type): Description of parameter `atlas`.
-        connectome (type): Description of parameter `connectome`.
-        ntf_parameters (type): Description of parameter `ntf_parameters`.
+        connectome (array): Array of the connectome.
+        reducedConnectome (array): Connectome with extreme components culled (?? Add doc please).
+        distance_matrix (array): Matrix of distances between brain regions.
+        permutation (array): The permutation applied to the data file connectome.
+        ordering (type): Description of parameter `ordering`.
+        ntf_params (dict): Parameters for the network transfer model.
 
     """
+
     def __init__(self):
         #Body variables
         self.connectome = None
-        self.reducedC = None
+        self.reducedConnectome = None
         self.distance_matrix = None
         self.permutation  = None
         self.ordering = {'permJulia':None,
@@ -61,7 +65,9 @@ class Brain:
         self.permutation = permutation
 
     def reorder_connectome(self, connectome, distancematrix):
-        '''re-order the present connectome and distance matrix'''
+        '''re-order the present connectome and distance matrix -- note that this is
+        a first iteration and some work needs to be done to make it flexible with regards
+        the specific ordering.'''
         con, dist, permutation = perm.reorder_connectome(conmat = connectome, distmat = distancematrix)
         self.connectome = con
         self.distance_matrix = dist
@@ -95,7 +101,7 @@ class Brain:
                                     qsubcort_lh, qsubcort_rh])
 
 
-    def bi_symmetric_c(self, linds, rinds):
+    def bi_symmetric_c(self):
         """Short summary.
 
         Args:
@@ -107,12 +113,16 @@ class Brain:
             type: Description of returned object.
 
         """
-        q = np.maximum(self.Cdk_conn[linds, :][:, linds], self.Cdk_conn[rinds, :][:, rinds])
-        q1 = np.maximum(self.Cdk_conn[linds, :][:, rinds], self.Cdk_conn[rinds, :][:, linds])
-        self.Cdk_conn[np.ix_(linds, linds)] = q
-        self.Cdk_conn[np.ix_(rinds, rinds)] = q
-        self.Cdk_conn[np.ix_(linds, rinds)] = q1
-        self.Cdk_conn[np.ix_(rinds, linds)] = q1
+        # Some other ordering that was in the original code:
+        linds = np.concatenate([np.arange(0,34), np.arange(68,77)])
+        rinds = np.concatenate([np.arange(34,68), np.arange(77,86)])
+
+        q = np.maximum(self.connectome[linds, :][:, linds], self.connectome[rinds, :][:, rinds])
+        q1 = np.maximum(self.connectome[linds, :][:, rinds], self.connectome[rinds, :][:, linds])
+        self.connectome[np.ix_(linds, linds)] = q
+        self.connectome[np.ix_(rinds, rinds)] = q
+        self.connectome[np.ix_(linds, rinds)] = q1
+        self.connectome[np.ix_(rinds, linds)] = q1
 
 
     def reduce_extreme_dir(self, max_dir=0.95, f=7):
@@ -127,9 +137,9 @@ class Brain:
             type: Description of returned object.
 
         """
-        thr = f*np.mean(self.Cdk_conn[self.Cdk_conn > 0])
-        C = np.minimum(self.Cdk_conn, thr)
+        thr = f*np.mean(self.connectome[self.connectome > 0])
+        C = np.minimum(self.connectome, thr)
         C = max_dir * C + (1-max_dir) * C
-        self.reducedC = C
+        self.reducedConnectome = C
 
 if __name__ == "__main__":
