@@ -16,10 +16,10 @@ class Brain:
     """
     def __init__(self):
         #Body variables
-        self.Connectome = None
+        self.connectome = None
         self.reducedC = None
-        self.Ddk_conn = None
-        self.permHCP  = None
+        self.distance_matrix = None
+        self.permutation  = None
         self.ordering = {'permJulia':None,
                          'emptyJulia':None,
                          'cortJulia':None}
@@ -47,10 +47,10 @@ class Brain:
                            conmat_in='mean80_fibercount.csv',
                            dmat_in='mean80_fiberlength.csv'):
 
-        self.cdk_hcp = np.genfromtxt(os.path.join(hcp_dir, conmat_in),
+        self.connectome = np.genfromtxt(os.path.join(hcp_dir, conmat_in),
                                 delimiter=',', skip_header=1)
 
-        self.ddk_hcp = np.genfromtxt(os.path.join(hcp_dir, dmat_in),
+        self.distance_matrix = np.genfromtxt(os.path.join(hcp_dir, dmat_in),
                                 delimiter=',', skip_header=0)
 
     def add_ordered_connectome(self, confile, distfile):
