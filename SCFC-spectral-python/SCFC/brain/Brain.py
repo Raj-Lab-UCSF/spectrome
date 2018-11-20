@@ -39,22 +39,30 @@ class Brain:
 
     def order_MEG(self, orderfile):
         '''Reordering the MEG data dictionary to match the standard given by the
-        list in orderfile.'''
+        list in orderfile, for instance the HCP_list.h5 file in 'dictionaries'.'''
         self.MEGdata = perm.order_dict(self.MEGdata, orderfile)
 
 
     def add_connectome(self, hcp_dir,
                            conmat_in='mean80_fibercount.csv',
                            dmat_in='mean80_fiberlength.csv'):
-        
-        cdk_hcp = np.genfromtxt(os.path.join(hcp_dir, conmat_in),
+
+        self.cdk_hcp = np.genfromtxt(os.path.join(hcp_dir, conmat_in),
                                 delimiter=',', skip_header=1)
 
-        ddk_hcp = np.genfromtxt(os.path.join(hcp_dir, dmat_in),
+        self.ddk_hcp = np.genfromtxt(os.path.join(hcp_dir, dmat_in),
                                 delimiter=',', skip_header=0)
 
-    def get_ordered_connectome(self):
-        con, dist, permutation = perm.reorder_connectome(conmat = cdk_hcp, distmat = ddk_hcp)
+    def add_ordered_connectome(self, confile, distfile):
+        '''add a connectome and distance matrix using ordering directly'''
+        con, dist, permutation = perm.reorder_connectome(conmatfile = confile, distmatfile = distfile)
+        self.connectome = con
+        self.distance_matrix = dist
+        self.permutation = permutation
+
+    def reorder_connectome(self, connectome, distancematrix):
+        '''re-order the present connectome and distance matrix'''
+        con, dist, permutation = perm.reorder_connectome(conmat = connectome, distmat = distancematrix)
         self.connectome = con
         self.distance_matrix = dist
         self.permutation = permutation
