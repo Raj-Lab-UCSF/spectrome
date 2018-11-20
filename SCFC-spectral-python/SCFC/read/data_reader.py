@@ -43,5 +43,3 @@ def get_MEG_data_frommat(sub_name, ordering, MEGfolder):
     del S, C
 
     return MEGdata, coords
-
-if __name__ == "__main__":
