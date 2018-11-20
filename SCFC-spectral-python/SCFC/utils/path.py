@@ -1,4 +1,5 @@
-"""Module with generic useful functions such as to return main dir path."""
+"""Module with generic useful functions such as to return main dir path, and
+writing hdf5 files."""
 
 import os
 import deepdish as dd
