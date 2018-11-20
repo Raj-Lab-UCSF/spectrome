@@ -80,12 +80,10 @@ def get_HCP_order(filepath, save=False, fileout = None, cortexstart = 18):
 
     return order
 
-def reorder_connectome(conmatfile= None, distmatfile=None,  conmat = None, distmat = None, save = False, cortexstart=18):
+def reorder_connectome(conmat = None, distmat = None, save = False, cortexstart=18):
     """A function to rearrange matrices by a cyclical permutation (no rearranging of order).
 
     Args:
-        conmatfile (string): Path to the csv file containing the connectivity matrix.
-        distmatfile (string): Path to the csv file containing the distance matrix.
         conmat (numpy array): Direct input connectome
         distmat (numpy array): Direct input distance matrix
         save (bool): Whether to save out to files.
@@ -95,22 +93,8 @@ def reorder_connectome(conmatfile= None, distmatfile=None,  conmat = None, distm
         numpy arrays: Connectome, distance matrix, and the permutation used on them.
 
     """
-    if conmat:
-        Connectome = conmat
-    else if conmatfile:
-        Connectome = np.genfromtxt(conmatfile,delimiter=',', skip_header=1)
-    else:
-        print('Need input connectome matrix or file!')
-        return None
-
-    if distmat:
-        Distance_matrix = distmat
-    else if distmatfile:
-        Distance_matrix = np.genfromtxt(distmatfile,delimiter=',', skip_header=0)
-    else:
-        print('Need input distance matric or file!')
-        return None
-
+    Connectome = conmat
+    Distance_matrix = distmat
     permutation = np.concatenate([np.arange(cortexstart, 86), np.arange(0, cortexstart)])
     Connectome = Connectome[permutation,][:, permutation]
     Distance_matrix = Distance_matrix[permutation, ][:, permutation]
