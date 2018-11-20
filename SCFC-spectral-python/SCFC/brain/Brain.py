@@ -3,6 +3,7 @@ import numpy as np
 import os
 from utils import path as pth
 import read.data_reader as dr
+import preprocess.permute as perm
 
 class Brain:
     """Short summary.
@@ -39,39 +40,24 @@ class Brain:
     def order_MEG(self, orderfile):
         '''Reordering the MEG data dictionary to match the standard given by the
         list in orderfile.'''
-        self.MEGdata = dr.order_dict(self.MEGdata, orderfile)
+        self.MEGdata = perm.order_dict(self.MEGdata, orderfile)
 
 
     def add_connectome(self, hcp_dir,
                            conmat_in='mean80_fibercount.csv',
                            dmat_in='mean80_fiberlength.csv'):
-        """Short summary.
-
-        Args:
-            hcp_dir (str): directory to HCP connectome.
-            conmat_in (type): name of connectivity csv file.
-            dmat_in (type): name of fiber distance csv file.
-
-        Returns:
-            Cdk_conn(arr): Connectivity matrix oredered according to permHCP
-            Ddk_conn(arr): Distance matrix ordered by permHCP
-            permHCP(arr): Ordering of brain regions in DK86 atlas
-
-        """
+        
         cdk_hcp = np.genfromtxt(os.path.join(hcp_dir, conmat_in),
                                 delimiter=',', skip_header=1)
 
         ddk_hcp = np.genfromtxt(os.path.join(hcp_dir, dmat_in),
                                 delimiter=',', skip_header=0)
 
-        self.permHCP = np.concatenate([np.arange(18, 52),
-                                       np.arange(52, 86),
-                                       np.arange(0, 9),
-                                       np.arange(9, 18)])
-
-        self.Connectome = cdk_hcp[self.permHCP, ][:, self.permHCP]
-        self.Ddk_conn = ddk_hcp[self.permHCP, ][:, self.permHCP]
-
+    def get_ordered_connectome(self):
+        con, dist, permutation = perm.reorder_connectome(conmat = cdk_hcp, distmat = ddk_hcp)
+        self.connectome = con
+        self.distance_matrix = dist
+        self.permutation = permutation
 
 #########THe functions below this all become a bit mysterious! More explanation please!
 
