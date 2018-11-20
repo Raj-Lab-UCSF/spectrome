@@ -1,5 +1,6 @@
 '''functions to make sure that data is in the right order, or that data is given dictionary
-keys labelling the data according to the brain regions'''
+keys labelling the data according to the brain regions. These are applied prior to any further
+processing.'''
 
 import sys, os
 sys.path.append("..")
@@ -113,19 +114,22 @@ def get_desikan(filepath):
                 coords.append([x,y,z])
     return regions, coords
 
-def HCP_get_order(filepath, save=False, fileout = None):
-    """Import the HCP connectome, and create a dictionary with the same order so
+def get_HCP_order(filepath, save=False, fileout = None, cortexstart = 18):
+    """Import the HCP connectome, and create a list with the same order so
     that input data can be rearranged to compare. The dictionary keys are standardised to single
-    words, lower case only.
+    words, lower case only. The HCP is also rearranged so that the cortex comes first,
+    non-cortex parts of the brain are placed after.
 
     Args:
-        filepath (type): Path to HCP connectome file.
-        save (type): Save output list to file?
-        fileout (type): Location of output list.
+        filepath (string): Path to HCP connectome file.
+        save (Boolean): Save output list to file?
+        fileout (string): Location of output list.
+        cortexstart (int): Index of start of cortex in original HCP ordering.
 
     Returns:
-        type: List of the brain regions in order, with cortical regions formatted in standard
-        lower case, single word with no spaces.
+        List: List of brain regions; HCP rearranged so that the cortex comes first,
+        non-cortex parts of the brain are placed after.
+
 
     """
 
@@ -147,11 +151,23 @@ def HCP_get_order(filepath, save=False, fileout = None):
             else:
                 break
 
+    #put the non-cortex to the end of the order list
+    order = region_order[cortexstart:]
+    for item in region_order[0:cortexstart]:
+        order.append(item)
+
     if save:
-        pth.save_hdf5(fileout, region_order)
+        pth.save_hdf5(fileout, order)
 
-    return region_order
+    return order
 
+def reorder_connectome(orderfile,connmatfile= None, distmatfile=None,  save = False, cortextstart=18):
+    order = pth.read_hdf5(orderfile)
+    start = order[0]
+    print(order)
+
+    Connectome = np.genfromtxt(conmatfile,delimiter=',', skip_header=1)
+    Distance_matrix = np.genfromtxt(distmatfile,delimiter=',', skip_header=0)
 
 
 
@@ -165,14 +181,18 @@ if __name__ == "__main__":
     # print(regions)
     # print(coords)
 
-    labelfile = 'mean80_fibercount.csv'
-    outlist = 'HCP_list.h5'
-    label_path = pth.get_sibling_path('data')
-    label_filename = os.path.join(label_path, labelfile)
-    out_filename = os.path.join(label_path, outlist)
-    regions = HCP_get_order(label_filename, save = True, fileout = out_filename)
-    print(regions)
+    # labelfile = 'mean80_fibercount.csv'
+    # outlist = 'HCP_list.h5'
+    # label_path = pth.get_sibling_path('data')
+    # label_filename = os.path.join(label_path, labelfile)
+    # out_filename = os.path.join(label_path, outlist)
+    # regions = get_HCP_order(label_filename, save = True, fileout = out_filename)
+    # print(regions)
 
+    outlist = 'HCP_list.h5'
+    path = pth.get_sibling_path('dictionaries')
+    filename = os.path.join(path, outlist)
+    reorder_connectome(filename)
 
     # '''example of the use of this -- preprocessed Chang's data accordingly'''
     # datapath = '/Users/Megan/RajLab/MEG-chang'
