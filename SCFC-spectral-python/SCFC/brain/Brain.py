@@ -15,7 +15,7 @@ class Brain:
     """
     def __init__(self):
         #Body variables
-        self.Cdk_conn = None
+        self.Connectome = None
         self.reducedC = None
         self.Ddk_conn = None
         self.permHCP  = None
@@ -42,7 +42,7 @@ class Brain:
         self.MEGdata = dr.order_dict(self.MEGdata, orderfile)
 
 
-    def set_hcp_connectome(self, hcp_dir,
+    def add_connectome(self, hcp_dir,
                            conmat_in='mean80_fibercount.csv',
                            dmat_in='mean80_fiberlength.csv'):
         """Short summary.
@@ -69,11 +69,11 @@ class Brain:
                                        np.arange(0, 9),
                                        np.arange(9, 18)])
 
-        self.Cdk_conn = cdk_hcp[self.permHCP, ][:, self.permHCP]
+        self.Connectome = cdk_hcp[self.permHCP, ][:, self.permHCP]
         self.Ddk_conn = ddk_hcp[self.permHCP, ][:, self.permHCP]
 
 
-#########THe functions below this all become a bit mysterious! More explanation please!        
+#########THe functions below this all become a bit mysterious! More explanation please!
 
 
     def set_julia_order(self):
