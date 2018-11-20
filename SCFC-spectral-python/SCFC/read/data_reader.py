@@ -1,4 +1,5 @@
-'''Functions to read in the data and return required inputs to the other analysis functions'''
+'''Functions to read in the data and return required inputs to the other analysis functions,
+including reordering of the data and matrices according to standard dictionary orders.'''
 import sys, os
 sys.path.append("..")
 from utils import path as pth
