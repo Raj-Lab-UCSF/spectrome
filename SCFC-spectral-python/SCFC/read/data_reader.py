@@ -19,37 +19,10 @@ def read_dict(filename):
     data = pth.read_hdf5(filename)
     return data
 
-def order_dict(data, orderfile):
-    """order_dict. Reorders a dictionary according to the order of keys passed in the
-    list in orderfile. Returns a reordered dictionary.
-
-    Args:
-        data (type): Input data dictionary.
-        orderfile (type): Name of file containing list of keys in the desired standard order.
-
-    Returns:
-        type: Dictionary of data, reordered to match the input standard of the orderfile.
-
-    """
-    dataorder = data.keys()
-    standardlist = pth.read_hdf5(orderfile)
-    newdata = {}
-    loc_in_standard = []
-    print(standardlist)
-
-    for key in standardlist:
-        if key in dataorder:
-            newdata[key] = data[key]
-            loc_in_standard.append(standardlist.index(key))
-        else:
-            print('Skipping region of brain -- not in data')
-
-    return newdata
-
 
 def get_MEG_data_frommat(sub_name, ordering, MEGfolder):
     """Get source localized MEG data and arrange it following ordering method
-    --using the matrix file (older function).
+    --using the matrix file (older function, deprecated).
 
     Args:
         sub_name (str): Name of subject.
@@ -72,8 +45,3 @@ def get_MEG_data_frommat(sub_name, ordering, MEGfolder):
     return MEGdata, coords
 
 if __name__ == "__main__":
-    data = read_MEG_dict('/Users/Megan/RajLab/MEG-chang/8002.101/DK_timecourse_20.h5')
-    # print(data['LHbankssts'].shape)
-    HCP_path = pth.get_sibling_path('dictionaries')
-    HCPfilename = os.path.join(HCP_path, 'HCP_order.h5')
-    order_MEG(data, HCPfilename)
