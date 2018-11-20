@@ -1,15 +1,17 @@
-"""Module for computing basic quantities from a spectral graph model."""
+"""Module for computing basic quantities from a spectral graph model: the forward model"""
 
 import numpy as np
 from scipy.io import loadmat
 import os
 from scipy.stats import pearsonr
 
-def network_transfer_function(C, D, parameters, w):
+def network_transfer_function(brain, parameters, w):
     """Network Transfer Function for spectral graph model.
 
     Args:
         brain (Brain): specific brain to calculate NTF
+        parameters (dict): parameters for ntf. We shall keep this separate from Brain
+        for now, as we want to change and update according to fitting. 
         frequency (float): frequency at which to calculate NTF
 
     Returns:
@@ -21,6 +23,9 @@ def network_transfer_function(C, D, parameters, w):
         FCmodel (numpy asarray): Functional connectivity - still in the works
 
     """
+    C = brain.reducedConnectome
+    D = brain.distance_matrix
+
     tau_e = parameters['tau_e']
     tau_i = parameters['tau_i']
     alpha = parameters['alpha']
