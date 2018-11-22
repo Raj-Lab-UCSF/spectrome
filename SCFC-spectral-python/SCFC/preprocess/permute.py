@@ -22,14 +22,14 @@ def order_dict(data, orderfile):
     standardlist = pth.read_hdf5(orderfile)
     newdata = {}
     loc_in_standard = []
-    print(standardlist)
 
     for key in standardlist:
         if key in dataorder:
             newdata[key] = data[key]
             loc_in_standard.append(standardlist.index(key))
         else:
-            print('Skipping region of brain -- not in data')
+            break
+            # print('Skipping region of brain -- not in data')
 
     return newdata
 
