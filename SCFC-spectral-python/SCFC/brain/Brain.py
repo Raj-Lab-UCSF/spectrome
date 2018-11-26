@@ -73,34 +73,6 @@ class Brain:
         self.distance_matrix = dist
         self.permutation = permutation
 
-#########THe functions below this all become a bit mysterious! More explanation please!
-
-
-    def set_julia_order(self):
-        """Set Julia Owen's brain region ordering (specific for DK86 atlas).
-
-        Args:
-
-        Returns:
-            permJulia (type): Brain region orders for all regions
-            emptyJulia (type): Brain regions with no MEG
-            cortJulia (type): Brain cortical regions.
-
-        """
-        cortJulia_lh = np.array([0, 1, 2, 3, 4, 6, 7, 8, 10, 11, 12, 13, 14,
-                                 15, 17, 16, 18, 19, 20, 21, 22, 23, 24, 25,
-                                 26, 27, 28, 29, 30, 31, 5, 32, 33, 9])
-        qsubcort_lh = np.array([0, 40, 36, 39, 38, 37, 35, 34, 0])
-        qsubcort_rh = qsubcort_lh + 34 + 1
-        cortJulia_rh = cortJulia_lh + 34 + 7
-
-
-        self.ordering['emptyJulia'] = np.array([68, 77, 76, 85])
-        self.ordering['cortJulia'] = np.concatenate([cortJulia_lh, 34 + cortJulia_lh])
-        self.ordering['permJulia'] = np.concatenate([cortJulia_lh, cortJulia_rh,
-                                    qsubcort_lh, qsubcort_rh])
-
-
     def bi_symmetric_c(self):
         """Short summary.
 
