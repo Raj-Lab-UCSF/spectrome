@@ -35,12 +35,16 @@ class Brain:
                            'tauC':0.006
                            }
 
-   def add_ordering(self, filename):
-       self.ordering = dr.read_dict(filename).keys()
+
+    def add_ordering(self, filename):
+        standard_list = pth.read_hdf5(filename)
+        self.ordering = standard_list
+
 
     def add_MEG(self, filename):
         '''Importing MEG data for this brain'''
         self.MEGdata = dr.read_dict(filename)
+
 
     def order_MEG(self, orderfile):
         '''Reordering the MEG data dictionary to match the standard given by the
