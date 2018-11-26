@@ -7,3 +7,4 @@ dependencies:
   - nitime
   - pandas
   - nose # for unit testing
+  - deepdish
