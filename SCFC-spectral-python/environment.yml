@@ -8,3 +8,5 @@ dependencies:
   - pandas
   - nose # for unit testing
   - deepdish
+  - csv
+  - re
