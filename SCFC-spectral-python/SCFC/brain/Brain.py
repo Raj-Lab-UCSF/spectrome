@@ -24,9 +24,7 @@ class Brain:
         self.reducedConnectome = None
         self.distance_matrix = None
         self.permutation  = None
-        self.ordering = {'permJulia':None,
-                         'emptyJulia':None,
-                         'cortJulia':None}
+        self.ordering = None
 
         self.ntf_params = {'tau_e':0.012,
                            'tau_i':0.003,
@@ -36,6 +34,9 @@ class Brain:
                            'gii':1.0,
                            'tauC':0.006
                            }
+
+   def add_ordering(self, filename):
+       self.ordering = dr.read_dict(filename).keys()
 
     def add_MEG(self, filename):
         '''Importing MEG data for this brain'''
