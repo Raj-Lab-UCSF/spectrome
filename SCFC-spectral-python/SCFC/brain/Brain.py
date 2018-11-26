@@ -105,7 +105,6 @@ class Brain:
         """Short summary.
 
         Args:
-            Cdk_conn (type): Description of parameter `Cdk_conn`.
             linds (type): Description of parameter `linds`.
             rinds (type): Description of parameter `rinds`.
 
@@ -129,7 +128,6 @@ class Brain:
         """Short summary.
 
         Args:
-            Cdk_conn (type): Description of parameter `Cdk_conn`.
             max_dir (type): Description of parameter `max_dir`.
             f (type): Description of parameter `f`.
 
