@@ -29,7 +29,7 @@ def filter_MEG(MEGdata, fsampling=600, fmin=2, fmax=45, regions =68):
         Fdata = np.convolve(psd, lpf, mode = 'same')
         FMEGdata[key] = Fdata
 
-    assert len(FMEGdata) == regions #make sure we have 68 regions spectra
+    assert len(FMEGdata) == regions #make sure we have correct number of regions in the spectra
 
     # ind_fmin = np.abs(f-fmin).argmin()
     # ind_fmax = np.abs(f-fmax).argmin()
