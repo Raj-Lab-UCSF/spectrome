@@ -9,8 +9,9 @@ import os
 from preprocess import filters as ft
 from utils import path as pth
 
-datapath = pth.get_sibling_path('data')
-MEG_path = os.path.join(datapath, 'MEG-chang')
+#datapath = pth.get_sibling_path('data')
+#MEG_path = os.path.join(datapath, 'MEG-chang')
+MEG_path = '/Users/Megan/RajLab/MEG-chang'
 directories = pth.walk_tree(MEG_path)
 
 data_filename = 'DK_timecourse_20.h5'
