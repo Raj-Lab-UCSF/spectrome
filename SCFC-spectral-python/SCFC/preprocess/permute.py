@@ -80,7 +80,7 @@ def get_HCP_order(filepath, save=False, fileout = None, cortexstart = 18):
 
     return order
 
-def reorder_connectome(conmat = None, distmat = None, save = False, cortexstart=18):
+def reorder_connectome(conmat, distmat, save = False, cortexstart=18):
     """A function to rearrange matrices by a cyclical permutation (no rearranging of order).
 
     Args:
