@@ -2,7 +2,7 @@
 
 def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
                           rois_with_MEG=np.arange(0, 68)):
-    """Cost function for optimization of the model.
+    """Cost function for optimization of the model (old form).
 
     Currently using negative of Pearson's correlation as cost metric.
 
@@ -20,7 +20,7 @@ def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
 
     Returns:
         err_out (float): Objective function evaluation result, negative of
-        Pearson's correlation between empirica MEG and model result.
+        Pearson's correlation between empirical MEG and model result.
 
     """
     # network_transfer_function current inputs
@@ -56,6 +56,7 @@ def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
 
     freq_model = np.asarray(freq_model)
     freq_model = freq_model[:, rois_with_MEG].transpose()
+    
     for n in rois_with_MEG:
         qdata = FMEGdata[n, :]
         if np.sum(qdata[:]) != 0:
