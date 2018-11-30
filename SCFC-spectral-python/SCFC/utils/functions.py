@@ -33,3 +33,8 @@ def mean_patient(data, freq_number):
         i += 0
     FMEGmean = np.mean(dataarray, axis = 0)
     return FMEGmean
+
+def down_sample(data):
+    '''function to downsample frequency domain data'''
+
+    
