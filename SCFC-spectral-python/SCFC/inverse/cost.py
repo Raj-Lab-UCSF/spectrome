@@ -56,7 +56,8 @@ def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
 
     freq_model = np.asarray(freq_model)
     freq_model = freq_model[:, rois_with_MEG].transpose()
-    
+
+    #demean data
     for n in rois_with_MEG:
         qdata = FMEGdata[n, :]
         if np.sum(qdata[:]) != 0:
