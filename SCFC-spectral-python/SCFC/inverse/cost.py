@@ -1,4 +1,6 @@
+def pearson_cost(FMEGdata, modeldata):
 
+return None
 
 def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
                           rois_with_MEG=np.arange(0, 68)):
