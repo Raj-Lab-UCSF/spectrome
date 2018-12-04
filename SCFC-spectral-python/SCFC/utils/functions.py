@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def mag2db(y):
     """Convert magnitude response to decibels for a simple array.
@@ -34,7 +35,24 @@ def mean_patient(data, freq_number):
     FMEGmean = np.mean(dataarray, axis = 0)
     return FMEGmean
 
-def down_sample(data):
-    '''function to downsample frequency domain data'''
+def down_sample(dataarray, n):
+    """down_sample. Down-samples any array in the simplest way possible-- by taking a
+    limited number of points from the original array.
 
-    
+    Args:
+        dataarray (numpy array): an input data array that needs re-sampling.
+        n (int): desired number of output points in the data.
+
+    Returns:
+        numpy array: down-sampled data array.
+
+    """
+
+    step = math.floor(len(dataarray)/n)
+    output = np.empty(n)
+    i = 0
+    while i < n:
+        j = i*step
+        output[i] = dataarray[j]
+        i += 1
+    return output
