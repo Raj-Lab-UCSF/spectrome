@@ -35,7 +35,7 @@ def mean_patient(data, freq_number):
     FMEGmean = np.mean(dataarray, axis = 0)
     return FMEGmean
 
-def down_sample(dataarray, n):
+def down_sample_(dataarray, n):
     """down_sample. Down-samples any array in the simplest way possible-- by taking a
     limited number of points from the original array.
 
@@ -55,4 +55,20 @@ def down_sample(dataarray, n):
         j = i*step
         output[i] = dataarray[j]
         i += 1
+    return output
+
+def to_float(dataarray):
+    """to_float. Ensures input array elements are in correct form of float
+    to be accepted by scipy.stats.pearsonr (I genuinely don't know exactly
+    why it complains).
+
+    Args:
+        dataarray (numpy array/list): An input array of what you think are sensible
+        floats but cause scipy.stats.pearsonr to complain.
+
+    Returns:
+        array: an array of floats in the right form to stop scipy.stats.pearsonr complaining.
+
+    """
+    output = [float(x) for x in dataarray]
     return output
