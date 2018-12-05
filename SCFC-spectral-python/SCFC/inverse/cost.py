@@ -1,6 +1,35 @@
-def pearson_cost(FMEGdata, modeldata):
+from scipy.stats import pearsonr
 
-return err
+
+def pearson_cost(data, model):
+    i = 0
+    err_list = []
+    for key in data.keys():
+        modregion = freq_model[i,:]
+        region = data[key]
+        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
+        modregion = [float(x) for x in modregion]
+        err = pearsonr(region,modregion)[0]
+        err = 1 - err #to convert to an error to minimise.
+        err_list.append(err)
+        i += 1
+    err = sum(err_list)
+    return err, err_list
+
+def pearson_cost_dB(data, model):
+    i = 0
+    err_list = []
+    for key in data.keys():
+        modregion = functions.mag2db(freq_model[i,:])
+        region = functions.mag2db(data[key])
+        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
+        modregion = [float(x) for x in modregion]
+        err = pearsonr(region,modregion)[0]
+        err = 1 - err #to convert to an error to minimise.
+        err_list.append(err)
+        i += 1
+    err = sum(err_list)
+    return err, err_list
 
 def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
                           rois_with_MEG=np.arange(0, 68)):
