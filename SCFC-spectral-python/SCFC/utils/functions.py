@@ -35,7 +35,7 @@ def mean_patient(data, freq_number):
     FMEGmean = np.mean(dataarray, axis = 0)
     return FMEGmean
 
-def down_sample_(dataarray, n):
+def down_sample_basic(dataarray, n):
     """down_sample. Down-samples any array in the simplest way possible-- by taking a
     limited number of points from the original array.
 
