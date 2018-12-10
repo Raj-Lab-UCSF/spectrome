@@ -10,6 +10,42 @@ import re
 import csv
 import numpy as np
 
+def add_key_to_matdata(label_filepath, data):
+    """Add dictionary keys (brain regions) to MEG data from raw MAT files
+    (note that this currently works for one particularly style of brain region input,
+    and will be generalised in future). The ordering used here is the desikan ordering.
+
+    Args:
+        label_filepath (type): full path and filename of the file containing the
+        correct order for the data being passed.
+        data (array): numpy array of the data in non-dictionary form.
+
+    Returns:
+        type: a dictionary of the data, keyed by brain region.
+
+    """
+
+
+    label_file = open(label_filepath, "r")
+    lines = label_file.readlines()
+    label_file.close()
+
+    #hack for Chang's data -- cleaning up ROIs list format -- can change for other versions
+    #of data
+    i = 0
+    for line in lines:
+        index_stop = line.find('.')
+        ind_newline = line.find('\n')
+        lines[i] = line[0:2].upper()+line[index_stop+1:ind_newline].lower()
+        i += 1
+
+    #import the data and apply the list members as keys, resave data in better format
+
+    data_dict ={}
+    for keys, values in zip(lines, data[:,:]):
+        data_dict[keys] = values
+
+    return data_dict
 
 def add_key_data(label_filepath, data_filepath):
     """Add dictionary keys (brain regions) to MEG data from raw MAT files
