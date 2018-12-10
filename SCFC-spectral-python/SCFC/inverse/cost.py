@@ -1,7 +1,43 @@
 from scipy.stats import pearsonr
+import numpy as np
+
+def pearson(data, freq_model):
+    """Pearson. Calculate pearsonr for each member of data dict against freq model
+
+    Args:
+        data (dict): Data dictionary.
+        freq_model (array): frequency model data in corresponding order
+
+    Returns:
+        float: Pearsonr correlation mean, and list of values over regions.
+
+    """
+    i = 0
+    pearsonr_list = []
+    for key in data.keys():
+        modregion = freq_model[i,:]
+        region = data[key]
+        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
+        modregion = [float(x) for x in modregion]
+        pearson = pearsonr(region,modregion)[0]
+        pearsonr_list.append(pearson)
+        i += 1
+    pearson = sum(pearsonr_list)
+    return pearson, pearsonr_list
 
 
-def pearson_cost(data, model):
+def pearson_cost(data, freq_model):
+    """pearson_cost. A cost function based on the pearson r correlation. Designed to
+    be minimised in a fitting process
+
+    Args:
+        data (dict): Data dictionary.
+        freq_model (array): frequency model data in corresponding order
+
+    Returns:
+        floats: mean error based on pearson r, and a list of values over regions.
+
+    """
     i = 0
     err_list = []
     for key in data.keys():
