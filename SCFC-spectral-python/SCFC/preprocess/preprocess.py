@@ -24,8 +24,6 @@ def add_key_to_matdata(label_filepath, data):
         type: a dictionary of the data, keyed by brain region.
 
     """
-
-
     label_file = open(label_filepath, "r")
     lines = label_file.readlines()
     label_file.close()
