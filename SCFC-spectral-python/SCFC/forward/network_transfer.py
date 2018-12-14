@@ -109,3 +109,5 @@ def network_transfer_function(brain, parameters, w):
     den = np.sqrt(np.abs(freqresp_out))
     FCmodel = np.matmul(np.matmul(np.diag(1/den), FCmodel), np.diag(1/den))
     return freqresp, ev, Vv, freqresp_out, FCmodel
+
+# def paramlist_todict(paramlist):

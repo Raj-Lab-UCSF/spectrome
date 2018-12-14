@@ -50,7 +50,7 @@ def pearson_cost_oneminus(data, freq_model):
         err = 1 - err #to convert to an error to minimise.
         err_list.append(err)
         i += 1
-    err = sum(err_list)
+    err = np.mean(sum(err_list))
     return err, err_list
 
 def pearson_cost_exp(data, freq_model):
