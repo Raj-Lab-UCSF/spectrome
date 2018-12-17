@@ -53,32 +53,6 @@ def pearson_cost_oneminus(data, freq_model):
     err = np.mean(sum(err_list))
     return err, err_list
 
-def pearson_cost_exp(data, freq_model):
-    """pearson_cost. A cost function based on the pearson r correlation. Designed to
-    be minimised in a fitting process, using e^(-r) as a measure of data-model distance.
-
-    Args:
-        data (dict): Data dictionary.
-        freq_model (array): frequency model data in corresponding order
-
-    Returns:
-        floats: mean error based on pearson r, and a list of values over regions.
-
-    """
-    i = 0
-    err_list = []
-    for key in data.keys():
-        modregion = freq_model[i,:]
-        region = data[key]
-        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
-        modregion = [float(x) for x in modregion]
-        err = pearsonr(region,modregion)[0]
-        err = math.exp(-1*err) #to convert to an error to minimise.
-        err_list.append(err)
-        i += 1
-    err = sum(err_list)
-    return err, err_list
-
 def pearson_cost_dB(data, model):
     i = 0
     err_list = []
@@ -168,3 +142,31 @@ def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
 
     err_out = -np.mean(err_min)
     return err_out
+
+
+def pearson_cost_exp(data, freq_model):
+    """pearson_cost. A cost function based on the pearson r correlation. Designed to
+    be minimised in a fitting process, using e^(-r) as a measure of data-model distance.
+    Not necessarily a great idea because of the e^(e^) possibility.
+
+    Args:
+        data (dict): Data dictionary.
+        freq_model (array): frequency model data in corresponding order
+
+    Returns:
+        floats: mean error based on pearson r, and a list of values over regions.
+
+    """
+    i = 0
+    err_list = []
+    for key in data.keys():
+        modregion = freq_model[i,:]
+        region = data[key]
+        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
+        modregion = [float(x) for x in modregion]
+        err = pearsonr(region,modregion)[0]
+        err = math.exp(-1*err) #to convert to an error to minimise.
+        err_list.append(err)
+        i += 1
+    err = sum(err_list)
+    return err, err_list
