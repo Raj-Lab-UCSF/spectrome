@@ -1,4 +1,4 @@
-from scipy import stats
+from scipy.stats import gamma, uniform
 import math
 import numpy as np
 
@@ -58,7 +58,7 @@ def lnpriors(theta, param_dists):
         param_dists (dict): The shape parameters of the prior distributions.
 
     Returns:
-        float: Value of the overall ln(prior probability) for this set of parameter values. 
+        float: Value of the overall ln(prior probability) for this set of parameter values.
 
     """
     tau_e, tau_i, alpha, speed, gei, gii, tauC = theta
