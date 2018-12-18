@@ -6,6 +6,19 @@ import time as time
 import numpy as np
 
 def run_forward(brain, params, freqs):
+    """run_forward. Function for running the forward model over the passed in range of frequencies,
+    for the handed set of parameters (which must be passed in as a dictionary)
+
+    Args:
+        brain (Brain): An instance of the Brain class.
+        params (dict): Dictionary of a setting of parameters for the NTF model.
+        freqs (array): Array of freqencies for which the model is to be calculated.
+
+    Returns:
+        array: Model values for each frequency, for each region of the brain, ordered as according to HCP
+        (as in Brain class ordering).
+
+    """
 
     evec = []
     Vvec =[]

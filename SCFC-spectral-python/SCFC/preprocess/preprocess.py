@@ -1,12 +1,12 @@
 '''functions to make sure that data is in the right order, or that data is given dictionary
 keys labelling the data according to the brain regions. These are applied prior to any further
-processing, and as such are not called by other functions directly.'''
+processing.'''
 
 import sys, os
 sys.path.append("..")
+
 from utils import path as pth
 from scipy.io import loadmat
-import re
 import csv
 import numpy as np
 

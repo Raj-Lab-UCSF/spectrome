@@ -1,4 +1,5 @@
-"""Module for computing basic quantities from a spectral graph model: the forward model"""
+"""Module for computing basic quantities from a spectral graph model: the forward model
+Makes the calculation for a single frequency only."""
 
 import numpy as np
 

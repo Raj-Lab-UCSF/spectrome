@@ -27,8 +27,8 @@ def pearson(data, freq_model):
     return pearson, pearsonr_list
 
 
-def pearson_cost_oneminus(data, freq_model):
-    """pearson_cost_oneminus. A cost function based on the pearson r correlation. Designed to
+def pearson_cost(data, freq_model):
+    """pearson_cost. A cost function based on the pearson r correlation. Designed to
     be minimised in a fitting process. Uses '1-r' as a measure of data-model error.
 
     Args:
