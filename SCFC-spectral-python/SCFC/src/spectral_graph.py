@@ -57,8 +57,8 @@ def get_HCP_connectome(hcp_dir,
                               np.arange(0, 9),
                               np.arange(9, 18)])
 
-    Cdk_conn = cdk_hcp[permHCP, ][:, permHCP]
-    Ddk_conn = ddk_hcp[permHCP, ][:, permHCP]
+    Cdk_conn = cdk_hcp[permHCP, :][:, permHCP]
+    Ddk_conn = ddk_hcp[permHCP, :][:, permHCP]
 
     return Cdk_conn, Ddk_conn, permHCP
 
@@ -203,7 +203,7 @@ def network_transfer_function(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
     # try scipy.sparse.linalg.eigs next
     if use_smalleigs is True:
         d, v = np.linalg.eig(L)
-        eig_ind = np.argsort(np.real(d))
+        eig_ind = np.argsort(np.abs(d))
         eig_vec = v[:, eig_ind]
         eig_val = d[eig_ind]
     else:
@@ -242,7 +242,7 @@ def network_transfer_function(C, D, w, tau_e=0.012, tau_i=0.003, alpha=1.0,
 
     den = np.sqrt(np.abs(freqresp_out))
     FCmodel = np.matmul(np.matmul(np.diag(1/den), FCmodel), np.diag(1/den))
-    return freqresp, ev, Vv, freqresp_out, FCmodel
+    return freqresp, ev, Vv, freqresp_out, L
 
 
 def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
