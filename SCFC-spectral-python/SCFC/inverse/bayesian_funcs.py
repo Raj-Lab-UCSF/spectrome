@@ -8,6 +8,8 @@ import math
 from inverse import cost
 from inverse import priors
 from forward import runforward as rf
+from inverse.cost import pearson_cost
+
 
 # TO DO: make this aspect of the code a bit better.
 #this is an unfortunately hard-coded dictionary of the parameters of prior distributions.
