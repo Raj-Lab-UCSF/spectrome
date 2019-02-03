@@ -14,21 +14,19 @@ from inverse.cost import pearson_cost
 # TO DO: make this aspect of the code a bit better.
 #this is an unfortunately hard-coded dictionary of the parameters of prior distributions.
 param_dists = {'tau_e':{'type':'gamma','alpha':2, 'loc':0.004492887509221829, 'scale':0.0032375996670863947},
-    'tau_i':{'type':'gamma','alpha':2.006014687419703, 'loc':0.004662441067103153, 'scale':0.0025497764353055712},
-              'alpha':{'type':'uniform','lower':0, 'upper':5},
-              'speed':{'type':'uniform','lower':0, 'upper':25},
-              'gei':{'type':'uniform','lower':0, 'upper':10},
-              'gii':{'type':'uniform','lower':0, 'upper':10},
-              'tauC':{'type':'gamma','alpha':2, 'loc':0.004211819821836749, 'scale':0.0029499360144432463}}
+               'tau_i':{'type':'gamma','alpha':2.006014687419703, 'loc':0.004662441067103153, 'scale':0.0025497764353055712},
+               'alpha':{'type':'uniform','lower':0, 'upper':5},
+               'speed':{'type':'uniform','lower':0, 'upper':25},
+               'gei':{'type':'uniform','lower':0, 'upper':10},
+               'gii':{'type':'uniform','lower':0, 'upper':10},
+               'tauC':{'type':'gamma','alpha':2, 'loc':0.004211819821836749, 'scale':0.0029499360144432463}}
 
 def ln_likelihood_pearson(theta, brain, fvec, FMEGdata):
-    """ln_likelihood. The ln likelihood function for MCMC. Takes a brain, parameter dict,
-    vector of frequency and data dict (in same order to compare to model), and returns
-    negative log likelihood.
+    """Calculate negative log likelihood given parameters.
 
     Args:
-        theta (array): Parameters of ntf model as an array (has to be converted to a dictionary).
-        brain (brain class): An instance of the brain class on which to run the ntf model.
+        theta (array): Parameters of ntf model as an array.
+        brain (Brain class): An instance of the brain class on which to run the ntf model.
         fvec (array): List of frequencies to calculate for.
         FMEGdata (dict): Dictionary of the experimental data.
 
@@ -64,7 +62,7 @@ def ln_likelihood_pearson(theta, brain, fvec, FMEGdata):
     return -(np.sum(list_errors)) + 68*(1-np.log(math.e**2 - 1))
 
 def lnprobs(theta, param_dists, brain, fvec, data):
-    """lnprobs. Function to calculate unnormalised posterior probability distribution,
+    """Calculate unnormalised posterior probability distribution
     by summing ln(prior) and ln(p(data|parameters)).
 
     Args:
