@@ -10,3 +10,6 @@ dependencies:
   - deepdish
   - csv
   - re
+  - emcee==3.0rc2
+  - tqdm==4.30.0
+  - h5py==2.9.0
