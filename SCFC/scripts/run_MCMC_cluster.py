@@ -19,8 +19,7 @@ from inverse.priors import lnprior_uniform, lnprior_gamma, lnpriors
 
 # from scipy.stats import pearsonr, gamma, uniform
 
-filename = 'freqMEGdata_8008-101.h5'
-FMEGdownsample = pth.read_hdf5('data/downsampled_patients/freqMEGdata_8008-101.h5')
+filename = input()
 FMEGdownsample = pth.read_hdf5('data/downsampled_patients/'+str(filename))
 
 hcp_dir = pth.get_sibling_path('SCFC/data') # connectome information is in /data/ dir
