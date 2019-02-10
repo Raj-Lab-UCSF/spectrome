@@ -8,3 +8,6 @@ __pycache__
 **/.png
 **/.jpg
 **/.svg
+*.key
+
+SCFC/data/MEG-chang/*

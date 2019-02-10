@@ -1,0 +1,15 @@
+name: spectral
+dependencies:
+  - python=3.6.6 #or any python 3 should work
+  - matplotlib
+  - numpy
+  - scipy
+  - nitime
+  - pandas
+  - nose # for unit testing
+  - deepdish
+  - csv
+  - re
+  - emcee==3.0rc2
+  - tqdm==4.30.0
+  - h5py==2.9.0

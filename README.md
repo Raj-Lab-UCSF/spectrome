@@ -1,9 +1,8 @@
-# Structure-Function Model Code Repository
+# Spectral Graph Model Repository
 
-#### Farras' code *(Farras-ND-fMRI)*
-SC-FC network diffusion model code for [his paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3951650/)
+Set up a conda environment if you do not have all the packages/compatible versions.
+The list of dependencies is listed in `environment.yml`. Set-up environment using conda: 
+`conda env create -f environment.yml`
 
-#### Spectral Graph Model *(SCFC_python)*
-SC-FC spectral graph model code currently in development.
+The default name of the environment is `spectral`, activate the environment with `source activate spectral`, and deactivate with `source deactivate`.
 
-Only uploaded .m files, did not attach .mat files or subject data files.
