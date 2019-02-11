@@ -35,28 +35,6 @@ def mean_patient(data, freq_number):
     FMEGmean = np.mean(dataarray, axis = 0)
     return FMEGmean
 
-def down_sample_basic(dataarray, n):
-    """down_sample. Down-samples any array in the simplest way possible-- by taking a
-    limited number of points from the original array.
-
-    Args:
-        dataarray (numpy array): an input data array that needs re-sampling.
-        n (int): desired number of output points in the data.
-
-    Returns:
-        numpy array: down-sampled data array.
-
-    """
-
-    step = math.floor(len(dataarray)/n)
-    output = np.empty(n)
-    i = 0
-    while i < n:
-        j = i*step
-        output[i] = dataarray[j]
-        i += 1
-    return output
-
 def to_float(dataarray):
     """to_float. Ensures input array elements are in correct form of float
     to be accepted by scipy.stats.pearsonr (I genuinely don't know exactly

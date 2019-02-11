@@ -57,30 +57,20 @@ def network_transfer_function(brain, parameters, w):
         K = nroi
 
     Tau = 0.001*D/speed
-
-    # Cc = np.real(C*np.exp(-1j*Tau*w)).astype(float)
     Cc = C*np.exp(-1j*Tau*w)
 
+    # Eigen Decomposition of Complex LaPlacian Here
     L1 = 0.8*np.identity(nroi)
-    L2 = np.divide(1, np.sqrt(rowdegree*coldegree)+np.spacing(1))
-    # diag(1./(sqrt(rowdegree.*coldegree)+eps));
+    L2 = np.divide(1, np.sqrt(np.multiply(rowdegree*coldegree))+np.spacing(1))
     L = L1 - np.matmul(np.diag(L2), Cc)
-    # L = np.array(L,dtype=np.float64)
 
-    # try scipy.sparse.linalg.eigs next
-    if use_smalleigs is True:
-        d, v = np.linalg.eig(L)
-        eig_ind = np.argsort(np.real(d))
-        eig_vec = v[:, eig_ind]
-        eig_val = d[eig_ind]
-    else:
-        d, v = np.linalg.eig(L)
-        eig_ind = np.argsort(np.abs(d))
-        eig_vec = v[:, eig_ind]
-        eig_val = d[eig_ind]
+    d, v = npl.linalg.eig(L) # decomposition with scipy.linalg.eig
+    eig_ind = np.argsort(np.abs(d)) # sorting in ascending order and absolute value
+    eig_vec = v[:, eig_ind] # re-indexing eigen vectors according to sorted index
+    eig_val = d[eig_ind] # re-indexing eigen values with same sorted index
 
     ev = np.transpose(eig_val[0:K])
-    Vv = eig_vec[:, 0:K]  # why is eigv 1 all the same numbers?
+    Vv = eig_vec[:, 0:K]
 
     # Cortical model
     He = np.divide(1/tau_e**2, (1j*w+1/tau_e)**2)
