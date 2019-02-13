@@ -41,15 +41,15 @@ class Brain:
         self.ordering = standard_list
 
 
-    def add_MEG(self, filename):
-        '''Importing MEG data for this brain'''
-        self.MEGdata = dr.read_dict(filename)
+    def add_functional_data(self, filename):
+        '''Importing functional data for this brain'''
+        self.timeseries_data = dr.read_dict(filename)
 
 
-    def order_MEG(self, orderfile):
-        '''Reordering the MEG data dictionary to match the standard given by the
+    def order_functional_data(self, orderfile):
+        '''Reordering the functional data dictionary to match the standard given by the
         list in orderfile, for instance the HCP_list.h5 file in 'dictionaries'.'''
-        self.MEGdata = perm.order_dict(self.MEGdata, orderfile)
+        self.timeseries_data = perm.order_dict(self.timeseries_data, orderfile)
 
 
     def add_connectome(self, hcp_dir,
