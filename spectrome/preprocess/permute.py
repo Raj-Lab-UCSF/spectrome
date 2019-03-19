@@ -82,6 +82,11 @@ def get_HCP_order(filepath, save=False, fileout = None, cortexstart = 18):
 
 def reorder_connectome(conmat, distmat, save = False, cortexstart=18):
     """A function to rearrange matrices by a cyclical permutation (no rearranging of order).
+    This is the equivalent of perm_HCP in the first code version: 
+    np.concatenate([np.arange(18, 52),
+                              np.arange(52, 86),
+                              np.arange(0, 9),
+                              np.arange(9, 18)])
 
     Args:
         conmat (numpy array): Direct input connectome
