@@ -15,5 +15,6 @@ dependencies:
   - h5py==2.9.0
   - nibabel
   - ipywidgets
-  - pysurfer
   - mayavi
+  - pip:
+    - pysurfer
