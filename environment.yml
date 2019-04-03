@@ -1,14 +1,15 @@
 name: spectrome
 dependencies:
-  - python=3.6.6 #or any python 3 should work
+  - python=3 #or any python 3 should work
   - matplotlib
   - numpy
   - scipy
   - pandas
   - nose # for unit testing
-  - h5py==2.9.0
+#  - h5py==2.9.0
   - ipywidgets
-  - vtk==8.1.1
+#  - vtk==8.1.1
+  - nodejs==11.9.0
   - pip:
     - pysurfer
     - nibabel
