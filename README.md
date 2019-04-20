@@ -9,3 +9,5 @@ The default name of the environment is `spectral`, activate the environment with
 #### Update Notes For April 2019:
  - Functions added:
     - `forward/get_complex_laplacian.py`: adds complex laplacian to brain class based on inputs of oscillatory frequency and transmission velocity. Gives `brain.laplacian/.norm_eigenmodes/.eigenvalues/.raw_eigenvectors.
+
+    - `utils/functions/`:`minmax_scale_z` normalizes a Pandas dataframe's row to between 0 - 1, almost like a z-score and `highlight_max` - highlights maximum in a dataframe's series
