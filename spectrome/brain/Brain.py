@@ -78,6 +78,25 @@ class Brain:
         self.distance_matrix = dist
         self.permutation = permutation
 
+    def add_laplacian_eigenmodes(self, connectome, distancematrix, w, speed = 10, num_ev = 10):
+        "add complex Laplacian `L` and selected eigen modes and eigen values"
+        L, selected_Evec, sorted_Eval = forward.get_complex_laplacian(C = connectome, D = distancematrix, w = w, speed = speed, num_ev = num_ev)
+        # Normalize eigen vectors for better visualization
+        norm_eigs = np.zeros(selected_Evec.shape)
+        for i in np.arange(0,num_ev):
+            vdata = np.maximum(selected_Evec[i,:], 
+                   np.mean(selected_Evec[i,:])-np.std(selected_Evec[i,:]))
+        vdata = vdata - np.amin(vdata)
+        
+        vdata = np.minimum(vdata, np.mean(vdata)+np.std(vdata))
+        vdata = vdata/np.amax(vdata)
+        norm_eigs[i,:] = vdata
+
+        self.laplacian = L
+        self.raw_eigenvectors = selected_Evec
+        self.norm_eigenmodes = norm_eigs
+        self.eigenvalues = sorted_Eval
+
     def bi_symmetric_c(self):
         """Short summary.
 
