@@ -2,6 +2,7 @@ import os, sys
 sys.path.append("..")
 import numpy as np
 from utils import path as pth
+from forward import get_complex_laplacian as fwd
 import read.data_reader as dr
 import preprocess.permute as perm
 
@@ -25,6 +26,9 @@ class Brain:
         self.distance_matrix = None
         self.permutation  = None
         self.ordering = None
+        self.laplacian = None
+        self.eigenvalues = None
+        self.norm_eigenmodes = None
 
         self.ntf_params = {'tau_e':0.012,
                            'tau_i':0.003,
@@ -80,17 +84,17 @@ class Brain:
 
     def add_laplacian_eigenmodes(self, connectome, distancematrix, w, speed = 10, num_ev = 10):
         "add complex Laplacian `L` and selected eigen modes and eigen values"
-        L, selected_Evec, sorted_Eval = forward.get_complex_laplacian(C = connectome, D = distancematrix, w = w, speed = speed, num_ev = num_ev)
+        L, selected_Evec, sorted_Eval = fwd.get_complex_laplacian(C = connectome, D = distancematrix, w = w, speed = speed, num_ev = num_ev)
         # Normalize eigen vectors for better visualization
         norm_eigs = np.zeros(selected_Evec.shape)
         for i in np.arange(0,num_ev):
             vdata = np.maximum(selected_Evec[i,:], 
                    np.mean(selected_Evec[i,:])-np.std(selected_Evec[i,:]))
-        vdata = vdata - np.amin(vdata)
+            vdata = vdata - np.amin(vdata)
         
-        vdata = np.minimum(vdata, np.mean(vdata)+np.std(vdata))
-        vdata = vdata/np.amax(vdata)
-        norm_eigs[i,:] = vdata
+            vdata = np.minimum(vdata, np.mean(vdata)+np.std(vdata))
+            vdata = vdata/np.amax(vdata)
+            norm_eigs[i,:] = vdata
 
         self.laplacian = L
         self.raw_eigenvectors = selected_Evec
