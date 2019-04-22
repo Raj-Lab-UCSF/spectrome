@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from sklearn.preprocessing import minmax_scale
 
 def mag2db(y):
     """Convert magnitude response to decibels for a simple array.
@@ -50,3 +51,18 @@ def to_float(dataarray):
     """
     output = [float(x) for x in dataarray]
     return output
+
+def minmax_scale_z(df):
+    #Only using this for min/max normalization
+    # Normalizes a pandas dataframe's rows to between 0 and 1
+    for name in df.index:
+        df.loc[name] = minmax_scale(np.asarray(df.loc[name].values))
+        
+    return df
+
+def highlight_max(s):
+    '''
+    highlight the maximum in a Pandas dataframe Series yellow.
+    '''
+    is_max = s == s.max()
+    return ['background-color: yellow' if v else '' for v in is_max]
