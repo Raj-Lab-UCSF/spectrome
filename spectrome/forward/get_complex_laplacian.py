@@ -50,7 +50,7 @@ def get_complex_laplacian(C, D, w, speed = 10, num_ev = 10):
     Vvec = np.asarray(Vv)
 
     # Select eigen modes based on num_ev as output...
-     selected_Evec = []
+    selected_Evec = []
     for k in np.arange(0, num_ev):
         abs_Vvec = np.abs(Vvec[:,k])
         selected_Evec.append(abs_Vvec)
