@@ -1,14 +1,14 @@
 '''Collection of functions to use MCMC methods on MEG data with forward network model
 -- uses cost (to find likelihood) and prior functions'''
 import sys, os
-sys.path.append("..")
+# sys.path.append("..")
 
 import numpy as np
 import math
-from inverse import cost
-from inverse import priors
-from forward import runforward as rf
-from inverse.cost import pearson_cost
+from ..inverse import cost
+from ..inverse import priors
+from ..forward import runforward as rf
+from ..inverse.cost import pearson_cost
 
 
 # TO DO: make this aspect of the code a bit better.

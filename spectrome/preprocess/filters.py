@@ -1,20 +1,18 @@
 '''Functions for filtering, eg. removing low frequency component drift in data'''
 ################## MAY DEPRECATE THIS FILE IN THE FUTURE, get_freq_spectrum is moved
-################## to preprocess.py, saving nodict version just in case we may need it. 
-import sys, os
-sys.path.append("..")
+################## to preprocess.py, saving nodict version just in case we may need it.
 from scipy.signal import lfilter, firls, decimate
 import nitime.algorithms as tsa
 import numpy as np
 import matplotlib.pyplot as plt
-from utils.functions import mag2db
+from ..utils.functions import mag2db
 
 def get_freq_spectrum(timeseries_data, fsampling, fmin= 2, fmax = 45, N = 68, downsample_factor = 4):
     """[Filters timeseries_data with a band pass filter designed with cutoff frequencies [fmin, fmax],
         the filtered time series will be downsampled by a factor of downsample_factor with a low-pass
-        filter. The downsampled time series is then transformed into the frequency domain using the 
+        filter. The downsampled time series is then transformed into the frequency domain using the
         multi-taper method]
-    
+
     Args:
         timeseries_data ([type]): [N x t time series data, with N brain regions for source localized data or
                                    N channels for sensor data. Duration = t time points, or t/fs seconds]
@@ -25,7 +23,7 @@ def get_freq_spectrum(timeseries_data, fsampling, fmin= 2, fmax = 45, N = 68, do
         fmin (int, optional): Defaults to 2. [low cutoff frequency]
         fmax (int, optional): Defaults to 45. [high cutoff frequency]
         N (int, optional): Defaults to 68. [number of regions or number of channels]
-    
+
     Returns:
         Freq_data[type]: [power spectrum for all input regions/channels]
         f : frequency vector/bins for power spectrum
@@ -61,11 +59,11 @@ def get_freq_spectrum(timeseries_data, fsampling, fmin= 2, fmax = 45, N = 68, do
     return Freq_data, f
 
 def get_freq_spectrum_notdict(timeseries_data, fsampling, fmin = 2, fmax = 45, N = 68, downsample_factor = 4, plot = True):
-    """[When input data is not in a dict format. Filters timeseries_data with a band pass filter designed 
-        with cutoff frequencies [fmin, fmax], the filtered time series will be downsampled by a factor of 
-        downsample_factor with a low-pass filter. The downsampled time series is then transformed into the 
+    """[When input data is not in a dict format. Filters timeseries_data with a band pass filter designed
+        with cutoff frequencies [fmin, fmax], the filtered time series will be downsampled by a factor of
+        downsample_factor with a low-pass filter. The downsampled time series is then transformed into the
         frequency domain using the multi-taper method]
-    
+
     Args:
         timeseries_data ([type]): [N x t time series data, with N brain regions for source localized data or
                                    N channels for sensor data. Duration = t time points, or t/fs seconds]
@@ -77,7 +75,7 @@ def get_freq_spectrum_notdict(timeseries_data, fsampling, fmin = 2, fmax = 45, N
         fmax (int, optional): Defaults to 45. [high cutoff frequency]
         N (int, optional): Defaults to 68. [number of regions or number of channels]
         plot (boolean, optional): Defaults to True. [Plot the spectra?]
-    
+
     Returns:
         Freq_data[type]: [power spectrum for all input regions/channels]
         f : frequency vector/bins for power spectrum

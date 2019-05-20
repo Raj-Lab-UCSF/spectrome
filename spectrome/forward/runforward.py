@@ -1,7 +1,5 @@
 ''' running the ntf over a range of frequencies.'''
-import sys, os
-sys.path.append("..")
-from forward import network_transfer as nt
+from ..forward import network_transfer as nt
 import time as time
 import numpy as np
 
