@@ -1,10 +1,8 @@
-import os, sys
-sys.path.append("..")
 import numpy as np
-from utils import path as pth
-from forward import get_complex_laplacian as fwd
-import read.data_reader as dr
-import preprocess.permute as perm
+from ..read import data_reader as dr
+from ..preprocess import permute as perm
+from ..utils import path as pth
+from ..forward import get_complex_laplacian as fwd
 
 class Brain:
     """A class containing data that represents a single brain.
@@ -88,10 +86,10 @@ class Brain:
         # Normalize eigen vectors for better visualization
         norm_eigs = np.zeros(selected_Evec.shape)
         for i in np.arange(0,num_ev):
-            vdata = np.maximum(selected_Evec[i,:], 
+            vdata = np.maximum(selected_Evec[i,:],
                    np.mean(selected_Evec[i,:])-np.std(selected_Evec[i,:]))
             vdata = vdata - np.amin(vdata)
-        
+
             vdata = np.minimum(vdata, np.mean(vdata)+np.std(vdata))
             vdata = vdata/np.amax(vdata)
             norm_eigs[i,:] = vdata
