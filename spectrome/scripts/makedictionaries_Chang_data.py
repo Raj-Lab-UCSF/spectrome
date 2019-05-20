@@ -1,13 +1,10 @@
-import sys
-sys.path.append("..")
-
 import numpy as np
 import os
 
-from brain import Brain
-from utils import path as pth
-from preprocess import preprocess as pp
-from preprocess import permute as pm
+from ..brain import Brain
+from ..utils import path as pth
+from ..preprocess import preprocess as pp
+from ..preprocess import permute as pm
 
 ## This bit processes the data to produce dictionary format versions.
 datapath = pth.get_sibling_path('data')

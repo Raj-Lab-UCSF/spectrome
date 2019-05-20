@@ -1,8 +1,5 @@
 '''Collection of functions to use MCMC methods on MEG data with forward network model
 -- uses cost (to find likelihood) and prior functions'''
-import sys, os
-# sys.path.append("..")
-
 import numpy as np
 import math
 from ..inverse import cost

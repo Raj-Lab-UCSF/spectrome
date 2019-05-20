@@ -1,13 +1,10 @@
-import sys,os
-sys.path.append("..")
-
 # #SCFC modules
 # from forward import network_transfer as nt
 # from utils import functions
 # from brain import Brain
 # from read import data_reader as dr
 # from preprocess import permute as perm
-from utils import path as pth
+from ..utils import path as pth
 # from preprocess import filters
 #
 # #generic modules
