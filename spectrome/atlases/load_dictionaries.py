@@ -21,7 +21,7 @@ def get_ROIs(cortical_only=False):
         names_file = 'OrderingAlphabetical_86ROIs.txt'
 
     root_path = get_root_path()
-    file_path = os.path.join(root_path,'dictionaries/')
+    file_path = os.path.join(root_path,'atlases/')
     file_path = os.path.join(file_path, names_file)
     names_array = np.genfromtxt(file_path,dtype='str')
     return(names_array)

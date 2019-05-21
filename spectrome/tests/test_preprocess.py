@@ -8,7 +8,7 @@ from ..preprocess import permute as pm
 
 def test_get_desikan():
     labelfile = 'desikan_atlas_68.csv'
-    label_path = pth.get_sibling_path('dictionaries')
+    label_path = pth.get_sibling_path('atlases')
     label_filename = os.path.join(label_path, labelfile)
     regions, coords = pp.get_desikan(label_filename)
     assert regions[-1] == 'fusiform'
@@ -23,7 +23,7 @@ def test_get_HCP_order():
 
 def test_reorder_connectome():
     outlist = 'HCP_list.h5'
-    path = pth.get_sibling_path('dictionaries')
+    path = pth.get_sibling_path('atlases')
     datapath = pth.get_sibling_path('data')
     confile = os.path.join(datapath, 'mean80_fibercount.csv')
     distfile = os.path.join(datapath, 'mean80_fiberlength.csv')

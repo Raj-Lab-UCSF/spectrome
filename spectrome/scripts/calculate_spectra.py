@@ -29,7 +29,7 @@ mybrain.add_connectome(directory)
 mybrain.reorder_connectome(mybrain.connectome, mybrain.distance_matrix)
 
 # reordering to HCP
-label_path = pth.get_sibling_path('dictionaries')
+label_path = pth.get_sibling_path('atlases')
 HCP_order = os.path.join(label_path, 'HCP_list.h5')
 mybrain.add_ordering(HCP_order)
 

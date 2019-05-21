@@ -50,7 +50,7 @@ class Brain:
 
     def order_functional_data(self, orderfile):
         '''Reordering the functional data dictionary to match the standard given by the
-        list in orderfile, for instance the HCP_list.h5 file in 'dictionaries'.'''
+        list in orderfile, for instance the HCP_list.h5 file in 'atlases'.'''
         self.timeseries_data = perm.order_dict(self.timeseries_data, orderfile)
 
 
