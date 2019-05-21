@@ -1,4 +1,6 @@
 import numpy as np
+import os
+
 from ..read import data_reader as dr
 from ..preprocess import permute as perm
 from ..utils import path as pth
