@@ -88,13 +88,13 @@ class Brain:
         # Normalize eigen vectors for better visualization
         norm_eigs = np.zeros(selected_Evec.shape)
         for i in np.arange(0,num_ev):
-            vdata = np.maximum(selected_Evec[i,:],
-                   np.mean(selected_Evec[i,:])-np.std(selected_Evec[i,:]))
+            vdata = np.maximum(selected_Evec[:,i], 
+                   np.mean(selected_Evec[:,i])-np.std(selected_Evec[:,i]))
             vdata = vdata - np.amin(vdata)
 
             vdata = np.minimum(vdata, np.mean(vdata)+np.std(vdata))
             vdata = vdata/np.amax(vdata)
-            norm_eigs[i,:] = vdata
+            norm_eigs[:,i] = vdata
 
         self.laplacian = L
         self.raw_eigenvectors = selected_Evec

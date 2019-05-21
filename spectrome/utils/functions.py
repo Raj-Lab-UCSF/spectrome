@@ -66,3 +66,10 @@ def highlight_max(s):
     '''
     is_max = s == s.max()
     return ['background-color: yellow' if v else '' for v in is_max]
+
+def highlight_min(s):
+    '''
+    highlight the minimum in a Pandas dataframe series yellow
+    '''
+    is_min = s == s.min()
+    return ['background-color: yellow' if v else '' for v in is_min]

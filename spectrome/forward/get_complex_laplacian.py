@@ -31,7 +31,7 @@ def get_complex_laplacian(C, D, w, speed = 10, num_ev = 10):
     Tau = 0.001*D/speed # delay as a function of distance and transmission speed
     Cc = C*np.exp(-1j*Tau*w) #Complex Laplacian
     
-    # Eigen decomposition
+    # Compute Laplacian and decompose into eigen vectors
     L1 = 0.8*np.identity(nroi)
     L2 = np.divide(1,np.sqrt(np.multiply(rowdegree,coldegree))+np.spacing(1)) #diag(1./(sqrt(rowdegree.*coldegree)+eps));
     L = L1 - np.matmul(np.diag(L2),Cc) #Final Laplacian
@@ -55,5 +55,5 @@ def get_complex_laplacian(C, D, w, speed = 10, num_ev = 10):
         abs_Vvec = np.abs(Vvec[:,k])
         selected_Evec.append(abs_Vvec)
     
-    selected_Evec = np.asarray(selected_Evec)
+    selected_Evec = np.transpose(np.asarray(selected_Evec))
     return L, selected_Evec, sorted_Evals
