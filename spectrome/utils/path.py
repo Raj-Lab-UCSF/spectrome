@@ -4,6 +4,8 @@ writing hdf5 files."""
 import os
 import deepdish as dd
 
+from pathlib import Path
+
 def get_file_path(filename):
     """Find filename in the relative directory `../data/` .
 
@@ -14,17 +16,16 @@ def get_file_path(filename):
         str: absolute path to file "filename" in ./data/ dir.
 
     """
-    here_dir = os.path.dirname(os.path.realpath('__file__'))
-    file_dir = os.path.join(here_dir, '../data', filename)
+    root_dir  = Path(__file__).parent.parent
+    file_dir = os.path.join(root_dir, 'data', filename)
 
     return file_dir
 
 
 def get_data_path():
     """Return absolute path to `/data/`."""
-    here_dir = os.path.dirname(os.path.realpath('__file__'))
-    data_path = os.path.join(here_dir, '../data/')
-
+    root_path = Path(__file__).parent.parent
+    data_path = os.path.join(root_path, 'data')
     return data_path
 
 
@@ -45,10 +46,13 @@ def get_absolute_path(relative_path='.'):
 
 def get_sibling_path(folder):
     '''returns the path of 'folder' on the same level'''
-    here_dir    = os.path.dirname(os.path.realpath('__file__'))
-    par_dir = os.path.abspath(os.path.join(here_dir, os.pardir))
-    sibling_dir = os.path.join(par_dir, folder)
+    root_dir  = Path(__file__).parent.parent
+    sibling_dir = os.path.join(root_dir, folder)
     return sibling_dir
+
+def get_root_path():
+    root_path = Path(__file__).parent.parent
+    return(root_path)
 
 def save_hdf5(path, dict):
     """Save out a dictionary/numpy array to HDF5 format using deepdish package.

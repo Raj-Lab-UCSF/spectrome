@@ -1,13 +1,10 @@
-import sys
-sys.path.append("..")
-
 import numpy as np
 import os
 
-from brain import Brain
-from utils import path as pth
-from preprocess import preprocess as pp
-from preprocess import permute as pm
+from ..brain import Brain
+from ..utils import path as pth
+from ..preprocess import preprocess as pp
+from ..preprocess import permute as pm
 
 ## This bit processes the data to produce dictionary format versions.
 datapath = pth.get_sibling_path('data')
@@ -20,7 +17,7 @@ out_coords = 'DK_coords_meg.h5'
 out_data = 'DK_timecourse_20.h5'
 
 labelfile = 'OrderingAlphabetical_68ROIs.txt'
-label_path = pth.get_sibling_path('dictionaries')
+label_path = pth.get_sibling_path('atlases')
 label_filename = os.path.join(label_path, labelfile)
 
 for dir in directories:

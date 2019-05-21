@@ -1,18 +1,14 @@
-import sys
-sys.path.append("..")
-
 #SCFC modules
-from forward import network_transfer as nt
-from utils import functions
-from brain import Brain
-from read import data_reader as dr
-from preprocess import permute as perm
-from utils import path as path
-# from preprocess import filters
+from ..forward import network_transfer as nt
+from ..utils import functions
+from ..brain import Brain
+from ..read import data_reader as dr
+from ..preprocess import permute as perm
+from ..utils import path as path
+from scipy.signal import lfilter, firls, decimate
 
 #generic modules
 import numpy as np
-from scipy.signal import lfilter, firls, decimate
 import time
 
 

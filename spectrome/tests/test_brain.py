@@ -1,9 +1,7 @@
-import sys
-sys.path.append("..")
-
-from brain import Brain
-from utils import path
 import numpy as np
+
+from ..brain import Brain
+from ..utils import path
 
 def test_ntf_parameters():
     """Check whether a Brain class is being initialized correctly."""

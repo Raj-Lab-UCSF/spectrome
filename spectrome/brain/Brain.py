@@ -1,10 +1,10 @@
-import os, sys
-sys.path.append("..")
 import numpy as np
-from utils import path as pth
-from forward import get_complex_laplacian as fwd
-import read.data_reader as dr
-import preprocess.permute as perm
+import os
+
+from ..read import data_reader as dr
+from ..preprocess import permute as perm
+from ..utils import path as pth
+from ..forward import get_complex_laplacian as fwd
 
 class Brain:
     """A class containing data that represents a single brain.
@@ -52,7 +52,7 @@ class Brain:
 
     def order_functional_data(self, orderfile):
         '''Reordering the functional data dictionary to match the standard given by the
-        list in orderfile, for instance the HCP_list.h5 file in 'dictionaries'.'''
+        list in orderfile, for instance the HCP_list.h5 file in 'atlases'.'''
         self.timeseries_data = perm.order_dict(self.timeseries_data, orderfile)
 
 
@@ -91,7 +91,7 @@ class Brain:
             vdata = np.maximum(selected_Evec[:,i], 
                    np.mean(selected_Evec[:,i])-np.std(selected_Evec[:,i]))
             vdata = vdata - np.amin(vdata)
-        
+
             vdata = np.minimum(vdata, np.mean(vdata)+np.std(vdata))
             vdata = vdata/np.amax(vdata)
             norm_eigs[:,i] = vdata

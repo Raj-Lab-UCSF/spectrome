@@ -10,4 +10,4 @@ __pycache__
 **/.svg
 *.key
 
-SCFC/data/MEG-chang/*
+spectrom/data/*
