@@ -4,6 +4,8 @@ writing hdf5 files."""
 import os
 import deepdish as dd
 
+from pathlib import Path
+
 def get_file_path(filename):
     """Find filename in the relative directory `../data/` .
 
@@ -49,6 +51,10 @@ def get_sibling_path(folder):
     par_dir = os.path.abspath(os.path.join(here_dir, os.pardir))
     sibling_dir = os.path.join(par_dir, folder)
     return sibling_dir
+
+def get_root_path():
+    root_path = Path(__file__).parent.parent
+    return(root_path)
 
 def save_hdf5(path, dict):
     """Save out a dictionary/numpy array to HDF5 format using deepdish package.
