@@ -1,13 +1,10 @@
 """ Script to apply the filtering step to the data and save out to dictoinary files --
 do prior to further analysis as this is a slow step """
 
-import sys
-sys.path.append("..")
-
 import numpy as np
 import os
-from preprocess import filters as ft
-from utils import path as pth
+from ..preprocess import filters as ft
+from ..utils import path as pth
 
 #datapath = pth.get_sibling_path('data')
 #MEG_path = os.path.join(datapath, 'MEG-chang')

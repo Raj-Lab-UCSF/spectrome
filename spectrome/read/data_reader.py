@@ -1,8 +1,6 @@
 '''Functions to read in the data and return required inputs to the other analysis functions,
 including reordering of the data and matrices according to standard dictionary orders.'''
-import sys, os
-sys.path.append("..")
-from utils import path as pth
+from ..utils import path as pth
 
 def read_dict(filename):
     """read_MEG_dict. Reads a HDF5 file containing a dictionary of MEG data, keyed

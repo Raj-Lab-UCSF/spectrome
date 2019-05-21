@@ -1,17 +1,15 @@
-'''functions to denoise, downsample, re-order, label, and transform the input functional 
+'''functions to denoise, downsample, re-order, label, and transform the input functional
 time series data. These are applied prior to any further processing.'''
 
-import sys, os
-sys.path.append("..")
-
-from utils import path as pth
-from scipy.io import loadmat
 import csv
 import numpy as np
-from scipy.signal import lfilter, firls, decimate
 import nitime.algorithms as tsa
 import matplotlib.pyplot as plt
-from utils.functions import mag2db
+
+from ..utils import path as pth
+from ..utils.functions import mag2db
+from scipy.io import loadmat
+from scipy.signal import lfilter, firls, decimate
 
 def add_key_to_matdata(label_filepath, data):
     """Add dictionary keys (brain regions) to MEG data from raw MAT files
@@ -122,14 +120,14 @@ def add_key_coords(label_filepath, coordfile):
 
 def denoise_timeseries(timeseries_data, fsampling, fmin = 2, fmax = 45):
     """Filters timeseries_data with a band pass filter designed with cutoff frequencies [fmin, fmax]
-    
+
     Args:
         timeseries_data (dict): [N x t time series data, with N brain regions for source localized data or
                                    N channels for sensor data. Duration = t time points, or t/fs seconds]
         fsampling ([type]): [sampling frequency of timeseries_data, no default given because this will vary]
         fmin (int, optional): Defaults to 2. [low cutoff frequency]
         fmax (int, optional): Defaults to 45. [high cutoff frequency]
-    
+
     Returns:
         clean_data (dict): [denoised time series data]
     """
@@ -148,19 +146,19 @@ def denoise_timeseries(timeseries_data, fsampling, fmin = 2, fmax = 45):
         q = lfilter(hbp, 1, row)
         q = q[ind_del:-1] # delete transient portions from filter
         clean_data[key] = q
-    
+
     return clean_data
 
 def downsample_data(data, fsampling, downsample_factor = 4):
     """Using the decimate function to low-pass filter and downsample
-    
+
     Args:
         data (dict): [Data to be downsampled, doesn't necessarily have to be time course]
         fsampling (int): [sampling frequency of data]
         downsample_factor (int, optional): Defaults to 4. [The ratio to downsample data, for example, 600 Hz MEG data
                                     will be downsampled to 150 Hz. This will be used in the decimate function,
                                     which has a low-pass filter built in to eliminate harmonic contamination]
-    
+
     Returns:
         DS_data (dict): [downsampled data]
         DS_fs (int): [sampling frequency for downsampled data]
@@ -178,7 +176,7 @@ def downsample_data(data, fsampling, downsample_factor = 4):
 def get_freq_spectrum(timeseries_data, fsampling, fmin, fmax, plot = True):
     """Transform a clean, downsampled time series data into frequency domain
     using the multi-taper method
-    
+
     Args:
         timeseries_data ([type]): [N x t time series data, with N brain regions for source localized data or
                                    N channels for sensor data. Duration = t time points, or t/fs seconds]
@@ -186,7 +184,7 @@ def get_freq_spectrum(timeseries_data, fsampling, fmin, fmax, plot = True):
         fmin (int, optional): Defaults to 2. [low cutoff frequency]
         fmax (int, optional): Defaults to 45. [high cutoff frequency]
         plot (boolean, optional): Defaults to True. [Plot the spectra?]
-    
+
     Returns:
         freq_data (dict): [power spectrum for all input regions/channels]
         frange: frequency vector ranging from fmin to fmax
@@ -218,7 +216,7 @@ def get_freq_spectrum(timeseries_data, fsampling, fmin, fmax, plot = True):
             plt.plot(frange,mag2db(Freq_range[g,:]))
     else:
         print('No plot')
-    
+
     return freq_data, frange, Freq_range
 
 ## May get moved to another folder in near future :)

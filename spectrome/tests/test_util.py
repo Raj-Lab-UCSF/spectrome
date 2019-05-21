@@ -1,11 +1,8 @@
 """Test suite for the util module."""
 
-import sys
-sys.path.append("..")
-
 import os
 from nose.tools import with_setup
-from utils import path
+from ..utils import path
 
 
 def f_setup():
