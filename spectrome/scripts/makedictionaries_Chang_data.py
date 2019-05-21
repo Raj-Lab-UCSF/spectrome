@@ -17,7 +17,7 @@ out_coords = 'DK_coords_meg.h5'
 out_data = 'DK_timecourse_20.h5'
 
 labelfile = 'OrderingAlphabetical_68ROIs.txt'
-label_path = pth.get_sibling_path('dictionaries')
+label_path = pth.get_sibling_path('atlases')
 label_filename = os.path.join(label_path, labelfile)
 
 for dir in directories:
