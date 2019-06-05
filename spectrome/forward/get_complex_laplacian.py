@@ -3,7 +3,7 @@ transmission speed and oscillatory frequency'''
 
 import numpy as np
 
-def get_complex_laplacian(C, D, w, speed = 10, num_ev = 10):
+def get_complex_laplacian(C, D, w, alpha = 1, speed = 10, num_ev = 10):
     """ Extract complex laplacian based on frequency "omega", returns number of eigen
         vectors. This function sorts eigen vectors by ascending order, meaning the sorting
         begins with the eigen vectors associated with smallest absolute value of eigen values. 
@@ -32,9 +32,11 @@ def get_complex_laplacian(C, D, w, speed = 10, num_ev = 10):
     Cc = C*np.exp(-1j*Tau*w) #Complex Laplacian
     
     # Compute Laplacian and decompose into eigen vectors
-    L1 = 0.8*np.identity(nroi)
+    #L1 = 0.8*np.identity(nroi)
+    L1 = np.identity(nroi)
     L2 = np.divide(1,np.sqrt(np.multiply(rowdegree,coldegree))+np.spacing(1)) #diag(1./(sqrt(rowdegree.*coldegree)+eps));
-    L = L1 - np.matmul(np.diag(L2),Cc) #Final Laplacian
+    L = L1 - alpha*np.matmul(np.diag(L2),Cc) #Final Laplacian = I - alpha*1/diag(sqrt(deg)
+
     # decomposition with linalg.eig 
     K = nroi
     d, v = np.linalg.eig(L)
@@ -53,7 +55,7 @@ def get_complex_laplacian(C, D, w, speed = 10, num_ev = 10):
     selected_Evec = []
     for k in np.arange(0, num_ev):
         abs_Vvec = np.abs(Vvec[:,k])
-        selected_Evec.append(abs_Vvec)
+        selected_Evec.append(abs_Vvec) #this appends as rows
     
-    selected_Evec = np.transpose(np.asarray(selected_Evec))
+    selected_Evec = np.transpose(np.asarray(selected_Evec)) #transpose back to column vectors
     return L, selected_Evec, sorted_Evals
