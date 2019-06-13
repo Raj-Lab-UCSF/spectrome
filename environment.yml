@@ -1,24 +1,23 @@
 name: spectrome
 dependencies:
   - python=3 #or any python 3 should work
+  - pip
   - matplotlib
   - numpy
   - scipy
   - pandas
   - nose # for unit testing
-#  - h5py==2.9.0
-  - ipywidgets
-#  - vtk==8.1.1
   - nodejs==11.9.0
+  - ipywidgets
   - pip:
-    - pysurfer
-    - nibabel
     - deepdish
-    - python-csv
-    - nitime
-    - re
     - emcee==3.0rc2
-    - tqdm==4.30.0
+    - great-expectations
     - mayavi
+    - nibabel
+    - nitime
     - PyQt5
-
+    - python-csv
+    - pysurfer
+    - sklearn
+    - tqdm==4.30.0
