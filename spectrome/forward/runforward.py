@@ -45,6 +45,7 @@ def run_forward(brain, params, freqs):
 
     return freq_model, frequency_response, evec, Vvec
 
+
 def run_local_coupling_forward(brain, params, freqs):
     """run_forward. Function for running the forward model over the passed in range of frequencies,
     for the handed set of parameters (which must be passed in as a dictionary)

@@ -1,5 +1,5 @@
-'''functions to denoise, downsample, re-order, label, and transform the input functional
-time series data. These are applied prior to any further processing.'''
+"""functions to denoise, downsample, re-order, label, and transform the input functional
+time series data. These are applied prior to any further processing."""
 
 import csv
 import numpy as np
@@ -10,6 +10,7 @@ from ..utils import path as pth
 from ..utils.functions import mag2db
 from scipy.io import loadmat
 from scipy.signal import lfilter, firls, decimate
+
 
 def add_key_to_matdata(label_filepath, data):
     """Add dictionary keys (brain regions) to MEG data from raw MAT files
@@ -29,22 +30,23 @@ def add_key_to_matdata(label_filepath, data):
     lines = label_file.readlines()
     label_file.close()
 
-    #hack for Chang's data -- cleaning up ROIs list format -- can change for other versions
-    #of data
+    # hack for Chang's data -- cleaning up ROIs list format -- can change for other versions
+    # of data
     i = 0
     for line in lines:
-        index_stop = line.find('.')
-        ind_newline = line.find('\n')
-        lines[i] = line[0:2].upper()+line[index_stop+1:ind_newline].lower()
+        index_stop = line.find(".")
+        ind_newline = line.find("\n")
+        lines[i] = line[0:2].upper() + line[index_stop + 1 : ind_newline].lower()
         i += 1
 
-    #import the data and apply the list members as keys, resave data in better format
+    # import the data and apply the list members as keys, resave data in better format
 
-    data_dict ={}
-    for keys, values in zip(lines, data[:,:]):
+    data_dict = {}
+    for keys, values in zip(lines, data[:, :]):
         data_dict[keys] = values
 
     return data_dict
+
 
 def add_key_data(label_filepath, data_filepath):
     """Add dictionary keys (brain regions) to MEG data from raw MAT files
@@ -61,29 +63,29 @@ def add_key_data(label_filepath, data_filepath):
 
     """
 
-
     label_file = open(label_filepath, "r")
     lines = label_file.readlines()
     label_file.close()
 
-    #hack for Chang's data -- cleaning up ROIs list format -- can change for other versions
-    #of data
+    # hack for Chang's data -- cleaning up ROIs list format -- can change for other versions
+    # of data
     i = 0
     for line in lines:
-        index_stop = line.find('.')
-        ind_newline = line.find('\n')
-        lines[i] = line[0:2].upper()+line[index_stop+1:ind_newline].lower()
+        index_stop = line.find(".")
+        ind_newline = line.find("\n")
+        lines[i] = line[0:2].upper() + line[index_stop + 1 : ind_newline].lower()
         i += 1
 
-    #import the data and apply the list members as keys, resave data in better format
+    # import the data and apply the list members as keys, resave data in better format
     data = loadmat(data_filepath)
-    data = data['DK_timecourse']
+    data = data["DK_timecourse"]
 
-    data_dict ={}
-    for keys, values in zip(lines, data[:,:]):
+    data_dict = {}
+    for keys, values in zip(lines, data[:, :]):
         data_dict[keys] = values
 
     return data_dict
+
 
 def add_key_coords(label_filepath, coordfile):
     """Add dictionary keys (brain regions) to brain region coordinates from raw MAT files
@@ -105,20 +107,21 @@ def add_key_coords(label_filepath, coordfile):
 
     i = 0
     for line in lines:
-        index_stop = line.find('.')
-        ind_newline = line.find('\n')
-        lines[i] = line[0:2].upper()+line[index_stop+1:ind_newline].lower()
+        index_stop = line.find(".")
+        ind_newline = line.find("\n")
+        lines[i] = line[0:2].upper() + line[index_stop + 1 : ind_newline].lower()
         i += 1
 
     coords = loadmat(coordfile)
-    coords = coords['DK_coords_meg']
+    coords = coords["DK_coords_meg"]
 
-    coord_dict ={}
+    coord_dict = {}
     for keys, values in zip(lines, coords):
         coord_dict[keys] = values
     return coord_dict
 
-def denoise_timeseries(timeseries_data, fsampling, fmin = 2, fmax = 45):
+
+def denoise_timeseries(timeseries_data, fsampling, fmin=2, fmax=45):
     """Filters timeseries_data with a band pass filter designed with cutoff frequencies [fmin, fmax]
 
     Args:
@@ -132,24 +135,30 @@ def denoise_timeseries(timeseries_data, fsampling, fmin = 2, fmax = 45):
         clean_data (dict): [denoised time series data]
     """
 
-    #fvec = np.linspace(fmin,fmax,Nbins)
-    hbp = firls(101, np.array([0, 0.2*fmin, 0.9*fmin, fmax-2, fmax+5, 100])*2/fsampling,
-           desired = np.array([0, 0, 1, 1, 0, 0])) #for detrending, a bandpass
+    # fvec = np.linspace(fmin,fmax,Nbins)
+    hbp = firls(
+        101,
+        np.array([0, 0.2 * fmin, 0.9 * fmin, fmax - 2, fmax + 5, 100]) * 2 / fsampling,
+        desired=np.array([0, 0, 1, 1, 0, 0]),
+    )  # for detrending, a bandpass
     lpf = np.array([1, 2, 5, 2, 1])
-    lpf = lpf/np.sum(lpf)
-    ind_del = hbp.size #number of coefficients in hbp. Delete that number in beginning of signal due to filtering
+    lpf = lpf / np.sum(lpf)
+    ind_del = (
+        hbp.size
+    )  # number of coefficients in hbp. Delete that number in beginning of signal due to filtering
     clean_data = {}
     for key in list(timeseries_data.keys()):
         data = timeseries_data[key]
         data = data.astype(float)
         row = np.asarray(data)
         q = lfilter(hbp, 1, row)
-        q = q[ind_del:-1] # delete transient portions from filter
+        q = q[ind_del:-1]  # delete transient portions from filter
         clean_data[key] = q
 
     return clean_data
 
-def downsample_data(data, fsampling, downsample_factor = 4):
+
+def downsample_data(data, fsampling, downsample_factor=4):
     """Using the decimate function to low-pass filter and downsample
 
     Args:
@@ -165,15 +174,16 @@ def downsample_data(data, fsampling, downsample_factor = 4):
     """
 
     DS_data = {}
-    DS_fs = fsampling/downsample_factor
+    DS_fs = fsampling / downsample_factor
 
     for key in list(data.keys()):
         heavy_data = np.asarray(data[key].astype(float))
-        DS_data[key] = decimate(heavy_data, downsample_factor, axis = 0)
+        DS_data[key] = decimate(heavy_data, downsample_factor, axis=0)
 
     return DS_data, DS_fs
 
-def get_freq_spectrum(timeseries_data, fsampling, fmin, fmax, plot = True):
+
+def get_freq_spectrum(timeseries_data, fsampling, fmin, fmax, plot=True):
     """Transform a clean, downsampled time series data into frequency domain
     using the multi-taper method
 
@@ -193,31 +203,34 @@ def get_freq_spectrum(timeseries_data, fsampling, fmin, fmax, plot = True):
 
     freq_data = {}
     lpf = np.array([1, 2, 5, 2, 1])
-    lpf = lpf/np.sum(lpf)
+    lpf = lpf / np.sum(lpf)
     freq_data = {}
 
     for key in list(timeseries_data.keys()):
         timedata = np.asarray(timeseries_data[key].astype(float))
-        f, psd, nu = tsa.multi_taper_psd(timedata, Fs = fsampling, NW = 3, BW = 1, adaptive = False, jackknife = False)
-        Fdata = np.convolve(psd, lpf, mode = 'same')
+        f, psd, nu = tsa.multi_taper_psd(
+            timedata, Fs=fsampling, NW=3, BW=1, adaptive=False, jackknife=False
+        )
+        Fdata = np.convolve(psd, lpf, mode="same")
         freq_data[key] = Fdata
 
-    ind_fmin = np.abs(f-fmin).argmin()
-    ind_fmax = np.abs(f-fmax).argmin()
+    ind_fmin = np.abs(f - fmin).argmin()
+    ind_fmax = np.abs(f - fmax).argmin()
     frange = f[ind_fmin:ind_fmax]
-    Freq_range = Freq_data[:,ind_fmin:ind_fmax]
+    Freq_range = Freq_data[:, ind_fmin:ind_fmax]
     if plot == True:
-        #fig1, ax1 = mpl.subplots(1, 1)
+        # fig1, ax1 = mpl.subplots(1, 1)
         # Plotting source localized MEG data
-        plt.figure(num = 1, figsize=[3,1.5], dpi = 300)
-        plt.xlabel('Frequency (Hz)')
-        plt.ylabel('Magnitude (dB)')
+        plt.figure(num=1, figsize=[3, 1.5], dpi=300)
+        plt.xlabel("Frequency (Hz)")
+        plt.ylabel("Magnitude (dB)")
         for g in range(len(Freq_data)):
-            plt.plot(frange,mag2db(Freq_range[g,:]))
+            plt.plot(frange, mag2db(Freq_range[g, :]))
     else:
-        print('No plot')
+        print("No plot")
 
     return freq_data, frange, Freq_range
+
 
 ## May get moved to another folder in near future :)
 def get_desikan(filepath):
@@ -233,7 +246,7 @@ def get_desikan(filepath):
 
     """
     with open(filepath) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
+        csv_reader = csv.reader(csv_file, delimiter=",")
         line_count = 0
         regions = []
         coords = []
@@ -246,5 +259,5 @@ def get_desikan(filepath):
                 x = float(row[2])
                 y = float(row[3])
                 z = float(row[4])
-                coords.append([x,y,z])
+                coords.append([x, y, z])
     return regions, coords

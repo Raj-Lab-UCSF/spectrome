@@ -74,7 +74,9 @@ HCP_brain.reduce_extreme_dir()
 omega = 2 * np.pi * fvec[np.abs(fvec - 10).argmin()]  # current frequency of interest
 eigthresh = 0.6  # see jupyter notebook for how this was obtained
 networks_alpha = pd.DataFrame(
-    np.zeros([len(alpha), Dkfc_binarized.shape[0]]), index=alpha, columns=Dkfc_binarized.index
+    np.zeros([len(alpha), Dkfc_binarized.shape[0]]),
+    index=alpha,
+    columns=Dkfc_binarized.index,
 )
 for param_alpha in alpha:
     HCP_brain.add_laplacian_eigenmodes(

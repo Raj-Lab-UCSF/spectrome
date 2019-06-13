@@ -6,7 +6,6 @@ from scipy.spatial import distance
 from scipy.stats import entropy
 
 
-
 def eig_fc_get_standardz(x, y, binary_thresh=0.1, nreps=1000):
     """Permutes both canonical networks and input eigenmodes 1000 times
     and calculates the standardized overlap score between each eigen mode
@@ -87,6 +86,7 @@ def get_sxy(x, y):
 
     return overlap_sxy
 
+
 def get_dice_df(x, y):
     """[Dice similarity score betewen two boolean arrays, then make it into a Pandas Dataframe
     translate into dataframes after we compute all the arrays?]
@@ -112,6 +112,7 @@ def get_dice_df(x, y):
             )  # without multiplying by support
         eigcounter += 1
     return df_dice
+
 
 def get_entropy_score(df_sxy):
     """[Compute purity score as a measure of entropy]
