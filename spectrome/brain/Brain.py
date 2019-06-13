@@ -82,9 +82,9 @@ class Brain:
         self.distance_matrix = dist
         self.permutation = permutation
 
-    def add_laplacian_eigenmodes(self, connectome, distancematrix, w, speed = 10, num_ev = 10):
+    def add_laplacian_eigenmodes(self, w, alpha = 1, speed = 10, num_ev = 86):
         "add complex Laplacian `L` and selected eigen modes and eigen values"
-        L, selected_Evec, sorted_Eval = fwd.get_complex_laplacian(C = connectome, D = distancematrix, w = w, speed = speed, num_ev = num_ev)
+        L, selected_Evec, sorted_Eval = fwd.get_complex_laplacian(C = self.reducedConnectome, D = self.distance_matrix, w = w, alpha = alpha, speed = speed, num_ev = num_ev)
         # Normalize eigen vectors for better visualization
         norm_eigs = np.zeros(selected_Evec.shape)
         for i in np.arange(0,num_ev):
