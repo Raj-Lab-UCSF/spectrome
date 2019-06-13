@@ -1,7 +1,8 @@
-'''Functions for rearranging matrices/data files'''
+"""Functions for rearranging matrices/data files"""
 from ..utils import path as pth
 import csv
 import numpy as np
+
 
 def order_dict(data, orderfile):
     """order_dict. Reorders a dictionary according to the order of keys passed in the
@@ -30,7 +31,8 @@ def order_dict(data, orderfile):
 
     return newdata
 
-def get_HCP_order(filepath, save=False, fileout = None, cortexstart = 18):
+
+def get_HCP_order(filepath, save=False, fileout=None, cortexstart=18):
     """Import the HCP connectome, and create a list with the same order so
     that input data can be rearranged to compare. The dictionary keys are standardised to single
     words, lower case only. The HCP is also rearranged so that the cortex comes first,
@@ -50,15 +52,15 @@ def get_HCP_order(filepath, save=False, fileout = None, cortexstart = 18):
     """
 
     with open(filepath) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
+        csv_reader = csv.reader(csv_file, delimiter=",")
         line_count = 0
         region_order = []
         for row in csv_reader:
             if line_count == 0:
                 for cell in row:
-                    index = cell.find('ctx')
+                    index = cell.find("ctx")
                     if index != -1:
-                        cell = cell[4:6].upper() + cell[index+7:].lower()
+                        cell = cell[4:6].upper() + cell[index + 7 :].lower()
                         region_order.append(cell)
                     else:
                         cell = cell
@@ -67,7 +69,7 @@ def get_HCP_order(filepath, save=False, fileout = None, cortexstart = 18):
             else:
                 break
 
-    #put the non-cortex to the end of the order list
+    # put the non-cortex to the end of the order list
     order = region_order[cortexstart:]
     for item in region_order[0:cortexstart]:
         order.append(item)
@@ -77,7 +79,8 @@ def get_HCP_order(filepath, save=False, fileout = None, cortexstart = 18):
 
     return order
 
-def reorder_connectome(conmat, distmat, save = False, cortexstart=18):
+
+def reorder_connectome(conmat, distmat, save=False, cortexstart=18):
     """A function to rearrange matrices by a cyclical permutation (no rearranging of order).
     This is the equivalent of perm_HCP in the first code version:
     np.concatenate([np.arange(18, 52),
@@ -97,8 +100,10 @@ def reorder_connectome(conmat, distmat, save = False, cortexstart=18):
     """
     Connectome = conmat
     Distance_matrix = distmat
-    permutation = np.concatenate([np.arange(cortexstart, 86), np.arange(0, cortexstart)])
+    permutation = np.concatenate(
+        [np.arange(cortexstart, 86), np.arange(0, cortexstart)]
+    )
     Connectome = Connectome[permutation,][:, permutation]
-    Distance_matrix = Distance_matrix[permutation, ][:, permutation]
+    Distance_matrix = Distance_matrix[permutation,][:, permutation]
 
     return Connectome, Distance_matrix, permutation

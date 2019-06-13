@@ -2,6 +2,7 @@ from scipy.stats import pearsonr
 import numpy as np
 import math
 
+
 def pearson(data, freq_model):
     """Pearson. Calculate Pearson r correlation for each member of data dict against freq model.
 
@@ -16,11 +17,13 @@ def pearson(data, freq_model):
     i = 0
     pearsonr_list = []
     for key in data.keys():
-        modregion = freq_model[i,:]
+        modregion = freq_model[i, :]
         region = data[key]
-        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
+        region = [
+            float(x) for x in region
+        ]  # we need to do this to make sure things are in the correct form for scipy.stats
         modregion = [float(x) for x in modregion]
-        pearson = pearsonr(region,modregion)[0]
+        pearson = pearsonr(region, modregion)[0]
         pearsonr_list.append(pearson)
         i += 1
     pearson = sum(pearsonr_list)
@@ -42,34 +45,41 @@ def pearson_cost(data, freq_model):
     i = 0
     err_list = []
     for key in data.keys():
-        modregion = freq_model[i,:]
+        modregion = freq_model[i, :]
         region = data[key]
-        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
+        region = [
+            float(x) for x in region
+        ]  # we need to do this to make sure things are in the correct form for scipy.stats
         modregion = [float(x) for x in modregion]
-        err = pearsonr(region,modregion)[0]
-        err = 1 - err #to convert to an error to minimise.
+        err = pearsonr(region, modregion)[0]
+        err = 1 - err  # to convert to an error to minimise.
         err_list.append(err)
         i += 1
     err = np.mean(sum(err_list))
     return err, err_list
 
+
 def pearson_cost_dB(data, model):
     i = 0
     err_list = []
     for key in data.keys():
-        modregion = functions.mag2db(freq_model[i,:])
+        modregion = functions.mag2db(freq_model[i, :])
         region = functions.mag2db(data[key])
-        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
+        region = [
+            float(x) for x in region
+        ]  # we need to do this to make sure things are in the correct form for scipy.stats
         modregion = [float(x) for x in modregion]
-        err = pearsonr(region,modregion)[0]
-        err = 1 - err #to convert to an error to minimise.
+        err = pearsonr(region, modregion)[0]
+        err = 1 - err  # to convert to an error to minimise.
         err_list.append(err)
         i += 1
     err = sum(err_list)
     return err, err_list
 
-def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
-                          rois_with_MEG=np.arange(0, 68)):
+
+def network_transfer_cost(
+    params, C, D, lpf, FMEGdata, frange, rois_with_MEG=np.arange(0, 68)
+):
     """Cost function for optimization of the model (old form).
 
     Currently using negative of Pearson's correlation as cost metric.
@@ -107,25 +117,25 @@ def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
     freq_model = []
     err_min = np.zeros(rois_with_MEG.shape)
     for i in frange:
-        w = 2*np.pi*i
+        w = 2 * np.pi * i
         _, _, _, freqresp_out, _ = network_transfer_function(
-                                                             C,
-                                                             D,
-                                                             w,
-                                                             tau_e=tau_e,
-                                                             tau_i=tau_i,
-                                                             alpha=alpha,
-                                                             speed=speed,
-                                                             gei=gei,
-                                                             gii=gii,
-                                                             tauC=tauC
-                                                             )
+            C,
+            D,
+            w,
+            tau_e=tau_e,
+            tau_i=tau_i,
+            alpha=alpha,
+            speed=speed,
+            gei=gei,
+            gii=gii,
+            tauC=tauC,
+        )
         freq_model.append(freqresp_out)
 
     freq_model = np.asarray(freq_model)
     freq_model = freq_model[:, rois_with_MEG].transpose()
 
-    #demean data
+    # demean data
     for n in rois_with_MEG:
         qdata = FMEGdata[n, :]
         if np.sum(qdata[:]) != 0:
@@ -133,7 +143,7 @@ def network_transfer_cost(params, C, D, lpf, FMEGdata, frange,
             qdata = qdata - np.mean(qdata)
 
         qmodel = np.abs(np.squeeze(freq_model[n, :]))
-        qmodel = mag2db(np.convolve(qmodel, lpf, mode='same'))
+        qmodel = mag2db(np.convolve(qmodel, lpf, mode="same"))
         qmodel = qmodel - np.mean(qmodel)
         if np.sum(qmodel) == 0 or np.sum(qdata) == 0:
             err_min[n] = 0
@@ -160,12 +170,14 @@ def pearson_cost_exp(data, freq_model):
     i = 0
     err_list = []
     for key in data.keys():
-        modregion = freq_model[i,:]
+        modregion = freq_model[i, :]
         region = data[key]
-        region = [float(x) for x in region]#we need to do this to make sure things are in the correct form for scipy.stats
+        region = [
+            float(x) for x in region
+        ]  # we need to do this to make sure things are in the correct form for scipy.stats
         modregion = [float(x) for x in modregion]
-        err = pearsonr(region,modregion)[0]
-        err = math.exp(-1*err) #to convert to an error to minimise.
+        err = pearsonr(region, modregion)[0]
+        err = math.exp(-1 * err)  # to convert to an error to minimise.
         err_list.append(err)
         i += 1
     err = sum(err_list)
