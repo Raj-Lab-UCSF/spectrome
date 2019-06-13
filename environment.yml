@@ -10,13 +10,14 @@ dependencies:
   - nodejs==11.9.0
   - ipywidgets
   - pip:
-    - pysurfer
-    - nibabel
     - deepdish
-    - python-csv
-    - nitime
     - emcee==3.0rc2
-    - tqdm==4.30.0
+    - great-expectations
     - mayavi
+    - nibabel
+    - nitime
     - PyQt5
-
+    - python-csv
+    - pysurfer
+    - sklearn
+    - tqdm==4.30.0
