@@ -1,6 +1,7 @@
-'''Functions to read in the data and return required inputs to the other analysis functions,
-including reordering of the data and matrices according to standard dictionary orders.'''
+"""Functions to read in the data and return required inputs to the other analysis functions,
+including reordering of the data and matrices according to standard dictionary orders."""
 from ..utils import path as pth
+
 
 def read_dict(filename):
     """read_MEG_dict. Reads a HDF5 file containing a dictionary of MEG data, keyed
@@ -32,12 +33,12 @@ def get_MEG_data_frommat(sub_name, ordering, MEGfolder):
         coords (type):
 
     """
-    S = loadmat(os.path.join(MEGfolder, sub_name, 'DK_timecourse_20.mat'))
-    MEGdata = S['DK_timecourse']
-    MEGdata = MEGdata[ordering, ]
-    C = loadmat(os.path.join(MEGfolder, sub_name, 'DK_coords_meg.mat'))
-    coords = C['DK_coords_meg']
-    coords = coords[ordering, ]
+    S = loadmat(os.path.join(MEGfolder, sub_name, "DK_timecourse_20.mat"))
+    MEGdata = S["DK_timecourse"]
+    MEGdata = MEGdata[ordering,]
+    C = loadmat(os.path.join(MEGfolder, sub_name, "DK_coords_meg.mat"))
+    coords = C["DK_coords_meg"]
+    coords = coords[ordering,]
     del S, C
 
     return MEGdata, coords

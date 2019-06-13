@@ -1,16 +1,17 @@
-
 import sys
 import time
 import emcee
 import numpy as np
 from schwimmbad import MPIPool
 
+
 def log_prob(theta):
     t = time.time() + np.random.uniform(0.005, 0.008)
     while True:
         if time.time() >= t:
             break
-    return -0.5*np.sum(theta**2)
+    return -0.5 * np.sum(theta ** 2)
+
 
 with MPIPool() as pool:
     if not pool.is_master():

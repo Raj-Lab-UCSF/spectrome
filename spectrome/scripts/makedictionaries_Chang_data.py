@@ -7,21 +7,21 @@ from ..preprocess import preprocess as pp
 from ..preprocess import permute as pm
 
 ## This bit processes the data to produce dictionary format versions.
-datapath = pth.get_sibling_path('data')
-MEG_path = os.path.join(datapath, 'MEG-chang')
+datapath = pth.get_sibling_path("data")
+MEG_path = os.path.join(datapath, "MEG-chang")
 
 directories = pth.walk_tree(MEG_path)
-coord_filename = 'DK_coords_meg.mat'
-data_filename = 'DK_timecourse_20.mat'
-out_coords = 'DK_coords_meg.h5'
-out_data = 'DK_timecourse_20.h5'
+coord_filename = "DK_coords_meg.mat"
+data_filename = "DK_timecourse_20.mat"
+out_coords = "DK_coords_meg.h5"
+out_data = "DK_timecourse_20.h5"
 
-labelfile = 'OrderingAlphabetical_68ROIs.txt'
-label_path = pth.get_sibling_path('atlases')
+labelfile = "OrderingAlphabetical_68ROIs.txt"
+label_path = pth.get_sibling_path("atlases")
 label_filename = os.path.join(label_path, labelfile)
 
 for dir in directories:
-    abspath = os.path.join(MEG_path,dir)
+    abspath = os.path.join(MEG_path, dir)
     coord_path = os.path.join(abspath, coord_filename)
     data_path = os.path.join(abspath, data_filename)
 
@@ -33,4 +33,4 @@ for dir in directories:
         pth.save_hdf5(os.path.join(abspath, out_coords), coord_dict)
 
     else:
-        print('folder ', abspath, ' is empty.')
+        print("folder ", abspath, " is empty.")
