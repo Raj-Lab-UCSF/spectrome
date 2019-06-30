@@ -27,11 +27,11 @@ def run_forward(brain, params, freqs):
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        fq, ev, Vv, freqresp_out, _ = nt.network_transfer_function(brain, params, w)
-        fqall.append(fq)
+        frequency_response, ev, Vv, model_out, _ = nt.network_transfer_function(brain, params, w)
+        fqall.append(frequency_response)
         evec.append(ev)
         Vvec.append(Vv)
-        freq_model.append(freqresp_out)
+        freq_model.append(model_out)
 
     frequency_response = np.asarray(fqall)
     evec = np.asarray(evec)
@@ -69,11 +69,11 @@ def run_local_coupling_forward(brain, params, freqs):
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        fq, ev, Vv, freqresp_out, _ = nt.network_transfer_local_alpha(brain, params, w)
-        fqall.append(fq)
+        frequency_response, ev, Vv, model_out, _ = nt.network_transfer_local_alpha(brain, params, w)
+        fqall.append(frequency_response)
         evec.append(ev)
         Vvec.append(Vv)
-        freq_model.append(freqresp_out)
+        freq_model.append(model_out)
 
     frequency_response = np.asarray(fqall)
     evec = np.asarray(evec)
@@ -102,11 +102,11 @@ def run_HM_forward(brain, params, freqs):
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        fq, ev, Vv, freqresp_out, Htotal = nt.network_transfer_HM(brain, params, w)
-        fqall.append(fq)
+        frequency_response, ev, Vv, model_out, Htotal = nt.network_transfer_HM(brain, params, w)
+        fqall.append(frequency_response)
         evec.append(ev)
         Vvec.append(Vv)
-        freq_model.append(freqresp_out)
+        freq_model.append(model_out)
         Htotal_allfreq.append(Htotal)
 
     frequency_response = np.asarray(fqall)
