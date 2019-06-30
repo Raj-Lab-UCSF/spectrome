@@ -16,10 +16,10 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
         use_smalleigs (boolean): how many eigen modes to use, True = using only 2/3 (cortical), leaving out subcortical
 
     Returns:
-        freqresp (numpy asarray):
+        frequency_response (numpy asarray): frequency response of local oscillators
         ev (numpy asarray): Eigen values
         Vv (numpy asarray): Eigen vectors
-        freqresp_out (numpy asarray):  Each region's frequency response for
+        model_out (numpy asarray):  Each region's frequency response for
         the given frequency (w)
         FCmodel (numpy asarray): Functional connectivity - still in the works
 
@@ -93,17 +93,17 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
     magq1 = np.maximum(np.abs(q1), qthr)
     angq1 = np.angle(q1)
     q1 = np.multiply(magq1, np.exp(1j * angq1))
-    freqresp = np.divide(Htotal, q1)
+    frequency_response = np.divide(Htotal, q1)
 
-    freqresp_out = 0
+    model_out = 0
     for k in range(1, K):
-        freqresp_out += freqresp[k] * Vv[:, k]
+        model_out += frequency_response[k] * Vv[:, k]
 
     FCmodel = np.matmul(
-        np.matmul(Vv[:, 1:K], np.diag(freqresp[1:K] ** 2)), np.transpose(Vv[:, 1:K])
+        np.matmul(Vv[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(Vv[:, 1:K])
     )
 
-    den = np.sqrt(np.abs(freqresp_out))
+    den = np.sqrt(np.abs(model_out))
     FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
     return frequency_response, eigenvalues, eigenvectors, model_out, FCmodel
 
@@ -122,10 +122,10 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
         use_smalleigs (boolean): how many eigen modes to use, True = using only 2/3 (cortical), leaving out subcortical
 
     Returns:
-        freqresp (numpy asarray):
+        frequency_response (numpy asarray):
         ev (numpy asarray): Eigen values
         Vv (numpy asarray): Eigen vectors
-        freqresp_out (numpy asarray):  Each region's frequency response for
+        model_out (numpy asarray):  Each region's frequency response for
         the given frequency (w)
         FCmodel (numpy asarray): Functional connectivity - still in the works
 
@@ -199,17 +199,17 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
     magq1 = np.maximum(np.abs(q1), qthr)
     angq1 = np.angle(q1)
     q1 = np.multiply(magq1, np.exp(1j * angq1))
-    freqresp = np.divide(Htotal, q1)
+    frequency_response = np.divide(Htotal, q1)
 
-    freqresp_out = 0
+    model_out = 0
     for k in range(1, K):
-        freqresp_out += freqresp[k] * Vv[:, k]
+        model_out += frequency_response[k] * Vv[:, k]
 
     FCmodel = np.matmul(
-        np.matmul(Vv[:, 1:K], np.diag(freqresp[1:K] ** 2)), np.transpose(Vv[:, 1:K])
+        np.matmul(Vv[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(Vv[:, 1:K])
     )
 
-    den = np.sqrt(np.abs(freqresp_out))
+    den = np.sqrt(np.abs(model_out))
     FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
     return frequency_response, eigenvalues, eigenvectors, model_out, FCmodel
 
@@ -302,16 +302,16 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     magq1 = np.maximum(np.abs(q1), qthr)
     angq1 = np.angle(q1)
     q1 = np.multiply(magq1, np.exp(1j * angq1))
-    freqresp = np.divide(Htotal, q1)
+    frequency_response = np.divide(Htotal, q1)
 
-    freqresp_out = 0
+    model_out = 0
     for k in range(1, K):
-        freqresp_out += freqresp[k] * Vv[:, k]
+        model_out += frequency_response[k] * Vv[:, k]
 
     #FCmodel = np.matmul(
-    #    np.matmul(Vv[:, 1:K], np.diag(freqresp[1:K] ** 2)), np.transpose(Vv[:, 1:K])
+    #    np.matmul(Vv[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(Vv[:, 1:K])
     #)
 
-    #den = np.sqrt(np.abs(freqresp_out))
+    #den = np.sqrt(np.abs(model_out))
     #FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
     return frequency_response, eigenvalues, eigenvectors, model_out, Htotal
