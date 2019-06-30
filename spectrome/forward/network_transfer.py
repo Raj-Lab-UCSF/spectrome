@@ -72,8 +72,8 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
     eig_vec = v[:, eig_ind]  # re-indexing eigen vectors according to sorted index
     eig_val = d[eig_ind]  # re-indexing eigen values with same sorted index
 
-    ev = np.transpose(eig_val)
-    Vv = eig_vec[:, 0:K]
+    eigenvalues = np.transpose(eig_val)
+    eigenvectors = eig_vec[:, 0:K]
 
     # Cortical model
     Fe = np.divide(1 / tau_e ** 2, (1j * w + 1 / tau_e) ** 2)
@@ -178,8 +178,8 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
     eig_vec = v[:, eig_ind]  # re-indexing eigen vectors according to sorted index
     eig_val = d[eig_ind]  # re-indexing eigen values with same sorted index
 
-    ev = np.transpose(eig_val)
-    Vv = eig_vec[:, 0:K]
+    eigenvalues = np.transpose(eig_val)
+    eigenvectors = eig_vec[:, 0:K]
 
     # Cortical model
     Fe = np.divide(1 / tau_e ** 2, (1j * w + 1 / tau_e) ** 2)
@@ -278,8 +278,8 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     eig_vec = v[:, eig_ind]  # re-indexing eigen vectors according to sorted index
     eig_val = d[eig_ind]  # re-indexing eigen values with same sorted index
 
-    ev = np.transpose(eig_val)
-    Vv = eig_vec[:, 0:K] # K is either 2/3 or all eigenmodes
+    eigenvalues = np.transpose(eig_val)
+    eigenvectors = eig_vec[:, 0:K] # K is either 2/3 or all eigenmodes
 
     # Cortical model:
     Fe = np.divide(1 / tau_e ** 2, (1j * w + 1 / tau_e) ** 2)
