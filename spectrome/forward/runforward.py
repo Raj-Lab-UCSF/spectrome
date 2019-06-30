@@ -97,20 +97,23 @@ def run_HM_forward(brain, params, freqs):
     Vvec = []
     fqall = []
     freq_model = []
+    Htotal_allfreq = []
 
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        fq, ev, Vv, freqresp_out = nt.network_transfer_HM(brain, params, w)
+        fq, ev, Vv, freqresp_out, Htotal = nt.network_transfer_HM(brain, params, w)
         fqall.append(fq)
         evec.append(ev)
         Vvec.append(Vv)
         freq_model.append(freqresp_out)
+        Htotal_allfreq.append(Htotal)
 
     frequency_response = np.asarray(fqall)
     evec = np.asarray(evec)
     Vvec = np.asarray(Vvec)
     freq_model = np.asarray(freq_model)
     freq_model = np.transpose(freq_model)
+    Htotal_out = np.asarray(Htotal_allfreq)
 
-    return freq_model, frequency_response, evec, Vvec
+    return freq_model, frequency_response, evec, Vvec, Htotal_out

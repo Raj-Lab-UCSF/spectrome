@@ -84,7 +84,7 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
     # Hid = 1/tau_i/(1j*w + 1/tau_i*Hi)
     Hid = local_alpha / tau_i / (1j * w + local_alpha / tau_i * Fi)
 
-    Heid = gei * Fe * Hi / (1 + gei * Fe * Fi)
+    Heid = gei * Fe * Fi / (1 + gei * Fe * Fi)
     Htotal = a * Hed + (1 - a) / 2 * Hid + (1 - a) / 2 * Heid
 
     q1 = 1 / local_alpha * tauC * (1j * w + local_alpha / tauC * Fe * ev)
@@ -105,7 +105,7 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
 
     den = np.sqrt(np.abs(freqresp_out))
     FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
-    return freqresp, ev, Vv, freqresp_out, FCmodel
+    return frequency_response, eigenvalues, eigenvectors, model_out, FCmodel
 
 
 # def paramlist_todict(paramlist):
@@ -190,7 +190,7 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
     # Hid = 1/tau_i/(1j*w + 1/tau_i*Hi)
     Hid = alpha / tau_i / (1j * w + alpha / tau_i * Fi)
 
-    Heid = gei * Fe * Hi / (1 + gei * Fe * Fi)
+    Heid = gei * Fe * Fi / (1 + gei * Fe * Fi)
     Htotal = a * Hed + (1 - a) / 2 * Hid + (1 - a) / 2 * Heid
 
     q1 = 1 / alpha * tauC * (1j * w + alpha / tauC * Fe * ev)
@@ -211,7 +211,7 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
 
     den = np.sqrt(np.abs(freqresp_out))
     FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
-    return freqresp, ev, Vv, freqresp_out, FCmodel
+    return frequency_response, eigenvalues, eigenvectors, model_out, FCmodel
 
 def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     """Network transfer function for spectral graph model, the local oscillator model is modified by HM.
@@ -308,10 +308,10 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     for k in range(1, K):
         freqresp_out += freqresp[k] * Vv[:, k]
 
-    FCmodel = np.matmul(
-        np.matmul(Vv[:, 1:K], np.diag(freqresp[1:K] ** 2)), np.transpose(Vv[:, 1:K])
-    )
+    #FCmodel = np.matmul(
+    #    np.matmul(Vv[:, 1:K], np.diag(freqresp[1:K] ** 2)), np.transpose(Vv[:, 1:K])
+    #)
 
-    den = np.sqrt(np.abs(freqresp_out))
-    FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
-    return freqresp, ev, Vv, freqresp_out, FCmodel
+    #den = np.sqrt(np.abs(freqresp_out))
+    #FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
+    return frequency_response, eigenvalues, eigenvectors, model_out, Htotal
