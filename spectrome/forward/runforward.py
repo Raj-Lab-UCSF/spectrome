@@ -86,3 +86,31 @@ def run_local_coupling_forward(brain, params, freqs):
     # print('Computation time = ', duration)
 
     return freq_model, frequency_response, evec, Vvec
+
+def run_HM_forward(brain, params, freqs):
+    """Run the forward calculations with HM's local oscillators
+    
+    Args:
+        same as above!
+    """
+    evec = []
+    Vvec = []
+    fqall = []
+    freq_model = []
+
+    # start = time.time()
+    for freq in freqs:
+        w = 2 * np.pi * freq
+        fq, ev, Vv, freqresp_out = nt.network_transfer_HM(brain, params, w)
+        fqall.append(fq)
+        evec.append(ev)
+        Vvec.append(Vv)
+        freq_model.append(freqresp_out)
+
+    frequency_response = np.asarray(fqall)
+    evec = np.asarray(evec)
+    Vvec = np.asarray(Vvec)
+    freq_model = np.asarray(freq_model)
+    freq_model = np.transpose(freq_model)
+
+    return freq_model, frequency_response, evec, Vvec
