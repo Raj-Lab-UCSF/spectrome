@@ -87,7 +87,7 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
     Heid = gei * Fe * Fi / (1 + gei * Fe * Fi)
     Htotal = a * Hed + (1 - a) / 2 * Hid + (1 - a) / 2 * Heid
 
-    q1 = 1 / local_alpha * tauC * (1j * w + local_alpha / tauC * Fe * ev)
+    q1 = 1 / local_alpha * tauC * (1j * w + local_alpha / tauC * Fe * eigenvalues)
     # q1 = tauC*(1j*w + 1/tauC*He*ev)
     qthr = zero_thr * np.abs(q1[:]).max()
     magq1 = np.maximum(np.abs(q1), qthr)
@@ -97,10 +97,10 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
 
     model_out = 0
     for k in range(1, K):
-        model_out += frequency_response[k] * Vv[:, k]
+        model_out += frequency_response[k] * eigenvectors[:, k]
 
     FCmodel = np.matmul(
-        np.matmul(Vv[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(Vv[:, 1:K])
+        np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(eigenvectors[:, 1:K])
     )
 
     den = np.sqrt(np.abs(model_out))
@@ -193,7 +193,7 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
     Heid = gei * Fe * Fi / (1 + gei * Fe * Fi)
     Htotal = a * Hed + (1 - a) / 2 * Hid + (1 - a) / 2 * Heid
 
-    q1 = 1 / alpha * tauC * (1j * w + alpha / tauC * Fe * ev)
+    q1 = 1 / alpha * tauC * (1j * w + alpha / tauC * Fe * eigenvalues)
     # q1 = tauC*(1j*w + 1/tauC*He*ev)
     qthr = zero_thr * np.abs(q1[:]).max()
     magq1 = np.maximum(np.abs(q1), qthr)
@@ -203,10 +203,10 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
 
     model_out = 0
     for k in range(1, K):
-        model_out += frequency_response[k] * Vv[:, k]
+        model_out += frequency_response[k] * eigenvectors[:, k]
 
     FCmodel = np.matmul(
-        np.matmul(Vv[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(Vv[:, 1:K])
+        np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(eigenvectors[:, 1:K])
     )
 
     den = np.sqrt(np.abs(model_out))
@@ -296,7 +296,7 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     Hoffdiag_alt = np.divide(gei * ((-1 / tau_e) * Fe + (1/tau_i) * Fi) * He * Hi, denom)
     Htotal = He_alt + Hi_alt + Hoffdiag_alt
 
-    q1 = 1 / local_alpha * tauC * (1j * w + local_alpha / tauC * Fe * ev)
+    q1 = 1 / local_alpha * tauC * (1j * w + local_alpha / tauC * Fe * eigenvalues)
     # q1 = tauC*(1j*w + 1/tauC*He*ev)
     qthr = zero_thr * np.abs(q1[:]).max()
     magq1 = np.maximum(np.abs(q1), qthr)
@@ -306,10 +306,10 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
 
     model_out = 0
     for k in range(1, K):
-        model_out += frequency_response[k] * Vv[:, k]
+        model_out += frequency_response[k] * eigenvectors[:, k]
 
     #FCmodel = np.matmul(
-    #    np.matmul(Vv[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(Vv[:, 1:K])
+    #    np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(eigenvectors[:, 1:K])
     #)
 
     #den = np.sqrt(np.abs(model_out))
