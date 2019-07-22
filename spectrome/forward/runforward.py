@@ -27,17 +27,17 @@ def run_forward(brain, params, freqs):
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        fq, ev, Vv, freqresp_out, _ = nt.network_transfer_function(brain, params, w)
-        fqall.append(fq)
+        freq_resp, ev, Vv, model_out, _ = nt.network_transfer_function(brain, params, w)
+        fqall.append(freq_resp)
         evec.append(ev)
         Vvec.append(Vv)
-        freq_model.append(freqresp_out)
+        freq_model.append(model_out)
 
-    frequency_response = np.asarray(fqall)
+    frequency_response = np.transpose(np.asarray(fqall))
     evec = np.asarray(evec)
     Vvec = np.asarray(Vvec)
-    freq_model = np.asarray(freq_model)
-    freq_model = np.transpose(freq_model)
+    freq_model = np.transpose(np.asarray(freq_model))
+    # freq_model = np.transpose(freq_model)
     # stop = time.time()
     # duration = stop - start
 
@@ -69,20 +69,51 @@ def run_local_coupling_forward(brain, params, freqs):
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        fq, ev, Vv, freqresp_out, _ = nt.network_transfer_local_alpha(brain, params, w)
-        fqall.append(fq)
+        freq_resp, ev, Vv, model_out, _ = nt.network_transfer_local_alpha(brain, params, w)
+        fqall.append(freq_resp)
         evec.append(ev)
         Vvec.append(Vv)
-        freq_model.append(freqresp_out)
+        freq_model.append(model_out)
 
-    frequency_response = np.asarray(fqall)
+    frequency_response = np.transpose(np.asarray(fqall))
     evec = np.asarray(evec)
     Vvec = np.asarray(Vvec)
-    freq_model = np.asarray(freq_model)
-    freq_model = np.transpose(freq_model)
+    freq_model = np.transpose(np.asarray(freq_model))
+    # freq_model = np.transpose(freq_model)
     # stop = time.time()
     # duration = stop - start
 
     # print('Computation time = ', duration)
 
     return freq_model, frequency_response, evec, Vvec
+
+def run_HM_forward(brain, params, freqs):
+    """Run the forward calculations with HM's local oscillators
+    
+    Args:
+        same as above!
+    """
+    evec = []
+    Vvec = []
+    fqall = []
+    freq_model = []
+    Htotal_allfreq = []
+
+    # start = time.time()
+    for freq in freqs:
+        w = 2 * np.pi * freq
+        freq_resp, ev, Vv, model_out, Htotal = nt.network_transfer_HM(brain, params, w)
+        fqall.append(freq_resp)
+        evec.append(ev)
+        Vvec.append(Vv)
+        freq_model.append(model_out)
+        Htotal_allfreq.append(Htotal)
+
+    frequency_response = np.transpose(np.asarray(fqall))
+    evec = np.asarray(evec)
+    Vvec = np.asarray(Vvec)
+    freq_model = np.transpose(np.asarray(freq_model))
+    # freq_model = np.transpose(freq_model)
+    Htotal_out = np.asarray(Htotal_allfreq)
+
+    return freq_model, frequency_response, evec, Vvec, Htotal_out

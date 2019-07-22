@@ -4,6 +4,8 @@ time series data. These are applied prior to any further processing."""
 import csv
 import numpy as np
 import nitime.algorithms as tsa
+import matplotlib
+matplotlib.use('PS')
 import matplotlib.pyplot as plt
 
 from ..utils import path as pth
