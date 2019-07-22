@@ -10,4 +10,5 @@ __pycache__
 **/.svg
 *.key
 
-spectrom/data/*
+spectrome/data/*
+spectrome/notebooks/complex_laplacian/figures
