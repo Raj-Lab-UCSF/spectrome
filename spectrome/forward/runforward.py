@@ -112,7 +112,7 @@ def run_HM_forward(brain, params, freqs):
     frequency_response = np.transpose(np.asarray(frequency_response))
     eigenvalues = np.asarray(eigenvalues)
     eigenvectors = np.asarray(eigenvectors)
-    model_out = np.transpose(np.asarray(freq_model))
+    model_out = np.transpose(np.asarray(model_out))
     # freq_model = np.transpose(freq_model)
     Htotal_frequency_response = np.asarray(Htotal_allfreq)
 
