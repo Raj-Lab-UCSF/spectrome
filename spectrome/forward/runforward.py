@@ -19,31 +19,31 @@ def run_forward(brain, params, freqs):
 
     """
 
-    evec = []
-    Vvec = []
-    fqall = []
-    freq_model = []
+    eigenvalues = []
+    eigenvectors = []
+    frequency_response = []
+    model_out = []
 
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        freq_resp, ev, Vv, model_out, _ = nt.network_transfer_function(brain, params, w)
-        fqall.append(freq_resp)
-        evec.append(ev)
-        Vvec.append(Vv)
-        freq_model.append(model_out)
+        freq_resp, eig_val, eig_vec, freq_model, _ = nt.network_transfer_function(brain, params, w)
+        frequency_response.append(freq_resp)
+        eigenvalues.append(eig_val)
+        eigenvectors.append(eig_vec)
+        model_out.append(freq_model)
 
-    frequency_response = np.transpose(np.asarray(fqall))
-    evec = np.asarray(evec)
-    Vvec = np.asarray(Vvec)
-    freq_model = np.transpose(np.asarray(freq_model))
+    frequency_response = np.transpose(np.asarray(frequency_response))
+    eigenvalues = np.asarray(eigenvalues)
+    eigenvectors = np.asarray(eigenvectors)
+    model_out = np.transpose(np.asarray(model_out))
     # freq_model = np.transpose(freq_model)
     # stop = time.time()
     # duration = stop - start
 
     # print('Computation time = ', duration)
 
-    return freq_model, frequency_response, evec, Vvec
+    return model_out, frequency_response, eigenvalues, eigenvectors
 
 
 def run_local_coupling_forward(brain, params, freqs):
@@ -61,31 +61,31 @@ def run_local_coupling_forward(brain, params, freqs):
 
     """
 
-    evec = []
-    Vvec = []
-    fqall = []
-    freq_model = []
+    eigenvalues = []
+    eigenvectors = []
+    frequency_response = []
+    model_out = []
 
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        freq_resp, ev, Vv, model_out, _ = nt.network_transfer_local_alpha(brain, params, w)
-        fqall.append(freq_resp)
-        evec.append(ev)
-        Vvec.append(Vv)
-        freq_model.append(model_out)
+        freq_resp, eig_val, eig_vec, freq_model, _ = nt.network_transfer_local_alpha(brain, params, w)
+        frequency_response.append(freq_resp)
+        eigenvalues.append(eig_val)
+        eigenvectors.append(eig_vec)
+        model_out.append(freq_model)
 
-    frequency_response = np.transpose(np.asarray(fqall))
-    evec = np.asarray(evec)
-    Vvec = np.asarray(Vvec)
-    freq_model = np.transpose(np.asarray(freq_model))
+    frequency_response = np.transpose(np.asarray(frequency_response))
+    eigenvalues = np.asarray(eigenvalues)
+    eigenvectors = np.asarray(eigenvectors)
+    model_out = np.transpose(np.asarray(model_out))
     # freq_model = np.transpose(freq_model)
     # stop = time.time()
     # duration = stop - start
 
     # print('Computation time = ', duration)
 
-    return freq_model, frequency_response, evec, Vvec
+    return model_out, frequency_response, eigenvalues, eigenvectors
 
 def run_HM_forward(brain, params, freqs):
     """Run the forward calculations with HM's local oscillators
@@ -93,27 +93,27 @@ def run_HM_forward(brain, params, freqs):
     Args:
         same as above!
     """
-    evec = []
-    Vvec = []
-    fqall = []
-    freq_model = []
+    eigenvalues = []
+    eigenvectors = []
+    frequency_response = []
+    model_out = []
     Htotal_allfreq = []
 
     # start = time.time()
     for freq in freqs:
         w = 2 * np.pi * freq
-        freq_resp, ev, Vv, model_out, Htotal = nt.network_transfer_HM(brain, params, w)
-        fqall.append(freq_resp)
-        evec.append(ev)
-        Vvec.append(Vv)
-        freq_model.append(model_out)
+        freq_resp, eig_val, eig_vec, freq_model, Htotal = nt.network_transfer_HM(brain, params, w)
+        frequency_response.append(freq_resp)
+        eigenvalues.append(eig_val)
+        eigenvectors.append(eig_vec)
+        model_out.append(freq_model)
         Htotal_allfreq.append(Htotal)
 
-    frequency_response = np.transpose(np.asarray(fqall))
-    evec = np.asarray(evec)
-    Vvec = np.asarray(Vvec)
-    freq_model = np.transpose(np.asarray(freq_model))
+    frequency_response = np.transpose(np.asarray(frequency_response))
+    eigenvalues = np.asarray(eigenvalues)
+    eigenvectors = np.asarray(eigenvectors)
+    model_out = np.transpose(np.asarray(freq_model))
     # freq_model = np.transpose(freq_model)
-    Htotal_out = np.asarray(Htotal_allfreq)
+    Htotal_frequency_response = np.asarray(Htotal_allfreq)
 
-    return freq_model, frequency_response, evec, Vvec, Htotal_out
+    return model_out, frequency_response, eigenvalues, eigenvectors, Htotal_frequency_response
