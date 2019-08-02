@@ -37,3 +37,14 @@ def test_ntf():
     fq, ev, Vv, f, _ = nt.network_transfer_function(
         my_brain, parameters=my_brain.ntf_params, w=2 * np.pi
     )
+
+def test_run_forward():
+    parameters = my_brain.ntf_params
+    fvec = np.array([40.])
+    freq_model, frequency_response, evec, Vvec = rf.run_forward(my_brain,
+                                                                parameters,
+                                                                fvec)
+    assert freq_model.shape == (86,1)
+    assert frequency_response.shape == (86,1)
+    assert evec.shape == (1,86)
+    assert Vvec.shape == (1, 86, 57)

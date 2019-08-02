@@ -65,7 +65,7 @@ def ln_likelihood_pearson(theta, brain, fvec, FMEGdata):
         parameters = theta
 
     # first, run the ntf model for this setting of parameters
-    freq_model = rf.run_forward(brain, parameters, fvec)
+    freq_model, frequency_response, eigenvalues, eigenvectors = rf.run_forward(brain, parameters, fvec)
 
     # now calculate the pearson r based error
     errors, list_errors = pearson_cost(FMEGdata, freq_model)

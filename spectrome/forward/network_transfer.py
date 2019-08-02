@@ -27,23 +27,20 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
     C = brain.reducedConnectome
     D = brain.distance_matrix
 
+    # defining parameters
     tau_e = parameters["tau_e"]
     tau_i = parameters["tau_i"]
     speed = parameters["speed"]
-    gei = parameters["gei"]
-    gii = parameters["gii"]
-    tauC = parameters["tauC"]
+    gei = parameters["gei"]# excitatory-inhibitory synaptic conductance as ratio of E-E syn
+    gii = parameters["gii"]# inhibitory-inhibitory synaptic conductance as ratio of E-E syn
+    tauC = parameters["tauC"] #  tauC = 0.5*tau_e
     global_alpha = parameters["alpha"]
     local_alpha = 1
 
     # Not being used: Pin = 1 and tau_syn = 0.002
     # Defining some other parameters used:
     zero_thr = 0.05
-    #use_smalleigs = True  # otherwise uses full eig()
     a = 0.5  # fraction of signal at a node that is recurrent excitatory
-    #  gei = 4 # excitatory-inhibitory synaptic conductance as ratio of E-E syn
-    #  gii = 1 # inhibitory-inhibitory synaptic conductance as ratio of E-E syn
-    #  tauC = 0.5*tau_e
 
     # define sum of degrees for rows and columns for laplacian normalization
     rowdegree = np.transpose(np.sum(C, axis=1))
@@ -108,9 +105,6 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
     return frequency_response, eigenvalues, eigenvectors, model_out, FCmodel
 
 
-# def paramlist_todict(paramlist):
-
-
 def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
     """Network Transfer Function for spectral graph model.
 
@@ -136,20 +130,16 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
     tau_e = parameters["tau_e"]
     tau_i = parameters["tau_i"]
     speed = parameters["speed"]
-    gei = parameters["gei"]
-    gii = parameters["gii"]
-    tauC = parameters["tauC"]
+    gei = parameters["gei"]# excitatory-inhibitory synaptic conductance as ratio of E-E syn
+    gii = parameters["gii"]# inhibitory-inhibitory synaptic conductance as ratio of E-E syn
+    tauC = parameters["tauC"]#  tauC = 0.5*tau_e
     alpha = parameters["alpha"]
     # local_alpha  = 1
 
     # Not being used: Pin = 1 and tau_syn = 0.002
     # Defining some other parameters used:
     zero_thr = 0.05
-    #use_smalleigs = True  # otherwise uses full eig()
     a = 0.5  # fraction of signal at a node that is recurrent excitatory
-    #  gei = 4 # excitatory-inhibitory synaptic conductance as ratio of E-E syn
-    #  gii = 1 # inhibitory-inhibitory synaptic conductance as ratio of E-E syn
-    #  tauC = 0.5*tau_e
 
     # define sum of degrees for rows and columns for laplacian normalization
     rowdegree = np.transpose(np.sum(C, axis=1))
@@ -296,6 +286,7 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     Hoffdiag_alt = np.divide(gei * ((-1 / tau_e) * Fe + (1/tau_i) * Fi) * He * Hi, denom)
     Htotal = He_alt + Hi_alt + Hoffdiag_alt
 
+    # This scaling may not be necessary, take a look at Htotal
     q1 = 1 / local_alpha * tauC * (1j * w + local_alpha / tauC * Fe * eigenvalues)
     # q1 = tauC*(1j*w + 1/tauC*He*ev)
     qthr = zero_thr * np.abs(q1[:]).max()
@@ -315,3 +306,5 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     #den = np.sqrt(np.abs(model_out))
     #FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
     return frequency_response, eigenvalues, eigenvectors, model_out, Htotal
+
+    # Look at Htotal only, see if it's similar to HOrig.

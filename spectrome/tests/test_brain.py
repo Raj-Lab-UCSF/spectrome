@@ -12,8 +12,8 @@ def test_ntf_parameters():
         "tau_i": 0.003,
         "alpha": 1.0,
         "speed": 5.0,
-        "gei": 4.0,
-        "gii": 1.0,
+        "gei": 2.0,
+        "gii": 4.0,
         "tauC": 0.006,
     }
     assert new_brain.ntf_params == default_ntf_params
