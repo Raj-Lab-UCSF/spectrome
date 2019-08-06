@@ -10,6 +10,7 @@ import pandas as pd
 from scipy.optimize import basinhopping
 
 import sys
+import os
 
 # spectrome imports
 from spectrome.brain import Brain
