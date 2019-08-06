@@ -50,17 +50,14 @@ for name in DK_df_normalized.index:
     )
 
 def laplacian_dice(x, Brain, FC_networks, network_name):
-    # Define frequency range of interest
-    fmin = 0
-    fmax = 45
-    fvec = np.linspace(fmin, fmax, 50)
-    f2w = np.abs(fvec - x[0]).argmin()  # 8th index = alpha ~10hz
-    w = 2 * np.pi * fvec[f2w]
+    # Define frequency of interest
+    w = 2 * np.pi * x[0]
+    
     # Laplacian, Brain already prep-ed with connectomes outside of function:
     Brain.add_laplacian_eigenmodes(w=w, alpha = x[1], speed = x[2], num_ev = 86)
     # Dice:
-    HCP_brain.binary_eigenmodes = np.where(HCP_brain.norm_eigenmodes > 0.6, 1, 0)
-    hcp_dice = eigenmode.get_dice_df(HCP_brain.binary_eigenmodes, FC_networks)
+    Brain.binary_eigenmodes = np.where(Brain.norm_eigenmodes > 0.6, 1, 0)
+    hcp_dice = eigenmode.get_dice_df(Brain.binary_eigenmodes, FC_networks)
     # Compute mean Dice for chosen network:
     ntw_dice = np.round(hcp_dice[network_name].values.astype(np.double),3)
     mean_dice = np.mean(ntw_dice)
