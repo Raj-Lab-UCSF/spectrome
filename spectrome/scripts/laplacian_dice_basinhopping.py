@@ -65,7 +65,7 @@ def laplacian_dice(x, Brain, FC_networks, network_name):
     mean_dice = np.mean(ntw_dice)
     return mean_dice
 
-opt_res = basinhopping(laplacian_dice, x0 = (2,0.5,10), minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))}, niter=250,  disp=True)
+opt_res = basinhopping(laplacian_dice, x0 = (2,0.5,10), minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))}, niter=500,  disp=True)
 file_name = str(sys.argv[1]) + "_BH_dice.h5"
 file_path = os.path.join(hcp_dir, file_name)
 path.save_hdf5(file_path, opt_res)
