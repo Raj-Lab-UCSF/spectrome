@@ -63,7 +63,20 @@ def laplacian_dice(x, Brain, FC_networks, network_name):
     mean_dice = np.mean(ntw_dice)
     return mean_dice
 
-opt_res = basinhopping(laplacian_dice, x0 = (2,0.5,10), minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))}, niter=500,  disp=True)
+class BH_bounds(object):
+    def __init__(self, xmax = [45, 5, 30], xmin = [1, 0, 0]):
+        self.xmax = np.array(xmax)
+        self.xmin = np.array(xmin)
+    
+    def __call__(self, **kwargs):
+        x = kwargs["x_new"]
+        tmax = bool(np.all(x <= self.xmax))
+        tmin = bool(np.all(x >= self.xmin))
+        return tmax and tmin
+
+
+bnds = BH_bounds()
+opt_res = basinhopping(laplacian_dice, x0 = (2,0.5,10), minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))}, niter=500, accept_test = bnds, disp=True)
 file_name = str(sys.argv[1]) + "_BH_dice.h5"
 file_path = os.path.join(hcp_dir, file_name)
 path.save_hdf5(file_path, opt_res)
