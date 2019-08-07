@@ -76,7 +76,15 @@ class BH_bounds(object):
 
 
 bnds = BH_bounds()
-opt_res = basinhopping(laplacian_dice, x0 = (2,0.5,10), minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))}, niter=500, accept_test = bnds, disp=True)
+opt_res = basinhopping(
+    laplacian_dice, x0 = (2,0.5,10),
+    minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))},
+    niter=500,
+    T = 0.01,
+    stepsize = 1.2,
+    accept_test = bnds,
+    disp=True)
 file_name = str(sys.argv[1]) + "_BH_dice.h5"
 file_path = os.path.join(hcp_dir, file_name)
 path.save_hdf5(file_path, opt_res)
+print("Optimal result: " , opt_res['x'])
