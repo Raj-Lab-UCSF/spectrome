@@ -8,6 +8,7 @@ import h5py
 import numpy as np
 import pandas as pd
 from scipy.optimize import basinhopping
+from sklearn.linear_model import LinearRegression
 
 import sys
 import os
@@ -60,8 +61,8 @@ def laplacian_dice(x, Brain, FC_networks, network_name):
     hcp_dice = eigenmode.get_dice_df(Brain.binary_eigenmodes, FC_networks)
     # Compute mean Dice for chosen network:
     ntw_dice = np.round(hcp_dice[network_name].values.astype(np.double),3)
-    mean_dice = np.mean(ntw_dice)
-    return mean_dice
+    min_dice = np.min(ntw_dice)
+    return min_dice
 
 class BH_bounds(object):
     def __init__(self, xmax = [45, 5, 30], xmin = [1, 0, 0]):
@@ -83,7 +84,42 @@ opt_res = basinhopping(
     T = 0.01,
     stepsize = 1.2,
     accept_test = bnds,
-    disp=True)
+    disp=False)
+
+opt_freq = opt_res['x'][0]
+opt_alpha = opt_res['x'][1]
+opt_speed = opt_res['x'][2]
+
+# Recreate the forward solution:
+w_opt = 2*np.pi*opt_freq
+HCP_brain.add_laplacian_eigenmodes(w=w_opt, alpha = opt_alpha, speed = opt_speed)
+HCP_brain.binary_eigenmodes = np.where(HCP_brain.binary_eigenmodes > 0.6, 1, 0)
+opt_dice = eigenmode.get_dice_df(HCP_brain.binary_eigenmodes, DKfc_binarized)
+ntw_opt_dice = np.round(opt_dice[network_name].values.astype(np.double),3)
+min_opt_dice = np.min(ntw_opt_dice)
+
+assert min_opt_dice == np.round(opt_res['fun'],3)
+
+# Linear Regression for 10 K's and save in a dictionary:
+K = 10
+ordered_dice = np.argsort(ntw_opt_dice)
+assert ntw_opt_dice[ordered_dice[1]] > ntw_opt_dice[ordered_dice[0]]
+
+# create empty list of dicts:
+LinReg = []
+keys = ['num','coef','r2score']
+for k in np.arange(0,K):
+    selected_eigs = HCP_brain.norm_eigenmodes[:,ordered_dice[0:k]]
+    canon_network = np.nan_to_num(DK_df_normalized.loc[network_name].values).reshape(-1,1)
+    regr = LinearRegression()
+    regr.fit(canon_network, selected_eigs)
+    c = regr.coef_
+    r2 = regr.score(canon_network, selected_eigs)
+    reg_results = {keys[0]:k, keys[1]:c, keys[2]:r2}
+    LinReg.append(reg_results)
+    print('For K = {}, coefficients: {} , residual error: {}'.format(k, c, r2))
+
+opt_res['LinRegResults'] = LinReg
 file_name = str(sys.argv[1]) + "_BH_dice.h5"
 file_path = os.path.join(hcp_dir, file_name)
 path.save_hdf5(file_path, opt_res)

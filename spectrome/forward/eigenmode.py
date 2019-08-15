@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy.spatial import distance
 from scipy.stats import entropy
-
+from sklearn.metrics import jaccard_score
 
 def eig_fc_get_standardz(x, y, binary_thresh=0.1, nreps=1000):
     """Permutes both canonical networks and input eigenmodes 1000 times
@@ -113,6 +113,30 @@ def get_dice_df(x, y):
         eigcounter += 1
     return df_dice
 
+def get_jaccard_df(x, y):
+    """[Jaccard similarity score betewen two boolean arrays, then make it into a Pandas Dataframe
+    translate into dataframes after we compute all the arrays?]
+    
+    Args:
+        x ([array]): [eigen mode array with boolean array values]
+        y ([Dataframe]): [canonical network data frame with boolean array vaues]
+
+    Returns:
+        jaccard_df [array]: dice scores between each eigen mode and each canonical network    
+    """
+    df_cols = y.index
+    df_ind = ["Eig #%d" % x for x in np.arange(x.shape[1]) + 1]
+    jaccard_df = pd.DataFrame([], index=df_ind, columns=df_cols)
+    eigcounter = 0
+    for eignum in jaccard_df.index:
+        for name in y.index:
+            em = x[:, eigcounter]  # eigen mode values
+            fc = y.loc[name].values
+            jaccard_df.at[eignum, name] = jaccard_score(
+                em, fc
+            )  # without multiplying by support
+        eigcounter += 1
+    return jaccard_df
 
 def get_entropy_score(df_sxy):
     """[Compute purity score as a measure of entropy]
