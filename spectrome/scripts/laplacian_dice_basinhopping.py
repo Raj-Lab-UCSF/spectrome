@@ -80,10 +80,11 @@ bnds = BH_bounds()
 opt_res = basinhopping(
     laplacian_dice, x0 = (2,0.5,10),
     minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))},
-    niter=500,
+    niter=1000,
     T = 0.01,
     stepsize = 1.2,
     accept_test = bnds,
+    seed = 24,
     disp=False)
 
 opt_freq = opt_res['x'][0]
