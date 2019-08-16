@@ -107,7 +107,7 @@ assert ntw_opt_dice[ordered_dice[1]] > ntw_opt_dice[ordered_dice[0]]
 
 # create empty list of dicts:
 LinReg = []
-keys = ['num','coef','r2score']
+keys = ['num','coef','r2score','ordereigs']
 for k in np.arange(0,K):
     selected_eigs = HCP_brain.norm_eigenmodes[:,ordered_dice[0:k]]
     canon_network = np.nan_to_num(DK_df_normalized.loc[network_name].values).reshape(-1,1)
@@ -115,9 +115,9 @@ for k in np.arange(0,K):
     regr.fit(canon_network, selected_eigs)
     c = regr.coef_
     r2 = regr.score(canon_network, selected_eigs)
-    reg_results = {keys[0]:k, keys[1]:c, keys[2]:r2}
+    reg_results = {keys[0]:k, keys[1]:c, keys[2]:r2, keys[3]:ordered_dice[0:k]}
     LinReg.append(reg_results)
-    print('For K = {}, coefficients: {} , residual error: {}'.format(k, c, r2))
+    print('For K = {}, chosen eigs: {}, coefficients: {} , residual error: {}'.format(k, ordered_dice[0:k], c, r2))
 
 opt_res['LinRegResults'] = LinReg
 file_name = str(sys.argv[1]) + "_BH_dice.h5"
