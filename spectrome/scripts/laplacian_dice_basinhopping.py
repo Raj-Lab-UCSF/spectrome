@@ -92,9 +92,9 @@ opt_speed = opt_res['x'][2]
 
 print('optimized output: {}'.format(opt_res))
 # Recreate the forward solution:
-w_opt = 2*np.pi*opt_freq
+w_opt = 2 * np.pi * opt_freq
 HCP_brain.add_laplacian_eigenmodes(w=w_opt, alpha = opt_alpha, speed = opt_speed)
-HCP_brain.binary_eigenmodes = np.where(HCP_brain.binary_eigenmodes > 0.6, 1, 0)
+HCP_brain.binary_eigenmodes = np.where(HCP_brain.norm_eigenmodes > 0.6, 1, 0)
 opt_dice = eigenmode.get_dice_df(HCP_brain.binary_eigenmodes, DKfc_binarized)
 ntw_opt_dice = np.round(opt_dice[str(sys.argv[1])].values.astype(np.double),3)
 print('all dice scores: {}'.format(ntw_opt_dice))
