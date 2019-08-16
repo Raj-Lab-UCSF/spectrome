@@ -95,7 +95,7 @@ w_opt = 2*np.pi*opt_freq
 HCP_brain.add_laplacian_eigenmodes(w=w_opt, alpha = opt_alpha, speed = opt_speed)
 HCP_brain.binary_eigenmodes = np.where(HCP_brain.binary_eigenmodes > 0.6, 1, 0)
 opt_dice = eigenmode.get_dice_df(HCP_brain.binary_eigenmodes, DKfc_binarized)
-ntw_opt_dice = np.round(opt_dice[network_name].values.astype(np.double),3)
+ntw_opt_dice = np.round(opt_dice[str(sys.argv[1])].values.astype(np.double),3)
 min_opt_dice = np.min(ntw_opt_dice)
 
 assert min_opt_dice == np.round(opt_res['fun'],3)
@@ -110,7 +110,7 @@ LinReg = []
 keys = ['num','coef','r2score','ordereigs']
 for k in np.arange(0,K):
     selected_eigs = HCP_brain.norm_eigenmodes[:,ordered_dice[0:k]]
-    canon_network = np.nan_to_num(DK_df_normalized.loc[network_name].values).reshape(-1,1)
+    canon_network = np.nan_to_num(DK_df_normalized.loc[str(sys.argv[1])].values).reshape(-1,1)
     regr = LinearRegression()
     regr.fit(canon_network, selected_eigs)
     c = regr.coef_
