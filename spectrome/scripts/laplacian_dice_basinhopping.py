@@ -101,14 +101,14 @@ min_opt_dice = np.min(ntw_opt_dice)
 assert min_opt_dice == np.round(opt_res['fun'],3)
 
 # Linear Regression for 10 K's and save in a dictionary:
-K = 10
+K = 11
 ordered_dice = np.argsort(ntw_opt_dice)
 assert ntw_opt_dice[ordered_dice[1]] > ntw_opt_dice[ordered_dice[0]]
 
 # create empty list of dicts:
 LinReg = []
 keys = ['num','coef','r2score','ordereigs']
-for k in np.arange(0,K):
+for k in np.arange(1,K):
     selected_eigs = HCP_brain.norm_eigenmodes[:,ordered_dice[0:k]]
     canon_network = np.nan_to_num(DK_df_normalized.loc[str(sys.argv[1])].values).reshape(-1,1)
     regr = LinearRegression()
