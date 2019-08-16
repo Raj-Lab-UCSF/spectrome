@@ -97,7 +97,7 @@ HCP_brain.add_laplacian_eigenmodes(w=w_opt, alpha = opt_alpha, speed = opt_speed
 HCP_brain.binary_eigenmodes = np.where(HCP_brain.binary_eigenmodes > 0.6, 1, 0)
 opt_dice = eigenmode.get_dice_df(HCP_brain.binary_eigenmodes, DKfc_binarized)
 ntw_opt_dice = np.round(opt_dice[str(sys.argv[1])].values.astype(np.double),3)
-print('all dice scores: {}'.format(ntw_opt_dice_dice))
+print('all dice scores: {}'.format(ntw_opt_dice))
 min_opt_dice = np.min(ntw_opt_dice)
 
 print('Basin hopping final dice: {}'.format(opt_res['fun']))
