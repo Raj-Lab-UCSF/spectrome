@@ -91,18 +91,18 @@ opt_freq = opt_res['x'][0]
 opt_alpha = opt_res['x'][1]
 opt_speed = opt_res['x'][2]
 
-print('optimized output: {}'.format(opt_res))
+#print('optimized output: {}'.format(opt_res))
 # Recreate the forward solution:
 w_opt = 2 * np.pi * opt_freq
 HCP_brain.add_laplacian_eigenmodes(w=w_opt, alpha = opt_alpha, speed = opt_speed)
 HCP_brain.binary_eigenmodes = np.where(HCP_brain.norm_eigenmodes > 0.6, 1, 0)
 opt_dice = eigenmode.get_dice_df(HCP_brain.binary_eigenmodes, DKfc_binarized)
 ntw_opt_dice = np.round(opt_dice[str(sys.argv[1])].values.astype(np.double),3)
-print('all dice scores: {}'.format(ntw_opt_dice))
+#print('all dice scores: {}'.format(ntw_opt_dice))
 min_opt_dice = np.min(ntw_opt_dice)
 
-print('Basin hopping final dice: {}'.format(opt_res['fun']))
-print('Forward calculated dice : {}'.format(min_opt_dice))
+#print('Basin hopping final dice: {}'.format(opt_res['fun']))
+#print('Forward calculated dice : {}'.format(min_opt_dice))
 assert min_opt_dice == np.round(opt_res['fun'],3)
 
 # Linear Regression for 10 K's and save in a dictionary:
@@ -125,7 +125,7 @@ for k in np.arange(1,K):
     print('For K = {}, chosen eigs: {}, coefficients: {} , residual error: {}'.format(k, ordered_dice[0:k], c, r2))
 
 opt_res['LinRegResults'] = LinReg
-file_name = str(sys.argv[1]) + "_BH_dice.h5"
+file_name = str(sys.argv[1]) + str(sys.argv[2]) + "_BH_dice.h5"
 file_path = os.path.join(hcp_dir, file_name)
 path.save_hdf5(file_path, opt_res)
 print("Optimal result: " , opt_res['x'])
