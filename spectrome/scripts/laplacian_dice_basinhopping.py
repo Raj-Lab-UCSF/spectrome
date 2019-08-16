@@ -98,8 +98,8 @@ opt_dice = eigenmode.get_dice_df(HCP_brain.binary_eigenmodes, DKfc_binarized)
 ntw_opt_dice = np.round(opt_dice[str(sys.argv[1])].values.astype(np.double),3)
 min_opt_dice = np.min(ntw_opt_dice)
 
-print('Basin hopping final dice: '.format(opt_res['fun']))
-print('Forward calculated dice : '.format(min_opt_dice))
+print('Basin hopping final dice: {}'.format(opt_res['fun']))
+print('Forward calculated dice : {}'.format(min_opt_dice))
 assert min_opt_dice == np.round(opt_res['fun'],3)
 
 # Linear Regression for 10 K's and save in a dictionary:
