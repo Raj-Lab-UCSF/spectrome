@@ -79,7 +79,7 @@ allx0 = np.array([[2,0.5,10],[10,1,10],[10,0.8,20],[25,0.8,1.5],[8,0.5,5]])
 
 bnds = BH_bounds()
 opt_res = basinhopping(
-    laplacian_dice, x0 = allx0[sys.argv[2],:],
+    laplacian_dice, x0 = allx0[int(sys.argv[2]),:],
     minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))},
     niter=1000,
     T = 0.01,
