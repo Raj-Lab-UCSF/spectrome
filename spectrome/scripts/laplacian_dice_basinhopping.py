@@ -90,7 +90,7 @@ opt_freq = opt_res['x'][0]
 opt_alpha = opt_res['x'][1]
 opt_speed = opt_res['x'][2]
 
-print('optimized parameters: {}'.format(opt_res['x']))
+print('optimized output: {}'.format(opt_res))
 # Recreate the forward solution:
 w_opt = 2*np.pi*opt_freq
 HCP_brain.add_laplacian_eigenmodes(w=w_opt, alpha = opt_alpha, speed = opt_speed)
