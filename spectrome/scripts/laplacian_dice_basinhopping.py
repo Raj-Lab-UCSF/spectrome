@@ -94,7 +94,7 @@ def laplacian_corr(x, Brain, FC_networks, network_name):
     for e in np.arange(0,len(corrs)):
         corrs[e] = -pearsonr(np.squeeze(canon_network), Brain.norm_eigenmodes[:,e])[0]
 
-    max_corr = np.max(corrs)
+    max_corr = np.min(corrs)
     return max_corr
 
 class BH_bounds(object):
@@ -117,22 +117,22 @@ if str(sys.argv[3]) == 'dice':
     opt_res = basinhopping(
         laplacian_dice, x0 = allx0[int(sys.argv[2]),:],
         minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))},
-        niter=2000,
+        niter=1500,
         T = 0.01,
-        stepsize = 1.2,
+        stepsize = 1.5,
         accept_test = bnds,
         seed = 24,
-        disp=False)
+        disp=True)
 elif str(sys.argv[3]) == 'corr':
     opt_res = basinhopping(
         laplacian_corr, x0 = allx0[int(sys.argv[2]),:],
         minimizer_kwargs = {"args":(HCP_brain, DK_df_normalized, str(sys.argv[1]))},
-        niter = 2000,
+        niter = 1500,
         T = 0.01,
-        stepsize = 1.2,
+        stepsize = 1.5,
         accept_test = bnds,
         seed = 24,
-        disp = False
+        disp = True
     )
 
 opt_freq = opt_res['x'][0]
