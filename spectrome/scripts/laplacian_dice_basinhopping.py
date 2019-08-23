@@ -123,7 +123,7 @@ if str(sys.argv[3]) == 'dice':
         accept_test = bnds,
         seed = 24,
         disp=False)
-elseif str(sys.argv[3]) == 'corr':
+elif str(sys.argv[3]) == 'corr':
     opt_res = basinhopping(
         laplacian_corr, x0 = allx0[int(sys.argv[2]),:],
         minimizer_kwargs = {"args":(HCP_brain, DK_df_normalized, str(sys.argv[1]))},
