@@ -92,7 +92,7 @@ def laplacian_corr(x, Brain, FC_networks, network_name):
     # compute max correlation for optimization
     corrs = np.zeros([Brain.norm_eigenmodes.shape[1],1])
     for e in np.arange(0,len(corrs)):
-        corrs[e] = -pearsonr(np.squeeze(canon_network, Brain.norm_eigenmodes[:,e]))[0]
+        corrs[e] = -pearsonr(np.squeeze(canon_network), Brain.norm_eigenmodes[:,e])[0]
 
     max_corr = np.max(corrs)
     return max_corr
