@@ -13,6 +13,7 @@ from sklearn.linear_model import LinearRegression
 
 import sys
 import os
+import time
 
 # spectrome imports
 from spectrome.brain import Brain
@@ -57,6 +58,7 @@ for name in DK_df_normalized.index:
     )
 
 def laplacian_dice(x, Brain, FC_networks, network_name):
+    start = time.time()
     # Define frequency of interest
     w = 2 * np.pi * x[0]
     
@@ -80,9 +82,12 @@ def laplacian_dice(x, Brain, FC_networks, network_name):
     # Compute mean Dice for chosen network:
     ntw_dice = np.round(hcp_dice[network_name].values.astype(np.double),3)
     min_dice = np.min(ntw_dice)
+    end = time.time()
+    print(end - start)
     return min_dice
 
 def laplacian_corr(x, Brain, FC_networks, network_name):
+    start = time.time()
     w = 2 * np.pi * x[0]
     
     # Laplacian, Brain already prep-ed with connectomes outside of function:
@@ -95,6 +100,8 @@ def laplacian_corr(x, Brain, FC_networks, network_name):
         corrs[e] = -pearsonr(np.squeeze(canon_network), Brain.norm_eigenmodes[:,e])[0]
 
     max_corr = np.min(corrs)
+    end = time.time()
+    print(end - start)
     return max_corr
 
 class BH_bounds(object):
