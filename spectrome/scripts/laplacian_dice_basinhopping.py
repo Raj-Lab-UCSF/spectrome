@@ -154,12 +154,12 @@ HCP_brain.add_laplacian_eigenmodes(w=w_opt, alpha = opt_alpha, speed = opt_speed
 thresh_vec = np.linspace(0.1,0.8,30)
 binary_count = np.zeros(thresh_vec.shape)
 for i in np.arange(0,len(thresh_vec)):
-    binary_mat = np.where(HCP_Brain.norm_eigenmodes > thresh_vec[i],1,0)
+    binary_mat = np.where(HCP_brain.norm_eigenmodes > thresh_vec[i],1,0)
     binary_count[i] = np.count_nonzero(binary_mat)
 
 num_canonical = np.count_nonzero(DKfc_binarized.loc[str(sys.argv[1])].values)
 bin_num = np.abs(binary_count - num_canonical).argmin()
-HCP_Brain.binary_eigenmodes = np.where(HCP_Brain.norm_eigenmodes > thresh_vec[bin_num], 1, 0)
+HCP_brain.binary_eigenmodes = np.where(HCP_brain.norm_eigenmodes > thresh_vec[bin_num], 1, 0)
 opt_dice = eigenmode.get_dice_df(HCP_brain.binary_eigenmodes, DKfc_binarized)
 ntw_opt_dice = np.round(opt_dice[str(sys.argv[1])].values.astype(np.double),3)
 #print('all dice scores: {}'.format(ntw_opt_dice))
