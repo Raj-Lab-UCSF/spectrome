@@ -21,9 +21,9 @@ from spectrome.utils import functions, path
 from spectrome.forward import eigenmode, get_complex_laplacian
 
 # Limit number of threads
-os.environ["OMP_NUM_THREADS"] = "2"
-os.environ["MKL_NUM_THREADS"] = "2"
-os.environ["NUMEXPR_NUM_THREADS"] = "2"
+#os.environ["OMP_NUM_THREADS"] = "2"
+#os.environ["MKL_NUM_THREADS"] = "2"
+#os.environ["NUMEXPR_NUM_THREADS"] = "2"
 
 # hcp template connectome directory
 hcp_dir = "../data"
