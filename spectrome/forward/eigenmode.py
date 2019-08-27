@@ -115,16 +115,16 @@ def get_dice_df(x, y):
 
 """
 def get_jaccard_df(x, y):
-    """[Jaccard similarity score betewen two boolean arrays, then make it into a Pandas Dataframe
-    translate into dataframes after we compute all the arrays?]
+    #[Jaccard similarity score betewen two boolean arrays, then make it into a Pandas Dataframe
+    #translate into dataframes after we compute all the arrays?]
     
-    Args:
-        x ([array]): [eigen mode array with boolean array values]
-        y ([Dataframe]): [canonical network data frame with boolean array vaues]
+    #Args:
+    #    x ([array]): [eigen mode array with boolean array values]
+    #    y ([Dataframe]): [canonical network data frame with boolean array vaues]
 
-    Returns:
-        jaccard_df [array]: dice scores between each eigen mode and each canonical network    
-    """
+    #Returns:
+    #    jaccard_df [array]: dice scores between each eigen mode and each canonical network    
+
     df_cols = y.index
     df_ind = ["Eig #%d" % x for x in np.arange(x.shape[1]) + 1]
     jaccard_df = pd.DataFrame([], index=df_ind, columns=df_cols)
