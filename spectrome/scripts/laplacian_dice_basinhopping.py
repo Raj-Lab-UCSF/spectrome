@@ -138,7 +138,7 @@ elif str(sys.argv[3]) == 'corr':
         minimizer_kwargs = {"args":(HCP_brain, DK_df_normalized, str(sys.argv[1]))},
         niter = 1500,
         T = 0.01,
-        stepsize = 1.5,
+        stepsize = 2,
         accept_test = bnds,
         seed = 24,
         niter_success=150,
