@@ -141,7 +141,7 @@ elif str(sys.argv[3]) == 'corr':
         stepsize = 1.5,
         accept_test = bnds,
         seed = 24,
-        niter_success=800,
+        niter_success=150,
         disp = True
     )
 
