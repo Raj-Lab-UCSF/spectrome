@@ -119,6 +119,7 @@ allx0 = np.array([[2,0.5,10],[10,1,10],[10,0.8,20],[25,0.8,1.5],[8,0.5,5],
 [2,3,5],[8,5,2],[8,2,10],[25,2,10],[40,1,10]])
 
 bnds = BH_bounds()
+print('Starting optimization for {} initial condition {}'.format(str(sys.argv[1]),str(sys.argv[2])))
 
 if str(sys.argv[3]) == 'dice':
     opt_res = basinhopping(
@@ -129,6 +130,7 @@ if str(sys.argv[3]) == 'dice':
         stepsize = 1.5,
         accept_test = bnds,
         seed = 24,
+        niter_success=800,
         disp=False)
 elif str(sys.argv[3]) == 'corr':
     opt_res = basinhopping(
@@ -139,6 +141,7 @@ elif str(sys.argv[3]) == 'corr':
         stepsize = 1.5,
         accept_test = bnds,
         seed = 24,
+        niter_success=800,
         disp = False
     )
 
