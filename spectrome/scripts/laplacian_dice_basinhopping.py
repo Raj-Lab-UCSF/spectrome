@@ -87,7 +87,7 @@ def laplacian_dice(x, Brain, FC_networks, network_name):
     return min_dice
 
 def laplacian_corr(x, Brain, FC_networks, network_name):
-    start = time.time()
+    #start = time.time()
     w = 2 * np.pi * x[0]
     
     # Laplacian, Brain already prep-ed with connectomes outside of function:
@@ -100,8 +100,8 @@ def laplacian_corr(x, Brain, FC_networks, network_name):
         corrs[e] = -pearsonr(np.squeeze(canon_network), Brain.norm_eigenmodes[:,e])[0]
 
     max_corr = np.min(corrs)
-    end = time.time()
-    print(end - start)
+    #end = time.time()
+    #print(end - start)
     return max_corr
 
 class BH_bounds(object):
