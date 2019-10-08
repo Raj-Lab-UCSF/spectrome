@@ -11,4 +11,4 @@ __pycache__
 *.key
 
 spectrome/data/*
-spectrome/notebooks/complex_laplacian/figures
+spectrome/notebooks/complex_laplacian/eigenmodes/figures
