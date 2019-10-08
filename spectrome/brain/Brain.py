@@ -1,10 +1,11 @@
 import numpy as np
 import os
+from sklearn.preprocessing import minmax_scale
 
 from ..read import data_reader as dr
 from ..preprocess import permute as perm
 from ..utils import path as pth
-from ..forward import get_complex_laplacian as fwd
+from ..forward import laplacian as fwd
 
 
 class Brain:
@@ -30,6 +31,10 @@ class Brain:
         self.laplacian = None
         self.eigenvalues = None
         self.norm_eigenmodes = None
+        self.regular_eigenvalues = None
+        self.regular_laplacian = None
+        self.norm_regular_eigenmodes = None
+        self.raw_regular_eigenvectors = None
 
         self.ntf_params = {
             "tau_e": 0.012,
@@ -89,7 +94,7 @@ class Brain:
         self.distance_matrix = dist
         self.permutation = permutation
 
-    def add_laplacian_eigenmodes(self, w, alpha=1, speed=10, num_ev=86):
+    def add_laplacian_eigenmodes(self, w, alpha=1, speed=10, num_ev=86, vis = True):
         "add complex Laplacian `L` and selected eigen modes and eigen values"
         L, selected_Evec, sorted_Eval = fwd.get_complex_laplacian(
             C=self.reducedConnectome,
@@ -100,22 +105,51 @@ class Brain:
             num_ev=num_ev,
         )
         # Normalize eigen vectors for better visualization
-        norm_eigs = np.zeros(selected_Evec.shape)
-        for i in np.arange(0, num_ev):
-            vdata = np.maximum(
-                selected_Evec[:, i],
-                np.mean(selected_Evec[:, i]) - np.std(selected_Evec[:, i]),
-            )
-            vdata = vdata - np.amin(vdata)
+        if vis == True:
+            norm_eigs = np.zeros(selected_Evec.shape)
+            for i in np.arange(0, num_ev):
+                vdata = np.maximum(
+                    selected_Evec[:, i],
+                    np.mean(selected_Evec[:, i]) - np.std(selected_Evec[:, i]),
+                )
+                vdata = vdata - np.amin(vdata)
 
-            vdata = np.minimum(vdata, np.mean(vdata) + np.std(vdata))
-            vdata = vdata / np.amax(vdata)
-            norm_eigs[:, i] = vdata
+                vdata = np.minimum(vdata, np.mean(vdata) + np.std(vdata))
+                vdata = vdata / np.amax(vdata)
+                norm_eigs[:, i] = vdata
+        else:
+            norm_eigs = minmax_scale(selected_Evec, axis = 1)
 
-        self.laplacian = L
+        self.complex_laplacian = L
         self.raw_eigenvectors = selected_Evec
         self.norm_eigenmodes = norm_eigs
         self.eigenvalues = sorted_Eval
+
+    def add_regular_laplacian_eigenmodes(self, alpha = 1, num_ev = 86, vis = True):
+        L, selected_Evec, sorted_Eval = fwd.get_laplacian(
+            C = self.reducedConnectome,
+            alpha = alpha,
+            num_ev = num_ev
+        )
+        # Normalize eigen vectors
+        if vis == True:
+            norm_eigs = np.zeros(selected_Evec.shape)
+            for i in np.arange(0, num_ev):
+                vdata = np.maximum(
+                    selected_Evec[:, i],
+                    np.mean(selected_Evec[:, i]) - np.std(selected_Evec[:, i]),
+                )
+                vdata = vdata - np.amin(vdata)
+
+                vdata = np.minimum(vdata, np.mean(vdata) + np.std(vdata))
+                vdata = vdata / np.amax(vdata)
+                norm_eigs[:, i] = vdata
+        else:
+            norm_eigs = minmax_scale(selected_Evec, axis = 1)
+        self.regular_laplacian = L
+        self.raw_regular_eigenvectors = selected_Evec
+        self.norm_regular_eigenmodes = norm_eigs
+        self.regular_eigenvalues = sorted_Eval
 
     def bi_symmetric_c(self):
         """Short summary.

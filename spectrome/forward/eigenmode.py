@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from scipy.spatial import distance
-from scipy.stats import entropy
+from scipy.stats import entropy, pearsonr
 #from sklearn.metrics import jaccard_score
 
 def eig_fc_get_standardz(x, y, binary_thresh=0.1, nreps=1000):
@@ -112,6 +112,21 @@ def get_dice_df(x, y):
             )  # without multiplying by support
         eigcounter += 1
     return df_dice
+
+def get_corr_df(x,y):
+    """Pearson's correlation between arrays
+    """
+    df_cols = y.index
+    df_ind = ["Eig #%d" % x for x in np.arange(x.shape[1]) + 1]
+    df_corr = pd.DataFrame([], index=df_ind, columns=df_cols)
+    eigcounter = 0
+    for eignum in df_corr.index:
+        for name in y.index:
+            em = x[:,eigcounter] # eigenmode
+            fc = np.nan_to_num(y.loc[name].values)
+            df_corr.at[eignum, name] = pearsonr(em, fc)[0]
+        eigcounter += 1
+    return df_corr
 
 """
 def get_jaccard_df(x, y):
