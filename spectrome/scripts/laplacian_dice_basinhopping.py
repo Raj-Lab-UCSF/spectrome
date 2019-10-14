@@ -8,7 +8,7 @@ import h5py
 import numpy as np
 import pandas as pd
 from scipy.optimize import basinhopping
-from scipy.stats import pearsonr
+from scipy.stats import spearmanr
 from sklearn.linear_model import LinearRegression
 
 import sys
@@ -18,7 +18,7 @@ import time
 # spectrome imports
 from spectrome.brain import Brain
 from spectrome.utils import functions, path
-from spectrome.forward import eigenmode, get_complex_laplacian
+from spectrome.forward import eigenmode, decompose_complex_laplacian
 
 # Limit number of threads
 #os.environ["OMP_NUM_THREADS"] = "2"
@@ -91,13 +91,13 @@ def laplacian_corr(x, Brain, FC_networks, network_name):
     w = 2 * np.pi * x[0]
     
     # Laplacian, Brain already prep-ed with connectomes outside of function:
-    Brain.add_laplacian_eigenmodes(w=w, alpha = x[1], speed = x[2], num_ev = 86)
+    Brain.decompose_complex_laplacian(alpha = x[1], phi = x[2], num_ev = 86)
     canon_network = np.nan_to_num(FC_networks.loc[network_name].values)
     
     # compute max correlation for optimization
     corrs = np.zeros([Brain.norm_eigenmodes.shape[1],1])
     for e in np.arange(0,len(corrs)):
-        corrs[e] = -pearsonr(np.squeeze(canon_network), Brain.norm_eigenmodes[:,e])[0]
+        corrs[e] = -spearmanr(np.squeeze(canon_network), Brain.norm_eigenmodes[:,e])[0]
 
     max_corr = np.min(corrs)
     #end = time.time()
@@ -105,7 +105,7 @@ def laplacian_corr(x, Brain, FC_networks, network_name):
     return max_corr
 
 class BH_bounds(object):
-    def __init__(self, xmax = [45, 5, 30], xmin = [1, 0, 0]):
+    def __init__(self, xmax = [5, 50], xmin = [0, 0]):
         self.xmax = np.array(xmax)
         self.xmin = np.array(xmin)
     
@@ -115,8 +115,8 @@ class BH_bounds(object):
         tmin = bool(np.all(x >= self.xmin))
         return tmax and tmin
 
-allx0 = np.array([[2,0.5,10],[10,1,10],[10,0.8,20],[25,0.8,1.5],[8,0.5,5],
-[2,3,5],[8,5,2],[8,2,10],[25,2,10],[40,1,10]])
+allx0 = np.array([[0.5,10],[1,10],[0.8,20],[0.8,1.5],[0.5,5],
+[3,5],[5,45],[2,10],[2,30],[1,40]])
 
 bnds = BH_bounds()
 print('Starting optimization for {} initial condition {}'.format(str(sys.argv[1]),str(sys.argv[2])))
@@ -145,14 +145,13 @@ elif str(sys.argv[3]) == 'corr':
         disp = True
     )
 
-opt_freq = opt_res['x'][0]
-opt_alpha = opt_res['x'][1]
-opt_speed = opt_res['x'][2]
+opt_alpha = opt_res['x'][0]
+opt_phi = opt_res['x'][1]
 
 #print('optimized output: {}'.format(opt_res))
 # Recreate the forward solution:
 w_opt = 2 * np.pi * opt_freq
-HCP_brain.add_laplacian_eigenmodes(w=w_opt, alpha = opt_alpha, speed = opt_speed)
+HCP_brain.decompose_complex_laplacian(alpha = opt_alpha, phi = opt_phi)
 
 if str(sys.argv[3]) == 'dice':
     # binarize per canonical network:
@@ -179,7 +178,7 @@ elif str(sys.argv[3]) == 'corr':
     # compute max correlation for optimization
     corrs = np.squeeze(np.zeros([HCP_brain.norm_eigenmodes.shape[1],1]))
     for e in np.arange(0,len(corrs)):
-        prcorr = pearsonr(np.squeeze(canon_network), HCP_brain.norm_eigenmodes[:,e])[0]
+        prcorr = spearmanr(np.squeeze(canon_network), HCP_brain.norm_eigenmodes[:,e])[0]
         corrs[e] = prcorr
         #print(prcorr)
 

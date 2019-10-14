@@ -94,6 +94,38 @@ class Brain:
         self.distance_matrix = dist
         self.permutation = permutation
 
+    def decompose_complex_laplacian(self, alpha, phi, num_ev = 86, vis = False):
+        "Add complex laplacian `L` and selected eigenmodes and eigen values based on 2 parameters alpha and phi"
+        L, selected_Evec, sorted_Eval = fwd.decompose_complex_laplacian(
+            C = self.reducedConnectome,
+            D = self.distance_matrix,
+            alpha = alpha,
+            phi = phi,
+            num_ev = num_ev
+        )
+
+        # Normalize eigen vectors for better visualization
+        if vis == True:
+            norm_eigs = np.zeros(selected_Evec.shape)
+            for i in np.arange(0, num_ev):
+                vdata = np.maximum(
+                    selected_Evec[:, i],
+                    np.mean(selected_Evec[:, i]) - np.std(selected_Evec[:, i]),
+                )
+                vdata = vdata - np.amin(vdata)
+
+                vdata = np.minimum(vdata, np.mean(vdata) + np.std(vdata))
+                vdata = vdata / np.amax(vdata)
+                norm_eigs[:, i] = vdata
+        else:
+            norm_eigs = minmax_scale(selected_Evec, axis = 1)
+
+        self.complex_laplacian = L
+        self.raw_eigenvectors = selected_Evec
+        self.norm_eigenmodes = norm_eigs
+        self.eigenvalues = sorted_Eval
+
+        
     def add_laplacian_eigenmodes(self, w, alpha=1, speed=10, num_ev=86, vis = True):
         "add complex Laplacian `L` and selected eigen modes and eigen values"
         L, selected_Evec, sorted_Eval = fwd.get_complex_laplacian(
