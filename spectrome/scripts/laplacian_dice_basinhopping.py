@@ -18,7 +18,7 @@ import time
 # spectrome imports
 from spectrome.brain import Brain
 from spectrome.utils import functions, path
-from spectrome.forward import eigenmode, decompose_complex_laplacian
+from spectrome.forward import eigenmode
 
 # Limit number of threads
 #os.environ["OMP_NUM_THREADS"] = "2"
@@ -88,10 +88,10 @@ def laplacian_dice(x, Brain, FC_networks, network_name):
 
 def laplacian_corr(x, Brain, FC_networks, network_name):
     #start = time.time()
-    w = 2 * np.pi * x[0]
+    #w = 2 * np.pi * x[0]
     
     # Laplacian, Brain already prep-ed with connectomes outside of function:
-    Brain.decompose_complex_laplacian(alpha = x[1], phi = x[2], num_ev = 86)
+    Brain.decompose_complex_laplacian(alpha = x[0], phi = x[1], num_ev = 86)
     canon_network = np.nan_to_num(FC_networks.loc[network_name].values)
     
     # compute max correlation for optimization
@@ -150,7 +150,7 @@ opt_phi = opt_res['x'][1]
 
 #print('optimized output: {}'.format(opt_res))
 # Recreate the forward solution:
-w_opt = 2 * np.pi * opt_freq
+#w_opt = 2 * np.pi * opt_freq
 HCP_brain.decompose_complex_laplacian(alpha = opt_alpha, phi = opt_phi)
 
 if str(sys.argv[3]) == 'dice':

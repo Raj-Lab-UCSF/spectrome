@@ -130,7 +130,7 @@ def get_corr_df(x,y, method = 'spearman'):
         eigcounter += 1
     return df_corr
 
-def get_coupled_corr()
+#def get_coupled_corr()
 
 """
 def get_jaccard_df(x, y):
