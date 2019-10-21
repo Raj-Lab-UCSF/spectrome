@@ -105,7 +105,7 @@ def laplacian_corr(x, Brain, FC_networks, network_name):
     return max_corr
 
 class BH_bounds(object):
-    def __init__(self, xmax = [5, 50], xmin = [0, 0]):
+    def __init__(self, xmax = [5, 600], xmin = [0, 0.1]):
         self.xmax = np.array(xmax)
         self.xmin = np.array(xmin)
     
@@ -115,8 +115,8 @@ class BH_bounds(object):
         tmin = bool(np.all(x >= self.xmin))
         return tmax and tmin
 
-allx0 = np.array([[0.5,10],[1,10],[0.8,20],[0.8,1.5],[0.5,5],
-[3,5],[5,45],[2,10],[2,30],[1,40]])
+allx0 = np.array([[0.5,5],[1,100],[0.8,50],[0.8,200],[0.5,400],
+[3,15],[5,250],[2,150],[2,300],[1,500]])
 
 bnds = BH_bounds()
 print('Starting optimization for {} initial condition {}'.format(str(sys.argv[1]),str(sys.argv[2])))
@@ -126,22 +126,22 @@ if str(sys.argv[3]) == 'dice':
         laplacian_dice, x0 = allx0[int(sys.argv[2]),:],
         minimizer_kwargs = {"args":(HCP_brain, DKfc_binarized, str(sys.argv[1]))},
         niter=1500,
-        T = 0.01,
-        stepsize = 1.5,
+        T = 0.1,
+        stepsize = 2,
         accept_test = bnds,
         seed = 24,
-        niter_success=800,
+        niter_success=100,
         disp=False)
 elif str(sys.argv[3]) == 'corr':
     opt_res = basinhopping(
         laplacian_corr, x0 = allx0[int(sys.argv[2]),:],
         minimizer_kwargs = {"args":(HCP_brain, DK_df_normalized, str(sys.argv[1]))},
         niter = 1500,
-        T = 0.01,
+        T = 0.1,
         stepsize = 2,
         accept_test = bnds,
         seed = 24,
-        niter_success=150,
+        niter_success=100,
         disp = True
     )
 
@@ -191,46 +191,46 @@ elif str(sys.argv[3]) == 'corr':
     assert ntw_opt_corr[ordered_corr[1]] <= ntw_opt_corr[ordered_corr[0]]
     assert max_opt_corr == -np.round(opt_res['fun'],3)
 # Linear Regression for 10 K's and save in a dictionary:
-K = 11
-if str(sys.argv[3]) == 'dice':
-    # create empty list of dicts:
-    LinReg = []
-    keys = ['num','coef','r2score','ordereigs']
-    for k in np.arange(1,K):
-        selected_eigs = HCP_brain.norm_eigenmodes[:,ordered_dice[0:k]]
-        canon_network = np.nan_to_num(DK_df_normalized.loc[str(sys.argv[1])].values).reshape(-1,1)
-        regr = LinearRegression()
-        regr.fit(canon_network, selected_eigs)
-        c = regr.coef_
-        r2 = regr.score(canon_network, selected_eigs)
-        reg_results = {keys[0]:k, keys[1]:c, keys[2]:r2, keys[3]:ordered_dice[0:k]}
-        LinReg.append(reg_results)
-        print('For K = {}, chosen eigs: {}, coefficients: {} , residual error: {}'.format(k, ordered_dice[0:k], c, r2))
+# K = 11
+# if str(sys.argv[3]) == 'dice':
+#     # create empty list of dicts:
+#     LinReg = []
+#     keys = ['num','coef','r2score','ordereigs']
+#     for k in np.arange(1,K):
+#         selected_eigs = HCP_brain.norm_eigenmodes[:,ordered_dice[0:k]]
+#         canon_network = np.nan_to_num(DK_df_normalized.loc[str(sys.argv[1])].values).reshape(-1,1)
+#         regr = LinearRegression()
+#         regr.fit(canon_network, selected_eigs)
+#         c = regr.coef_
+#         r2 = regr.score(canon_network, selected_eigs)
+#         reg_results = {keys[0]:k, keys[1]:c, keys[2]:r2, keys[3]:ordered_dice[0:k]}
+#         LinReg.append(reg_results)
+#         print('For K = {}, chosen eigs: {}, coefficients: {} , residual error: {}'.format(k, ordered_dice[0:k], c, r2))
 
-    opt_res['LinRegResults'] = LinReg
+#     opt_res['LinRegResults'] = LinReg
 
-    file_name = str(sys.argv[1]) + str(sys.argv[2]) + "_BH_dice.h5"
-    file_path = os.path.join(hcp_dir, file_name)
-    path.save_hdf5(file_path, opt_res)
-    print("Optimal result: " , opt_res['x'])
-elif str(sys.argv[3]) == 'corr':
-    # create empty list of dicts:
-    LinReg = []
-    keys = ['num','coef','r2score','ordereigs']
-    for k in np.arange(1,K):
-        selected_eigs = HCP_brain.norm_eigenmodes[:,ordered_corr[0:k]]
-        canon_network = np.nan_to_num(DK_df_normalized.loc[str(sys.argv[1])].values).reshape(-1,1)
-        regr = LinearRegression()
-        regr.fit(canon_network, selected_eigs)
-        c = regr.coef_
-        r2 = regr.score(canon_network, selected_eigs)
-        reg_results = {keys[0]:k, keys[1]:c, keys[2]:r2, keys[3]:ordered_corr[0:k]}
-        LinReg.append(reg_results)
-        print('For K = {}, chosen eigs: {}, coefficients: {} , residual error: {}'.format(k, ordered_corr[0:k], c, r2))
+#     file_name = str(sys.argv[1]) + str(sys.argv[2]) + "_BH_dice.h5"
+#     file_path = os.path.join(hcp_dir, file_name)
+#     path.save_hdf5(file_path, opt_res)
+#     print("Optimal result: " , opt_res['x'])
+# elif str(sys.argv[3]) == 'corr':
+#     # create empty list of dicts:
+#     LinReg = []
+#     keys = ['num','coef','r2score','ordereigs']
+#     for k in np.arange(1,K):
+#         selected_eigs = HCP_brain.norm_eigenmodes[:,ordered_corr[0:k]]
+#         canon_network = np.nan_to_num(DK_df_normalized.loc[str(sys.argv[1])].values).reshape(-1,1)
+#         regr = LinearRegression()
+#         regr.fit(canon_network, selected_eigs)
+#         c = regr.coef_
+#         r2 = regr.score(canon_network, selected_eigs)
+#         reg_results = {keys[0]:k, keys[1]:c, keys[2]:r2, keys[3]:ordered_corr[0:k]}
+#         LinReg.append(reg_results)
+#         print('For K = {}, chosen eigs: {}, coefficients: {} , residual error: {}'.format(k, ordered_corr[0:k], c, r2))
 
-    opt_res['LinRegResults'] = LinReg
+#     opt_res['LinRegResults'] = LinReg
 
-    file_name = str(sys.argv[1]) + str(sys.argv[2])+ "_BH_corr.h5"
-    file_path = os.path.join(hcp_dir, file_name)
-    path.save_hdf5(file_path, opt_res)
-    print("Optimal result: " , opt_res['x'])
+file_name = str(sys.argv[1]) + str(sys.argv[2])+ "_BH_corr.h5"
+file_path = os.path.join(hcp_dir, file_name)
+path.save_hdf5(file_path, opt_res)
+print("Optimal result: " , opt_res['x'])
