@@ -91,7 +91,7 @@ def laplacian_corr(x, Brain, FC_networks, network_name):
     #w = 2 * np.pi * x[0]
     
     # Laplacian, Brain already prep-ed with connectomes outside of function:
-    Brain.decompose_complex_laplacian(alpha = x[0], phi = x[1], num_ev = 86)
+    Brain.decompose_complex_laplacian(alpha = x[0], k = x[1], num_ev = 86)
     canon_network = np.nan_to_num(FC_networks.loc[network_name].values)
     
     # compute max correlation for optimization
@@ -151,7 +151,7 @@ opt_phi = opt_res['x'][1]
 #print('optimized output: {}'.format(opt_res))
 # Recreate the forward solution:
 #w_opt = 2 * np.pi * opt_freq
-HCP_brain.decompose_complex_laplacian(alpha = opt_alpha, phi = opt_phi)
+HCP_brain.decompose_complex_laplacian(alpha = opt_alpha, k = opt_phi)
 
 if str(sys.argv[3]) == 'dice':
     # binarize per canonical network:

@@ -94,13 +94,13 @@ class Brain:
         self.distance_matrix = dist
         self.permutation = permutation
 
-    def decompose_complex_laplacian(self, alpha, phi, num_ev = 86, vis = False):
-        "Add complex laplacian `L` and selected eigenmodes and eigen values based on 2 parameters alpha and phi"
+    def decompose_complex_laplacian(self, alpha, k, num_ev = 86, vis = False):
+        "Add complex laplacian `L` and selected eigenmodes and eigen values based on 2 parameters alpha and k"
         L, selected_Evec, sorted_Eval = fwd.decompose_complex_laplacian(
             C = self.reducedConnectome,
             D = self.distance_matrix,
             alpha = alpha,
-            phi = phi,
+            k = k,
             num_ev = num_ev
         )
 

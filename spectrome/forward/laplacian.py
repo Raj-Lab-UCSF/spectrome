@@ -114,7 +114,7 @@ def get_laplacian(C, alpha = 1, num_ev = 86):
     )  # transpose back to column vectors
     return L, selected_Evec, sorted_Evals
 
-def decompose_complex_laplacian(C, D, alpha = 1, phi = 5, num_ev=86):
+def decompose_complex_laplacian(C, D, alpha = 1, k = 25, num_ev=86):
     """ Extract complex laplacian based on frequency "omega", returns number of eigen
         vectors. This function sorts eigen vectors by ascending order, meaning the sorting
         begins with the eigen vectors associated with smallest absolute value of eigen values. 
@@ -123,7 +123,7 @@ def decompose_complex_laplacian(C, D, alpha = 1, phi = 5, num_ev=86):
         - C (array): connectome
         - D (array): Distance matrix for C
         - alpha (float): coupling/diffusivity parameter
-        - phi (float): omega/speed
+        - k (float): omega/speed, wave number parameter
         - num_ev (int): number of eigen vectors you want as output
         Output:
         - L: complex laplacian
@@ -141,7 +141,7 @@ def decompose_complex_laplacian(C, D, alpha = 1, phi = 5, num_ev=86):
 
     #Tau = 0.001 * D / speed  # delay as a function of distance and transmission speed
     Tau = 0.001 * D
-    Cc = C * np.exp(-1j * Tau * phi)  # Complex Laplacian
+    Cc = C * np.exp(-1j * Tau * k)  # Complex Laplacian
 
     # Compute Laplacian and decompose into eigen vectors
     # L1 = 0.8*np.identity(nroi)
