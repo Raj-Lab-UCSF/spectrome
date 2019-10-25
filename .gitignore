@@ -10,10 +10,8 @@ __pycache__
 **/.svg
 *.key
 
-spectrome/data/*
-<<<<<<< HEAD
+spectrome/data/downsampled_patients
+spectrome/data/laplacian_networks
+spectrome/data/SCFC-data
 spectrome/notebooks/complex_laplacian/diffuse_model/figures
 spectrome/notebooks/complex_laplacian/eigenmodes/figures
-=======
-spectrome/notebooks/complex_laplacian/figures
->>>>>>> parent of 3c5f50b... edited gitignore
