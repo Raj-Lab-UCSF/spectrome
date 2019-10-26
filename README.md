@@ -24,3 +24,7 @@ You may add `conda-forge` to your list of channels with the command: `conda conf
 The default name of the environment is `spectrome`, activate the environment with `source activate spectrome`, and deactivate with `source deactivate` or `conda deactivate`.
 
 If you want to be able to run `spectrome` from anywhere, just add it's path to your PYTHONPATH. For instance, if you downloaded `spectrome` to `~/Documents/spectrome` do `export PYTHONPATH=$PYTHONPATH:~/Documents/spectrome`
+
+## Files:
+ - `../spectrome/notebooks`: contains two jupyter notebooks, `run_model` is the basic simulation of frequency spectrums with default parameters for the HCP template connectome. `SGM_ frequency_responses` looks at the eigenvalues and their frequency responses.
+ - `../spectrome/data`: contains intermediate data. Includes HCP template connectome and distance matrix, optimized model parameters for the HCP connectome as well as individual subject's connectomes (N = 36).
