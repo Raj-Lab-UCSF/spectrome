@@ -1,6 +1,9 @@
 # Spectrome Repository
 [Xihe Xie](https://github.com/axiezai) & [Pablo F. Damasceno](https://github.com/pfdamasceno)
 
+[![DOI](https://zenodo.org/badge/217634383.svg)](https://zenodo.org/badge/latestdoi/217634383)
+
+
 `Spectrome` is a combination of the words "spectrum" and "connectome". This package is the collection of codes that constructed the analysis for the publication ["Spectral graph theory of brain oscillations"](https://www.biorxiv.org/content/10.1101/589176v3). 
 
 The spectral graph model (SGM) is a brain structure-function model that simulates brain activity power spectrum given a structural connectome. The model is linear, low-dimensional, and provides an analytical relationship between the brain's structural and functional patterns.
