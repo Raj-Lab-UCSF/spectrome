@@ -5,10 +5,11 @@ __pycache__
 *.pyc
 
 #ignore figures
-**/.jpg
-**/.svg
-**/.pdf
-**/.tiff
+**/*.jpg
+**/*.svg
+**/*.pdf
+**/*.tiff
+**/*.png
 
 *.key
 
