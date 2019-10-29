@@ -13,3 +13,6 @@ __pycache__
 
 *.key
 
+spectrome/data/SCFC-data
+spectrome/data/downsampled_patients
+spectrome/data/laplacian_networks
