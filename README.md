@@ -12,6 +12,9 @@ The spectral graph model (SGM) is a brain structure-function model that simulate
 The paper is currently in pre-print stages:
 https://doi.org/10.1101/589176
 
+## Abstract:
+The relationship between the brain’s structural wiring and the functional patterns of neural activity is of fundamental interest in computational neuroscience. We examine a hierarchical, linear graph spectral model of brain activity at mesoscopic and macroscopic scales. The model formulation yields an elegant closed-form solution for the structure-function problem, specified by the graph spectrum of the structural connectome’s Laplacian, with simple, universal rules of dynamics specified by a minimal set of global parameters. The resulting parsimonious and analytical solution stands in contrast to complex numerical simulations of high dimensional coupled non-linear neural field models. This spectral graph model accurately predicts spatial and spectral features of neural oscillatory activity across the brain and was successful in simultaneously reproducing empirically observed spatial and spectral patterns of alpha-band (8-12 Hz) and beta-band (15-30Hz) activity estimated from source localized scalp magneto-encephalography (MEG). This spectral graph model demonstrates that certain brain oscillations are emergent properties of the graph structure of the structural connectome and provides important insights towards understanding the fundamental relationship between network topology and macroscopic whole-brain dynamics.
+
 Code citation:
 
 ## Set-up:
