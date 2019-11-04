@@ -5,7 +5,8 @@ import csv
 import numpy as np
 import nitime.algorithms as tsa
 import matplotlib
-matplotlib.use('PS')
+
+matplotlib.use("PS")
 import matplotlib.pyplot as plt
 
 from ..utils import path as pth

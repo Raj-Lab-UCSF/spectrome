@@ -26,7 +26,9 @@ def run_forward(brain, params, freqs):
 
     for freq in freqs:
         w = 2 * np.pi * freq
-        freq_resp, eig_val, eig_vec, freq_model, _ = nt.network_transfer_function(brain, params, w)
+        freq_resp, eig_val, eig_vec, freq_model, _ = nt.network_transfer_function(
+            brain, params, w
+        )
         frequency_response.append(freq_resp)
         eigenvalues.append(eig_val)
         eigenvectors.append(eig_vec)
@@ -62,7 +64,9 @@ def run_local_coupling_forward(brain, params, freqs):
 
     for freq in freqs:
         w = 2 * np.pi * freq
-        freq_resp, eig_val, eig_vec, freq_model, _ = nt.network_transfer_local_alpha(brain, params, w)
+        freq_resp, eig_val, eig_vec, freq_model, _ = nt.network_transfer_local_alpha(
+            brain, params, w
+        )
         frequency_response.append(freq_resp)
         eigenvalues.append(eig_val)
         eigenvectors.append(eig_vec)
@@ -74,6 +78,7 @@ def run_local_coupling_forward(brain, params, freqs):
     model_out = np.transpose(np.asarray(model_out))
 
     return model_out, frequency_response, eigenvalues, eigenvectors
+
 
 def run_HM_forward(brain, params, freqs):
     """Run the forward calculations with HM's local oscillators
@@ -89,7 +94,9 @@ def run_HM_forward(brain, params, freqs):
 
     for freq in freqs:
         w = 2 * np.pi * freq
-        freq_resp, eig_val, eig_vec, freq_model, Htotal = nt.network_transfer_HM(brain, params, w)
+        freq_resp, eig_val, eig_vec, freq_model, Htotal = nt.network_transfer_HM(
+            brain, params, w
+        )
         frequency_response.append(freq_resp)
         eigenvalues.append(eig_val)
         eigenvectors.append(eig_vec)
@@ -102,4 +109,10 @@ def run_HM_forward(brain, params, freqs):
     model_out = np.transpose(np.asarray(model_out))
     Htotal_frequency_response = np.asarray(Htotal_allfreq)
 
-    return model_out, frequency_response, eigenvalues, eigenvectors, Htotal_frequency_response
+    return (
+        model_out,
+        frequency_response,
+        eigenvalues,
+        eigenvectors,
+        Htotal_frequency_response,
+    )

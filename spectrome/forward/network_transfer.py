@@ -5,7 +5,7 @@ coupling alpha (in laplacian) and the local coupling alpha = 1. """
 import numpy as np
 
 
-def network_transfer_function(brain, parameters, w, use_smalleigs = True):
+def network_transfer_function(brain, parameters, w, use_smalleigs=True):
     """Network Transfer Function for spectral graph model.
 
     Args:
@@ -31,9 +31,13 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
     tau_e = parameters["tau_e"]
     tau_i = parameters["tau_i"]
     speed = parameters["speed"]
-    gei = parameters["gei"]# excitatory-inhibitory synaptic conductance as ratio of E-E syn
-    gii = parameters["gii"]# inhibitory-inhibitory synaptic conductance as ratio of E-E syn
-    tauC = parameters["tauC"] #  tauC = 0.5*tau_e
+    gei = parameters[
+        "gei"
+    ]  # excitatory-inhibitory synaptic conductance as ratio of E-E syn
+    gii = parameters[
+        "gii"
+    ]  # inhibitory-inhibitory synaptic conductance as ratio of E-E syn
+    tauC = parameters["tauC"]  #  tauC = 0.5*tau_e
     global_alpha = parameters["alpha"]
     local_alpha = 1
 
@@ -97,7 +101,8 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
         model_out += frequency_response[k] * eigenvectors[:, k]
 
     FCmodel = np.matmul(
-        np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(eigenvectors[:, 1:K])
+        np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)),
+        np.transpose(eigenvectors[:, 1:K]),
     )
 
     den = np.sqrt(np.abs(model_out))
@@ -105,7 +110,7 @@ def network_transfer_function(brain, parameters, w, use_smalleigs = True):
     return frequency_response, eigenvalues, eigenvectors, model_out, FCmodel
 
 
-def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
+def network_transfer_local_alpha(brain, parameters, w, use_smalleigs=True):
     """Network Transfer Function for spectral graph model.
 
     Args:
@@ -130,9 +135,13 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
     tau_e = parameters["tau_e"]
     tau_i = parameters["tau_i"]
     speed = parameters["speed"]
-    gei = parameters["gei"]# excitatory-inhibitory synaptic conductance as ratio of E-E syn
-    gii = parameters["gii"]# inhibitory-inhibitory synaptic conductance as ratio of E-E syn
-    tauC = parameters["tauC"]#  tauC = 0.5*tau_e
+    gei = parameters[
+        "gei"
+    ]  # excitatory-inhibitory synaptic conductance as ratio of E-E syn
+    gii = parameters[
+        "gii"
+    ]  # inhibitory-inhibitory synaptic conductance as ratio of E-E syn
+    tauC = parameters["tauC"]  #  tauC = 0.5*tau_e
     alpha = parameters["alpha"]
     # local_alpha  = 1
 
@@ -196,14 +205,16 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs = True):
         model_out += frequency_response[k] * eigenvectors[:, k]
 
     FCmodel = np.matmul(
-        np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(eigenvectors[:, 1:K])
+        np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)),
+        np.transpose(eigenvectors[:, 1:K]),
     )
 
     den = np.sqrt(np.abs(model_out))
     FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
     return frequency_response, eigenvalues, eigenvectors, model_out, FCmodel
 
-def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
+
+def network_transfer_HM(brain, parameters, w, use_smalleigs=True):
     """Network transfer function for spectral graph model, the local oscillator model is modified by HM.
     
     Args:
@@ -215,7 +226,7 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     Returns:
         [type]: [description]
     """
-    
+
     # Housing keeping - defining connectomes, distance matrix, and model parameters.
     C = brain.reducedConnectome
     D = brain.distance_matrix
@@ -231,7 +242,7 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     # Not being used: Pin = 1 and tau_syn = 0.002
     # Defining some other parameters used:
     zero_thr = 0.05
-    #use_smalleigs = True  # otherwise uses full eig()
+    # use_smalleigs = True  # otherwise uses full eig()
     numsmalleigs = np.round(2 / 3 * C.shape[0])  # 2/3
     a = 0.5  # fraction of signal at a node that is recurrent excitatory
     #  gei = 4 # excitatory-inhibitory synaptic conductance as ratio of E-E syn
@@ -254,7 +265,9 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
         K = nroi
 
     # Complex connectivity:
-    Tau = 0.001 * D / speed # divide distance by speed, which is in meters per second, 0.001 converts D to meters
+    Tau = (
+        0.001 * D / speed
+    )  # divide distance by speed, which is in meters per second, 0.001 converts D to meters
     Cc = C * np.exp(-1j * Tau * w)
 
     # Complex Laplacian:
@@ -269,7 +282,7 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     eig_val = d[eig_ind]  # re-indexing eigen values with same sorted index
 
     eigenvalues = np.transpose(eig_val)
-    eigenvectors = eig_vec[:, 0:K] # K is either 2/3 or all eigenmodes
+    eigenvectors = eig_vec[:, 0:K]  # K is either 2/3 or all eigenmodes
 
     # Cortical model:
     Fe = np.divide(1 / tau_e ** 2, (1j * w + 1 / tau_e) ** 2)
@@ -277,13 +290,15 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
 
     He = local_alpha / tau_e / (1j * w + local_alpha / tau_e * Fe)
     Hi = local_alpha / tau_i / (1j * w + local_alpha / tau_e * Fi)
-    
-    #denominator term for alternative model proposed by HM
-    denom = 1 + (gei**2 / tau_e*tau_i) * Fe * Fi * He * Hi
-    He_alt = np.divide(He,denom)
-    Hi_alt = np.divide(Hi,denom)
 
-    Hoffdiag_alt = np.divide(gei * ((-1 / tau_e) * Fe + (1/tau_i) * Fi) * He * Hi, denom)
+    # denominator term for alternative model proposed by HM
+    denom = 1 + (gei ** 2 / tau_e * tau_i) * Fe * Fi * He * Hi
+    He_alt = np.divide(He, denom)
+    Hi_alt = np.divide(Hi, denom)
+
+    Hoffdiag_alt = np.divide(
+        gei * ((-1 / tau_e) * Fe + (1 / tau_i) * Fi) * He * Hi, denom
+    )
     Htotal = He_alt + Hi_alt + Hoffdiag_alt
 
     # This scaling may not be necessary, take a look at Htotal
@@ -299,12 +314,12 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs = True):
     for k in range(1, K):
         model_out += frequency_response[k] * eigenvectors[:, k]
 
-    #FCmodel = np.matmul(
+    # FCmodel = np.matmul(
     #    np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)), np.transpose(eigenvectors[:, 1:K])
-    #)
+    # )
 
-    #den = np.sqrt(np.abs(model_out))
-    #FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
+    # den = np.sqrt(np.abs(model_out))
+    # FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
     return frequency_response, eigenvalues, eigenvectors, model_out, Htotal
 
     # Look at Htotal only, see if it's similar to HOrig.
