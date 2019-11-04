@@ -94,14 +94,14 @@ class Brain:
         self.distance_matrix = dist
         self.permutation = permutation
 
-    def decompose_complex_laplacian(self, alpha, k, num_ev = 86, vis = False):
+    def decompose_complex_laplacian(self, alpha, k, num_ev=86, vis=False):
         "Add complex laplacian `L` and selected eigenmodes and eigen values based on 2 parameters alpha and k"
         L, selected_Evec, sorted_Eval = fwd.decompose_complex_laplacian(
-            C = self.reducedConnectome,
-            D = self.distance_matrix,
-            alpha = alpha,
-            k = k,
-            num_ev = num_ev
+            C=self.reducedConnectome,
+            D=self.distance_matrix,
+            alpha=alpha,
+            k=k,
+            num_ev=num_ev,
         )
 
         # Normalize eigen vectors for better visualization
@@ -118,15 +118,14 @@ class Brain:
                 vdata = vdata / np.amax(vdata)
                 norm_eigs[:, i] = vdata
         else:
-            norm_eigs = minmax_scale(selected_Evec, axis = 1)
+            norm_eigs = minmax_scale(selected_Evec, axis=1)
 
         self.complex_laplacian = L
         self.raw_eigenvectors = selected_Evec
         self.norm_eigenmodes = norm_eigs
         self.eigenvalues = sorted_Eval
 
-        
-    def add_laplacian_eigenmodes(self, w, alpha=1, speed=10, num_ev=86, vis = True):
+    def add_laplacian_eigenmodes(self, w, alpha=1, speed=10, num_ev=86, vis=True):
         "add complex Laplacian `L` and selected eigen modes and eigen values"
         L, selected_Evec, sorted_Eval = fwd.get_complex_laplacian(
             C=self.reducedConnectome,
@@ -150,18 +149,16 @@ class Brain:
                 vdata = vdata / np.amax(vdata)
                 norm_eigs[:, i] = vdata
         else:
-            norm_eigs = minmax_scale(selected_Evec, axis = 1)
+            norm_eigs = minmax_scale(selected_Evec, axis=1)
 
         self.complex_laplacian = L
         self.raw_eigenvectors = selected_Evec
         self.norm_eigenmodes = norm_eigs
         self.eigenvalues = sorted_Eval
 
-    def add_regular_laplacian_eigenmodes(self, alpha = 1, num_ev = 86, vis = True):
+    def add_regular_laplacian_eigenmodes(self, alpha=1, num_ev=86, vis=True):
         L, selected_Evec, sorted_Eval = fwd.get_laplacian(
-            C = self.reducedConnectome,
-            alpha = alpha,
-            num_ev = num_ev
+            C=self.reducedConnectome, alpha=alpha, num_ev=num_ev
         )
         # Normalize eigen vectors
         if vis == True:
@@ -177,7 +174,7 @@ class Brain:
                 vdata = vdata / np.amax(vdata)
                 norm_eigs[:, i] = vdata
         else:
-            norm_eigs = minmax_scale(selected_Evec, axis = 1)
+            norm_eigs = minmax_scale(selected_Evec, axis=1)
         self.regular_laplacian = L
         self.raw_regular_eigenvectors = selected_Evec
         self.norm_regular_eigenmodes = norm_eigs
