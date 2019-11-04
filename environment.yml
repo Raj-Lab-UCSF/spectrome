@@ -21,3 +21,4 @@ dependencies:
     - pysurfer
     - sklearn
     - tqdm==4.30.0
+    - vtk==8.1.1
