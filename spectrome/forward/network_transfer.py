@@ -168,7 +168,8 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs=True):
     Cc = C * np.exp(-1j * Tau * w)
 
     # Eigen Decomposition of Complex Laplacian Here
-    L1 = 0.8 * np.identity(nroi)  # 0.8I in matlab
+    #L1 = 0.8 * np.identity(nroi)  # 0.8I in matlab
+    L1 = np.identity(nroi)
     L2 = np.divide(1, np.sqrt(np.multiply(rowdegree, coldegree)) + np.spacing(1))
     L = L1 - alpha * np.matmul(np.diag(L2), Cc)
 
