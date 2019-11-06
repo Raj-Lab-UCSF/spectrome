@@ -1,5 +1,5 @@
 # Spectrome Repository
-[Xihe Xie](https://github.com/axiezai) & [Pablo F. Damasceno](https://github.com/pfdamasceno)
+[Xihe Xie](https://github.com/axiezai), [Megan J. Stanley](https://github.com/megstanley), & [Pablo F. Damasceno](https://github.com/pfdamasceno)
 
 [![DOI](https://zenodo.org/badge/217634383.svg)](https://zenodo.org/badge/latestdoi/217634383)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Raj-Lab-UCSF/spectrome/master)
@@ -22,6 +22,8 @@ The relationship between the brain’s structural wiring and the functional patt
 To avoid going through the hustles of setting up a `conda` environment, you can simply click on the `Binder` badge above and run the Jupyter notebooks through a docker image on the cloud.
 
 ---
+First clone the environment to your computer, either download this repo as a `.zip` file or `git clone https://github.com/Raj-Lab-UCSF/spectrome.git`.
+
 Set up a [conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html) if you do not have all the packages/compatible versions. The list of dependencies is listed in `environment.yml`. 
 
 Set-up environment using conda, detailed instructions can be found [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html): 
@@ -36,4 +38,4 @@ If you want to be able to run `spectrome` from anywhere, just add it's path to y
 
 ## Files:
  - `../spectrome/notebooks`: contains two jupyter notebooks, `run_model` is the basic simulation of frequency spectrums with default parameters for the HCP template connectome. `SGM_ frequency_responses` looks at the eigenvalues and their frequency responses.
- - `../spectrome/data`: contains intermediate data. Includes HCP template connectome and distance matrix, optimized model parameters for the HCP connectome as well as individual subject's connectomes (N = 36).
+ - `../spectrome/data`: contains intermediate data. Includes HCP template connectome and distance matrix, individual subject's connectivity matrices, one example source localized MEG spectrum, and optimized model parameters for the HCP connectome as well as individual subject's connectomes (N = 36). 
