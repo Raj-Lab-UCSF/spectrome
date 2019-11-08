@@ -114,8 +114,9 @@ def get_dice_df(x, y):
     return df_dice
 
 
-def get_corr_df(x, y, method="spearman"):
-    """Pearson's or Spearman's correlation between arrays
+def get_correlation_df(x, y, method="spearman"):
+    """Pearson's or Spearman's correlation between arrays, the output is a pandas DataFrame
+    
     """
     df_cols = y.index
     df_ind = ["Eig #%d" % x for x in np.arange(x.shape[1]) + 1]
