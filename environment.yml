@@ -8,6 +8,7 @@ dependencies:
   - numpy
   - scipy
   - pandas
+  - scikit-learn
 #  - nose # for unit testing
 #  - nodejs==11.9.0
 #  - ipywidgets
@@ -22,5 +23,5 @@ dependencies:
 #    - PyQt5
     - python-csv
 #    - pysurfer
-    - sklearn
+#    - sklearn
     - tqdm==4.30.0
