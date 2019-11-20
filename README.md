@@ -41,4 +41,9 @@ After completing the set-up for conda environment and `spectrome` path, you may 
 ## Files:
  - `../spectrome/notebooks`: contains three jupyter notebooks, `run_model_example.ipynb` is the basic simulation of frequency spectrums with default parameters for the HCP template connectome. `SGM_frequency_responses` looks at the eigenvalues and their frequency responses, and `reproduce_MEG_spectra.ipynb` shows an example of the spectral graph model recapitulating empirical MEG spectra with optimized parameters.
 
- - `../spectrome/data`: contains intermediate data. Includes HCP template connectome and distance matrix, individual subject's connectivity matrices, one example source localized MEG spectrum, and optimized model parameters for the HCP connectome as well as individual subject's connectomes (N = 36). 
+ - `../spectrome/data`: contains intermediate data. 
+    - `mean80_fibercount/length.csv`: HCP template connectome and distance matrix.
+    - The following `.mat` files come from Matlab structs, `..['output']['param']` are the fields for the optimized parameters, other fields are other outputs from the optimization algorith.
+        - `SCFC_opparam_individual.mat`: individual subject's connectivity matrices (N = 36). 
+        - `SCFC_opparam_HCP.mat`: optimized model parameters for the HCP connectome.
+    - `freqMEGdata_8002-101.h5`: one example source localized MEG spectrum. Dictionary with region names attached to each column (keys).
