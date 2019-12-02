@@ -1,4 +1,5 @@
-""" functions to sort and compute stats on eigen modes"""
+""" functions to sort, compute stats, and compare arrays of eigenmodes"""
+
 import pandas as pd
 import numpy as np
 
@@ -134,8 +135,6 @@ def get_correlation_df(x, y, method="spearman"):
     return df_corr
 
 
-# def get_coupled_corr()
-
 """
 def get_jaccard_df(x, y):
     #[Jaccard similarity score betewen two boolean arrays, then make it into a Pandas Dataframe
@@ -165,10 +164,10 @@ def get_jaccard_df(x, y):
 
 
 def get_entropy_score(df_sxy):
-    """[Compute purity score as a measure of entropy]
+    """[Compute entropy of a given dataframe]
     
     Args:
-        df_sxy (Pandas DataFrame): DataFrame of either overlap scores or standardized overlap scores
+        df_sxy (Pandas DataFrame): DataFrame
     
     
     Returns:
@@ -188,3 +187,13 @@ def get_entropy_score(df_sxy):
 
     # purity_score = -np.sum(purity_vec, axis = 1)
     return np.asarray(entropy_vec)
+
+def entropy(dp, dq = None, base = 10):
+
+    dp = np.asarray(np.squeeze(dp))
+    dp = 1 * dq/np.sum(dq, axis = 0) # normalize
+
+    if dq is None:
+        if base == 10:
+            S = np.multiply(dp, np.log10(dp))
+    return S
