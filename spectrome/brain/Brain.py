@@ -147,9 +147,9 @@ class Brain:
         else:
             norm_eigs = minmax_scale(selected_Evec, axis=1)
         self.regular_laplacian = L
-        self.raw_regular_eigenvectors = selected_Evec
-        self.norm_regular_eigenmodes = norm_eigs
-        self.regular_eigenvalues = sorted_Eval
+        self.raw_eigenvectors = selected_Evec
+        self.norm_eigenmodes = norm_eigs
+        self.eigenvalues = sorted_Eval
 
     def bi_symmetric_c(self):
         """Short summary.
