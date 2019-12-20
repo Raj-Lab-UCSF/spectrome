@@ -24,3 +24,4 @@ dependencies:
 #    - pysurfer
     - sklearn
     - tqdm==4.30.0
+    - jupyter
