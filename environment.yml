@@ -8,20 +8,21 @@ dependencies:
   - numpy
   - scipy
   - pandas
-#  - nose # for unit testing
-#  - nodejs==11.9.0
-#  - ipywidgets
-#  - vtk==8.1.1
+  - nose # for unit testing
+  - nodejs==11.9.0
+  - ipywidgets
+  - vtk==8.1.1
+  - h5py
   - pip:
     - deepdish
-#    - emcee==3.0rc2
-#    - great-expectations
-#    - mayavi
-#    - nibabel
+    - emcee==3.0rc2
+    - great-expectations
+    - mayavi
+    - nibabel
     - nitime
-#    - PyQt5
+    - PyQt5
     - python-csv
-#    - pysurfer
+    - pysurfer
     - sklearn
     - tqdm==4.30.0
     - jupyter
