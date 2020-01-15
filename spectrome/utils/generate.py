@@ -75,46 +75,34 @@ def add_weights(Cij, u, s):
     return wCij
 
 
-def exp_neg_dist_Cij(distance_matrix):
-    """Generate network weighted by exponent of negative distance:
+def exp_neg_dist_Cij(distance_matrix, sparsity = 0.8):
+    """Generate network weighted by exponent of negative distance given sparsity:
     
     Args:
         distance_matrix (array): input distance matrix
     
     Returns:
-        dist_wCij [array]: symmetric distance weighted network with 0 diagonal
+        negdist [array]: symmetric distance weighted network with 0 diagonal
     """
     negdist = np.exp(-distance_matrix)
     negdist = negdist - np.diag(np.diag(negdist))
 
     V = len(negdist)  # number of vertices
-    E = np.floor(np.count_nonzero(negdist) / 2).astype(int)  # number of edges
+    #compute current sparsity:
+    current_sparsity = np.count_nonzero(negdist == 0)/(len(negdist)**2)
 
-    linear_indices = np.squeeze(
-        np.asarray(np.where((negdist < 1) & (negdist > 0.0001)))
-    )  # get rid of extremes
-    dist_distribution = negdist[linear_indices[0, :], linear_indices[1, :]]
+    # Remove lowest distances to achieve sparsity:
+    while current_sparsity < sparsity:
+        triu_negdist = np.triu(negdist)
+        triu_nonzeros = np.asarray(np.triu(negdist).ravel().nonzero())
+        # replace lowest distances with 0's
+        min_loc = np.where(triu_negdist == np.amin(triu_negdist[np.unravel_index(triu_nonzeros, negdist.shape)]))
+        triu_negdist[min_loc] = 0
+        #update sparsity:
+        negdist = triu_negdist + np.transpose(triu_negdist)
+        current_sparsity = np.count_nonzero(negdist == 0)/(len(negdist)**2)
 
-    # Sample from dist_distribution into a matrix:
-    triu_indices = np.triu(np.logical_not(np.eye(V)))
-    i = np.asarray(
-        triu_indices.ravel().nonzero()
-    )  # linear indices of upper triangle elements
-
-    RP = np.random.permutation(i.shape[1])  # randomly perm the indices
-    random_indices = i[:, RP]  # vertices randomly permuted
-    random_indices = np.squeeze(
-        np.asarray(np.unravel_index(random_indices, negdist.shape))
-    )
-
-    dist_wCij = np.zeros([V, V])  # V-vertices matrix
-    for n in np.arange(0, E):
-        dist_wCij[random_indices[0, n], random_indices[1, n]] = np.random.choice(
-            dist_distribution, replace=False
-        )
-
-    dist_wCij = dist_wCij + np.transpose(dist_wCij)
-    return dist_wCij
+    return negdist
 
 
 def distance_matrix(C, distances):
