@@ -5,13 +5,14 @@ __pycache__
 *.pyc
 
 #ignore figures
-**/.png
-**/.jpg
-**/.svg
+**/*.jpg
+**/*.svg
+**/*.pdf
+**/*.tiff
+**/*.png
+
 *.key
 
+spectrome/data/SCFC-data
 spectrome/data/downsampled_patients
 spectrome/data/laplacian_networks
-spectrome/data/SCFC-data
-spectrome/notebooks/complex_laplacian/diffuse_model/figures
-spectrome/notebooks/complex_laplacian/eigenmodes/figures

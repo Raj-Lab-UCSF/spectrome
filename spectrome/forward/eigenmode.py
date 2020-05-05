@@ -1,9 +1,11 @@
-""" functions to sort and compute stats on eigen modes"""
+""" functions to sort, compute stats, and compare arrays of eigenmodes"""
+
 import pandas as pd
 import numpy as np
 
 from scipy.spatial import distance
 from scipy.stats import entropy, spearmanr, pearsonr
+
 
 def eig_fc_get_standardz(x, y, binary_thresh=0.1, nreps=1000):
     """Permutes both canonical networks and input eigenmodes 1000 times
@@ -112,8 +114,10 @@ def get_dice_df(x, y):
         eigcounter += 1
     return df_dice
 
-def get_corr_df(x,y, method = 'spearman'):
-    """Pearson's or Spearman's correlation between arrays
+
+def get_correlation_df(x, y, method="spearman"):
+    """Pearson's or Spearman's correlation between arrays, the output is a pandas DataFrame
+    
     """
     df_cols = y.index
     df_ind = ["Eig #%d" % x for x in np.arange(x.shape[1]) + 1]
@@ -121,16 +125,15 @@ def get_corr_df(x,y, method = 'spearman'):
     eigcounter = 0
     for eignum in df_corr.index:
         for name in y.index:
-            em = x[:,eigcounter] # eigenmode
+            em = x[:, eigcounter]  # eigenmode
             fc = np.nan_to_num(y.loc[name].values)
-            if method == 'pearson':
+            if method == "pearson":
                 df_corr.at[eignum, name] = pearsonr(em, fc)[0]
-            elif method == 'spearman':
-                df_corr.at[eignum, name] = spearmanr(em,fc)[0]
+            elif method == "spearman":
+                df_corr.at[eignum, name] = spearmanr(em, fc)[0]
         eigcounter += 1
     return df_corr
 
-#def get_coupled_corr()
 
 """
 def get_jaccard_df(x, y):
@@ -159,11 +162,12 @@ def get_jaccard_df(x, y):
     return jaccard_df
 """
 
+
 def get_entropy_score(df_sxy):
-    """[Compute purity score as a measure of entropy]
+    """[Compute entropy of a given dataframe]
     
     Args:
-        df_sxy (Pandas DataFrame): DataFrame of either overlap scores or standardized overlap scores
+        df_sxy (Pandas DataFrame): DataFrame
     
     
     Returns:
@@ -183,3 +187,13 @@ def get_entropy_score(df_sxy):
 
     # purity_score = -np.sum(purity_vec, axis = 1)
     return np.asarray(entropy_vec)
+
+def entropy(dp, dq = None, base = 10):
+
+    dp = np.asarray(np.squeeze(dp))
+    dp = 1 * dq/np.sum(dq, axis = 0) # normalize
+
+    if dq is None:
+        if base == 10:
+            S = np.multiply(dp, np.log10(dp))
+    return S

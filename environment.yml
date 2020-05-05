@@ -1,4 +1,6 @@
 name: spectrome
+channels:
+  - conda-forge
 dependencies:
   - python=3 #or any python 3 should work
   - pip
@@ -9,6 +11,8 @@ dependencies:
   - nose # for unit testing
   - nodejs==11.9.0
   - ipywidgets
+  - vtk==8.1.1
+  - h5py
   - pip:
     - deepdish
     - emcee==3.0rc2
@@ -21,3 +25,4 @@ dependencies:
     - pysurfer
     - sklearn
     - tqdm==4.30.0
+    - jupyter
