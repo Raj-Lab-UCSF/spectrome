@@ -1,5 +1,5 @@
 """ running the ntf over a range of frequencies."""
-from ..forward import network_transfer_P as nt
+from ..forward import network_transfer as nt
 import time as time
 import numpy as np
 
