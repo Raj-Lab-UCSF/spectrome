@@ -9,7 +9,10 @@
 The spectral graph model (SGM) is a brain structure-function model that simulates brain activity power spectrum given a structural connectome. The model is linear, low-dimensional, and provides an analytical relationship between the brain's structural and functional patterns.
 
 ## Citation:
-The code in this repository is used for the analysis as shown in: Raj, Ashish, Chang Cai, Xihe Xie, Eva Palacios, Julia Owen, Pratik Mukherjee, and Srikantan Nagarajan. “Spectral Graph Theory of Brain Oscillations.” Human Brain Mappin. https://doi.org/10.1002/hbm.24991.
+The code in this repository is used for the analysis as shown in: 
+ - Ashish Raj, Chang Cai, Xihe Xie, Eva Palacios, Julia Owen, Pratik Mukherjee, and Srikantan Nagarajan. “Spectral Graph Theory of Brain Oscillations.” Human Brain Mappin. https://doi.org/10.1002/hbm.24991.
+
+ - Xihe Xie, Chang Cai, Pablo Damasceno, Srikantan Nagarajan, and Ashish Raj. "Emergence of Canonical Functional Networks from the Structural Connectome." NeuroImage. https://doi.org/10.1016/j.neuroimage.2021.118190.
 
 
 Code citation: Xihe Xie, Megan J. Stanley, & Pablo F. Damasceno. (2019, November 7). Raj-Lab-UCSF/spectrome: Spectral Graph Model of Connectomes (Version 0.15). Zenodo. http://doi.org/10.5281/zenodo.3532497
