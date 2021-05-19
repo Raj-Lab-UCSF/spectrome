@@ -50,7 +50,7 @@ def decompose_regular_laplacian(C, alpha=1, num_ev=86):
     return L, selected_Evec, sorted_Evals
 
 
-def decompose_complex_laplacian(C, D, alpha=1, k=25, f = None, speed = None, num_ev=86):
+def decompose_complex_laplacian(C, D, alpha=1, k=25, f = None, speed = None, num_ev=86, take_abs=True):
     """ Extract complex laplacian based on alpha (coupling strength) and k (wave number), returns number of eigen
         vectors. This function sorts eigen vectors by ascending order, meaning the sorting
         begins with the eigen vectors associated with smallest absolute value of eigen values. 
@@ -65,6 +65,7 @@ def decompose_complex_laplacian(C, D, alpha=1, k=25, f = None, speed = None, num
         - f (float): frequency, gets converted to omega, oscillatory angular frequency via "omega = 2*pi*f"
         - speed (float): signal transmission velocity
         - num_ev (int): number of eigen vectors you want as output
+        - take_abs (boolean): whether to take absolute value of complex eigenmodes default is True
         Output:
         - L: complex laplacian
         - selected_Evec: eigen vectors
@@ -105,6 +106,7 @@ def decompose_complex_laplacian(C, D, alpha=1, k=25, f = None, speed = None, num
     # abseiv = np.abs(eig_vec[:,0])
     sorted_Evals = d[eig_ind]
 
+
     # defining some intermediate variables
     ev = np.transpose(sorted_Evals[0:K])
     Vv = eig_vec[:, 0:K]
@@ -113,8 +115,11 @@ def decompose_complex_laplacian(C, D, alpha=1, k=25, f = None, speed = None, num
     # Select eigen modes based on num_ev as output...
     selected_Evec = []
     for k in np.arange(0, num_ev):
-        abs_Vvec = np.abs(Vvec[:, k])
-        selected_Evec.append(abs_Vvec)  # this appends as rows
+        if take_abs is True:
+            abs_Vvec = np.abs(Vvec[:, k])
+            selected_Evec.append(abs_Vvec)  # this appends as rows
+        if take_abs is False:
+            selected_Evec.append(Vvec[:, k])
 
     selected_Evec = np.transpose(
         np.asarray(selected_Evec)
