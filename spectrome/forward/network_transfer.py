@@ -3,7 +3,9 @@ Makes the calculation for a single frequency only. This variation separates the 
 coupling alpha (in laplacian) and the local coupling alpha = 1. """
 
 import numpy as np
-
+import sys
+import matplotlib.pyplot as plt
+from scipy.fft import fft, ifft
 
 def network_transfer_function(brain, parameters, w, use_smalleigs=True):
     """Network Transfer Function for spectral graph model.
@@ -45,7 +47,7 @@ def network_transfer_function(brain, parameters, w, use_smalleigs=True):
     # Defining some other parameters used:
     zero_thr = 0.05
     a = 0.5  # fraction of signal at a node that is recurrent excitatory
-
+    
     # define sum of degrees for rows and columns for laplacian normalization
     rowdegree = np.transpose(np.sum(C, axis=1))
     coldegree = np.sum(C, axis=0)
@@ -81,7 +83,7 @@ def network_transfer_function(brain, parameters, w, use_smalleigs=True):
     Fi = np.divide(gii * 1 / tau_i ** 2, (1j * w + 1 / tau_i) ** 2)
 
     # Hed = 1/tau_e/(1j*w + 1/tau_e*He)
-    Hed = local_alpha / tau_e / (1j * w + local_alpha / tau_e * Fe)
+    Hed = local_alpha / tau_e / (1j  * w + local_alpha / tau_e * Fe)
     # Hid = 1/tau_i/(1j*w + 1/tau_i*Hi)
     Hid = local_alpha / tau_i / (1j * w + local_alpha / tau_i * Fi)
 
@@ -143,7 +145,7 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs=True):
     ]  # inhibitory-inhibitory synaptic conductance as ratio of E-E syn
     tauC = parameters["tauC"]  #  tauC = 0.5*tau_e
     alpha = parameters["alpha"]
-    # local_alpha  = 1
+    local_alpha  = 1
 
     # Not being used: Pin = 1 and tau_syn = 0.002
     # Defining some other parameters used:
@@ -181,37 +183,42 @@ def network_transfer_local_alpha(brain, parameters, w, use_smalleigs=True):
     eigenvalues = np.transpose(eig_val)
     eigenvectors = eig_vec[:, 0:K]
 
-    # Cortical model
+#     # Corrected Cortical model
     Fe = np.divide(1 / tau_e ** 2, (1j * w + 1 / tau_e) ** 2)
-    Fi = np.divide(gii * 1 / tau_i ** 2, (1j * w + 1 / tau_i) ** 2)
+    Fi = np.divide(1 / tau_i ** 2, (1j * w + 1 / tau_i) ** 2)
 
-    # Hed = 1/tau_e/(1j*w + 1/tau_e*He)
-    Hed = alpha / tau_e / (1j * w + alpha / tau_e * Fe)
-    # Hid = 1/tau_i/(1j*w + 1/tau_i*Hi)
-    Hid = alpha / tau_i / (1j * w + alpha / tau_i * Fi)
+#     Corrected transfer functions without any local_alpha
+    Hed = 1 / (1j * w + 1 / tau_e * Fe)
+    Hid = 1 / (1j * w + gii / tau_i * Fi)
 
-    Heid = gei * Fe * Fi / (1 + gei * Fe * Fi)
-    Htotal = a * Hed + (1 - a) / 2 * Hid + (1 - a) / 2 * Heid
-
-    q1 = 1 / alpha * tauC * (1j * w + alpha / tauC * Fe * eigenvalues)
+#     Corrected transfer function for alternate populations to match exactly what is mentioned in the paper.
+    Heid = Hed * Hid / (1 + gei * Hed * Hid)
+#     Htotal = a * Hed + (1 - a) / 2 * Hid + (1 - a) / 2 * Heid
+#     Will add a later. We don't know what the value of "a" should be
+    Htotal = Hed + Hid + Heid
+    
+#     Corrected q1 to remove alpha's
+    q1 = (1j * w + 1 / tauC * Fe * eigenvalues)
     # q1 = tauC*(1j*w + 1/tauC*He*ev)
     qthr = zero_thr * np.abs(q1[:]).max()
     magq1 = np.maximum(np.abs(q1), qthr)
     angq1 = np.angle(q1)
     q1 = np.multiply(magq1, np.exp(1j * angq1))
     frequency_response = np.divide(Htotal, q1)
-
+    
     model_out = 0
+    ## Changed model_out to take into account P(w) which is a vector of ones.
     for k in range(1, K):
-        model_out += frequency_response[k] * eigenvectors[:, k]
+        model_out += (frequency_response[k]) * eigenvectors[:, k] * sum(np.conjugate(eigenvectors[:, k])) 
 
     FCmodel = np.matmul(
         np.matmul(eigenvectors[:, 1:K], np.diag(frequency_response[1:K] ** 2)),
         np.transpose(eigenvectors[:, 1:K]),
     )
-
+    
     den = np.sqrt(np.abs(model_out))
     FCmodel = np.matmul(np.matmul(np.diag(1 / den), FCmodel), np.diag(1 / den))
+
     return frequency_response, eigenvalues, eigenvectors, model_out, FCmodel
 
 
@@ -324,3 +331,13 @@ def network_transfer_HM(brain, parameters, w, use_smalleigs=True):
     return frequency_response, eigenvalues, eigenvectors, model_out, Htotal
 
     # Look at Htotal only, see if it's similar to HOrig.
+
+
+
+
+
+
+
+
+
+
